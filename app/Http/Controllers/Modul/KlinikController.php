@@ -93,9 +93,9 @@ class KlinikController extends Controller
 		
 		$bulan = date('m');
 		$tahun = date('Y');
-		if(!empty($request->input("bulan"))){
-			$bulan = $request->input("bulan");
-			$tahun = $request->input("tahun");
+		if(!empty($request->bulan)){
+			$bulan = $request->bulan;
+			$tahun = $request->tahun;
 			$_SESSION['bulan'] = $bulan;
 			$_SESSION['tahun'] = $tahun;
 			
@@ -581,9 +581,9 @@ class KlinikController extends Controller
 			$klinik = Klinik::create($input);
 
 			//$listDataTerapi = (!empty($_SESSION['klinikTerapi'])?$_SESSION['klinikTerapi']:[]);
-			$tindakan = $request->input("tindakan");
-			$terapi_id = $request->input("terapi_id");
-			$dosis = $request->input("dosis");
+			$tindakan = $request->tindakan;
+			$terapi_id = $request->terapi_id;
+			$dosis = $request->dosis;
 			foreach($tindakan as $key=>$item){
 				$klinikTerapi = new KlinikDosis();
 				$klinikTerapi->terapi_id = $terapi_id[$key];
@@ -596,19 +596,19 @@ class KlinikController extends Controller
 			$terapi = new KlinikTerapi();
 			foreach($tindakan as $key=>$item){
 				$terapi->terapi_id = $terapi_id[$key];
-				$terapi->pemeriksa = $request->input('pemeriksa');
-				$paramedis = $request->input('paramedis');
+				$terapi->pemeriksa = $request->pemeriksa;
+				$paramedis = $request->paramedis;
 				if(empty($paramedis)){
 					$paramedis = "-";
 				}else{
-					$paramedis = $request->input('paramedis');
+					$paramedis = $request->paramedis;
 				}
 				$terapi->paramedis = $paramedis;
-				$terapi->tanggal_periksa = $request->input('tanggal_periksa');
-				$terapi->signalement = $request->input('signalement');
-				$terapi->anamnesia = $request->input('anamnesia');
-				$terapi->diagnosa = $request->input('diagnosa');
-				$terapi->keterangan = $request->input('keterangan');
+				$terapi->tanggal_periksa = $request->tanggal_periksa;
+				$terapi->signalement = $request->signalement;
+				$terapi->anamnesia = $request->anamnesia;
+				$terapi->diagnosa = $request->diagnosa;
+				$terapi->keterangan = $request->keterangan;
 				$terapi->tindakan = $item;          
 				
 				$klinik->klinikTerapi()->save($terapi);
@@ -713,19 +713,19 @@ class KlinikController extends Controller
 					$klinikTerapi->terapi_id = $item['terapi'];
 					$klinikTerapi->dosis = $item['dosis'];
 					$klinikTerapi->input_by = $klinik->input_by;
-					$klinikTerapi->tindakan = $request->input('tindakan');
+					$klinikTerapi->tindakan = $request->tindakan;
 					$klinik->klinikDosis()->save($klinikTerapi);
 				}
 
 				$delKlinikTerapi = KlinikTerapi::where('klinik_id',$id)->delete();
 				$terapi = new KlinikTerapi();
-				$terapi->pemeriksa = $request->input('pemeriksa');
-				$terapi->tanggal_periksa = $request->input('tanggal_periksa');
-				$terapi->signalement = $request->input('signalement');
-				$terapi->anamnesia = $request->input('anamnesia');
-				$terapi->diagnosa = $request->input('diagnosa');
-				$terapi->keterangan = $request->input('keterangan');
-				$terapi->tindakan = $request->input('tindakan');            
+				$terapi->pemeriksa = $request->pemeriksa;
+				$terapi->tanggal_periksa = $request->tanggal_periksa;
+				$terapi->signalement = $request->signalement;
+				$terapi->anamnesia = $request->anamnesia;
+				$terapi->diagnosa = $request->diagnosa;
+				$terapi->keterangan = $request->keterangan;
+				$terapi->tindakan = $request->tindakan;            
 				$klinik->klinikTerapi()->save($terapi);
 				unset($_SESSION['klinikTerapi']);
 
@@ -754,7 +754,7 @@ class KlinikController extends Controller
 			}
 		}else{
 			$input = $request->all();
-			$klinik = Klinik::where("no_pasien",$request->input("no_pasien"));
+			$klinik = Klinik::where("no_pasien",$request->no_pasien);
 			if($klinik->count() > 0){
 				$hasil = $klinik->first();
 				$model_klinik = Klinik::find($hasil->id);
@@ -762,12 +762,12 @@ class KlinikController extends Controller
 				//$model_klinik->update($input);
 				//echo "ketemu";
 				$klinikTerapi = new KlinikTerapi();
-				$klinikTerapi->no_pasien = $request->input("no_pasien");
+				$klinikTerapi->no_pasien = $request->no_pasien;
 				$klinikTerapi->klinik_id = $hasil->id;
-				$klinikTerapi->tanggal_periksa = $request->input("tanggal_periksa");
-				$klinikTerapi->keluhan = $request->input("keluhan");
-				$klinikTerapi->pemeriksa = $request->input("pemeriksa");
-				$klinikTerapi->umur = $request->input("umur");
+				$klinikTerapi->tanggal_periksa = $request->tanggal_periksa;
+				$klinikTerapi->keluhan = $request->keluhan;
+				$klinikTerapi->pemeriksa = $request->pemeriksa;
+				$klinikTerapi->umur = $request->umur;
 				$klinikTerapi->jam_pendaftaran = date("H:i:s");
 				
 				$klinikTerapi->status = 1;
@@ -782,13 +782,13 @@ class KlinikController extends Controller
 				}
 			}else{
 				//Session::flash('pesanError', 'Data Klinik Gagal Ditambahkan');
-				if(!empty($request->input("no_pasien"))){
+				if(!empty($request->no_pasien)){
 					$klinik = new Klinik();
-					$klinik->no_pasien = $request->input('no_pasien');
-					$klinik->pemilik_id = $request->input('pemilik_id');
-					$klinik->nama_hewan = $request->input("hewan_baru");
-					$klinik->spesies_id = $request->input("spesies_id");
-					$klinik->jenis_kelamin = $request->input("jenis_kelamin");
+					$klinik->no_pasien = $request->no_pasien;
+					$klinik->pemilik_id = $request->pemilik_id;
+					$klinik->nama_hewan = $request->hewan_baru;
+					$klinik->spesies_id = $request->spesies_id;
+					$klinik->jenis_kelamin = $request->jenis_kelamin;
 					$klinik->input_by = Auth::user()->id;
 					$klinik->sub_satuan_kerja_id = Auth::user()->sub_satuan_kerja_id;
 					if($klinik->save()){
@@ -797,11 +797,11 @@ class KlinikController extends Controller
 						//$model_klinik->update($input);
 						//echo "ketemu";
 						$klinikTerapi = new KlinikTerapi();
-						$klinikTerapi->no_pasien = $request->input("no_pasien");
+						$klinikTerapi->no_pasien = $request->no_pasien;
 						$klinikTerapi->klinik_id = $klinik->id;
-						$klinikTerapi->tanggal_periksa = $request->input("tanggal_periksa");
-						$klinikTerapi->keterangan = $request->input("keterangan");
-						$klinikTerapi->pemeriksa = $request->input("pemeriksa");
+						$klinikTerapi->tanggal_periksa = $request->tanggal_periksa;
+						$klinikTerapi->keterangan = $request->keterangan;
+						$klinikTerapi->pemeriksa = $request->pemeriksa;
 						$klinikTerapi->jam_pendaftaran = date("H:i:s");
 						$klinikTerapi->status = 1;
 						if($klinikTerapi->save()){
@@ -835,19 +835,19 @@ class KlinikController extends Controller
 					$klinikTerapi->terapi_id = $item['terapi'];
 					$klinikTerapi->dosis = $item['dosis'];
 					$klinikTerapi->input_by = $klinik->input_by;
-					$klinikTerapi->tindakan = $request->input('tindakan');
+					$klinikTerapi->tindakan = $request->tindakan;
 					$klinik->klinikDosis()->save($klinikTerapi);
 				}
 
 				$delKlinikTerapi = KlinikTerapi::where('klinik_id',$id)->delete();
 				$terapi = new KlinikTerapi();
-				$terapi->pemeriksa = $request->input('pemeriksa');
-				$terapi->tanggal_periksa = $request->input('tanggal_periksa');
-				$terapi->signalement = $request->input('signalement');
-				$terapi->anamnesia = $request->input('anamnesia');
-				$terapi->diagnosa = $request->input('diagnosa');
-				$terapi->keterangan = $request->input('keterangan');
-				$terapi->tindakan = $request->input('tindakan');            
+				$terapi->pemeriksa = $request->pemeriksa;
+				$terapi->tanggal_periksa = $request->tanggal_periksa;
+				$terapi->signalement = $request->signalement;
+				$terapi->anamnesia = $request->anamnesia;
+				$terapi->diagnosa = $request->diagnosa;
+				$terapi->keterangan = $request->keterangan;
+				$terapi->tindakan = $request->tindakan;            
 				$klinik->klinikTerapi()->save($terapi);
 				unset($_SESSION['klinikTerapi']);
 
@@ -875,23 +875,23 @@ class KlinikController extends Controller
 			}
 		}else{
 			$input = $request->all();
-			$klinik = Klinik::where("no_pasien",$request->input("no_pasien"));
-			echo $request->input("no_pasien");
+			$klinik = Klinik::where("no_pasien",$request->no_pasien);
+			echo $request->no_pasien;
 			if($klinik->count() > 0){
 				$hasil = $klinik->first();
 				$model_klinik = Klinik::find($hasil->id);
-				//echo $request->input("tanggal_periksa");
+				//echo $request->tanggal_periksa;
 				//$model_klinik->
 				//$model_klinik->update($input);
 				//echo "ketemu";
-				$klinikTerapi = KlinikTerapi::find($request->input("id_klinik_terapi"));
-				echo $request->input("id_klinik_terapi");
-				$klinikTerapi->no_pasien = $request->input("no_pasien");
-				//$klinikTerapi->klinik_id = $request->input("hewan");
-				$klinikTerapi->tanggal_periksa = $request->input("tanggal_periksa");
-				$klinikTerapi->keterangan = $request->input("keterangan");
-				$klinikTerapi->pemeriksa = $request->input("pemeriksa");
-				$klinikTerapi->umur = $request->input("umur");
+				$klinikTerapi = KlinikTerapi::find($request->id_klinik_terapi);
+			echo $request->id_klinik_terapi;
+			$klinikTerapi->no_pasien = $request->no_pasien;
+			//$klinikTerapi->klinik_id = $request->hewan;
+			$klinikTerapi->tanggal_periksa = $request->tanggal_periksa;
+			$klinikTerapi->keterangan = $request->keterangan;
+			$klinikTerapi->pemeriksa = $request->pemeriksa;
+			$klinikTerapi->umur = $request->umur;
 				$klinikTerapi->jam_pendaftaran = date("H:i:s");
 				//$klinikTerapi->status = 1;
 				if($klinikTerapi->save()){
@@ -906,11 +906,11 @@ class KlinikController extends Controller
 				
 			}
 			//return redirect('klinik/pendaftaran'.$var['url']['all']);
-			$url = $request->input("from_url");
+			$url = $request->from_url;
 			if($url == "awal")
 				return redirect('klinik/pendaftaran'.$var['url']['all']);
 			else
-				return redirect('klinik/detailPeriksa/' . $request->input("hewan"));
+				return redirect('klinik/detailPeriksa/' . $request->hewan);
 			
         }
 	}
@@ -926,21 +926,21 @@ class KlinikController extends Controller
 				return redirect('klinik/pemeriksaan');
 			}
 		}else{
-			$tindakan_id = $request->input("tindakan_id");
-			$terapi_id = $request->input("terapi_id");
-			$dosis = $request->input("dosis");
-			$diagnosa = $request->input("diagnosa");
-			$klinik_terapi_id = $request->input("id");
+			$tindakan_id = $request->tindakan_id;
+			$terapi_id = $request->terapi_id;
+			$dosis = $request->dosis;
+			$diagnosa = $request->diagnosa;
+			$klinik_terapi_id = $request->id;
 			//echo $klinik_terapi_id;
 			//exit;
 			$klinikTerapi = KlinikTerapi::find($klinik_terapi_id);
-			$klinikTerapi->keterangan = $request->input("keterangan");
-			$klinikTerapi->anamnesia = $request->input("anamnesia");
-			$klinikTerapi->signalement = $request->input("signalement");
-			$klinikTerapi->paramedis = $request->input("paramedis");
+			$klinikTerapi->keterangan = $request->keterangan;
+			$klinikTerapi->anamnesia = $request->anamnesia;
+			$klinikTerapi->signalement = $request->signalement;
+			$klinikTerapi->paramedis = $request->paramedis;
 			$klinikTerapi->diagnosa = $diagnosa;
 			$klinikTerapi->jam_pemeriksaan = date("H:i:s");
-			$from_url = $request->input("from_url");
+			$from_url = $request->from_url;
 			if($from_url == "awal")
 				$klinikTerapi->status = 2;
 			$klinikTerapi->save();
@@ -959,7 +959,7 @@ class KlinikController extends Controller
 				if($from_url == "awal")
 					return redirect('klinik/pemeriksaan');
 				else
-					return redirect('klinik/detailPeriksa/' . $request->input("hewan"));
+					return redirect('klinik/detailPeriksa/' . $request->hewan);
 			}else{
 				return redirect('klinik/add_pemeriksaan/'. $klinik_terapi_id);
 			}
@@ -979,61 +979,61 @@ class KlinikController extends Controller
 				return redirect('klinik/pembayaran');
 			}
 		}else{
-			$kegiatan = $request->input("kegiatan");
-			$klinik_terapi_id = $request->input("klinik_terapi_id");
-			$cek_pembayaran = Pembayaran::where("klinik_terapi_id",$request->input("klinik_terapi_id"));
+			$kegiatan = $request->kegiatan;
+			$klinik_terapi_id = $request->klinik_terapi_id;
+			$cek_pembayaran = Pembayaran::where("klinik_terapi_id",$request->klinik_terapi_id);
 			if($cek_pembayaran->count() == 0){
 			
 			
 				$pembayaran = new Pembayaran();
 				$pembayaran->klinik_terapi_id = $klinik_terapi_id;
-				$pembayaran->total = $request->input("total");
+				$pembayaran->total = $request->total;
 				if($kegiatan == 2){
 					$pembayaran->total = 0;
 				}
 				$pembayaran->tanggal = date('Y-m-d H:i:s');
-				$pembayaran->no_kwitansi = $request->input("no_kwitansi");
+				$pembayaran->no_kwitansi = $request->no_kwitansi;
 				$pembayaran->save();
 				
-				$tindakan = $request->input("tindakan_id");
+				$tindakan = $request->tindakan_id;
 				
 				foreach($tindakan as $key=>$value){
 					$detailPembayaran = new DetailPembayaran();
 					$detailPembayaran->pembayaran_id = $pembayaran->id;
 					$detailPembayaran->tindakan = $value;
-					$detailPembayaran->terapi_id = $request->input("terapi_id")[$key];
-					$detailPembayaran->tarif = $request->input("tarif")[$key];
+					$detailPembayaran->terapi_id = $request->terapi_id[$key];
+					$detailPembayaran->tarif = $request->tarif[$key];
 					if($kegiatan == 2){
 						$detailPembayaran->tarif = 0;
 					}
-					$detailPembayaran->spesies_id = $request->input("spesies_id")[$key];
+					$detailPembayaran->spesies_id = $request->spesies_id[$key];
 					$detailPembayaran->save();
 				}
 				
-				if(!empty($request->input("nama_layanan"))){
-					$nama_layanan = $request->input("nama_layanan");
+				if(!empty($request->nama_layanan)){
+					$nama_layanan = $request->nama_layanan;
 					foreach($nama_layanan as $key=>$value){
 						$layanan = new LayananPembayaran();
 						$layanan->pembayaran_id = $pembayaran->id;
 						$layanan->nama_layanan = $value;
-						$layanan->tarif = $request->input("tarif_layanan")[$key];
+						$layanan->tarif = $request->tarif_layanan[$key];
 						$layanan->save();
 					}
 				}
 			}else{
 				$pembayaran = Pembayaran::find($cek_pembayaran->first()->id);
 				$pembayaran->klinik_terapi_id = $klinik_terapi_id;
-				$pembayaran->total = $request->input("total");
+				$pembayaran->total = $request->total;
 				if($kegiatan == 2){
 					$pembayaran->total = 0;
 				}
 				$pembayaran->tanggal = date('Y-m-d H:i:s');
-				$pembayaran->no_kwitansi = $request->input("no_kwitansi");
+				$pembayaran->no_kwitansi = $request->no_kwitansi;
 				$pembayaran->save();
 				
 				
 				$hapusDetail1 = DetailPembayaran::where('pembayaran_id', $pembayaran->id)->delete();
-				$tindakan = $request->input("tindakan_id");
+				$tindakan = $request->tindakan_id;
 				
 				
 				
@@ -1041,23 +1041,23 @@ class KlinikController extends Controller
 					$detailPembayaran = new DetailPembayaran();
 					$detailPembayaran->pembayaran_id = $pembayaran->id;
 					$detailPembayaran->tindakan = $value;
-					$detailPembayaran->terapi_id = $request->input("terapi_id")[$key];
-					$detailPembayaran->tarif = $request->input("tarif")[$key];
+					$detailPembayaran->terapi_id = $request->terapi_id[$key];
+					$detailPembayaran->tarif = $request->tarif[$key];
 					if($kegiatan == 2){
 						$detailPembayaran->tarif = 0;
 					}
-					$detailPembayaran->spesies_id = $request->input("spesies_id")[$key];
+					$detailPembayaran->spesies_id = $request->spesies_id[$key];
 					$detailPembayaran->save();
 				}
 				
-				if(!empty($request->input("nama_layanan"))){
+				if(!empty($request->nama_layanan)){
 					$hapusDetail2 = LayananPembayaran::where('pembayaran_id', $pembayaran->id)->delete();
-					$nama_layanan = $request->input("nama_layanan");
+					$nama_layanan = $request->nama_layanan;
 					foreach($nama_layanan as $key=>$value){
 						$layanan = new LayananPembayaran();
 						$layanan->pembayaran_id = $pembayaran->id;
 						$layanan->nama_layanan = $value;
-						$layanan->tarif = $request->input("tarif_layanan")[$key];
+						$layanan->tarif = $request->tarif_layanan[$key];
 						$layanan->save();
 					}
 				}
@@ -1070,7 +1070,7 @@ class KlinikController extends Controller
 			$klinikTerapi->jam_pembayaran = date("H:i:s");
 			$klinikTerapi->kegiatan = $kegiatan;
 			//$klinikTerapi->diagnosa = $diagnosa;
-			$from_url = $request->input("from_url");
+			$from_url = $request->from_url;
 			if($from_url == "awal")
 				$klinikTerapi->status = 3;
 			
@@ -1078,7 +1078,7 @@ class KlinikController extends Controller
 				if($from_url == "awal")
 					return redirect('klinik/pembayaran');
 				else
-					return redirect('klinik/detailPeriksa/' . $request->input("hewan"));
+					return redirect('klinik/detailPeriksa/' . $request->hewan);
 			}else{
 				return redirect('klinik/add_pembayaran/'. $klinik_terapi_id);
 			}
@@ -1102,7 +1102,7 @@ class KlinikController extends Controller
 				return redirect('klinik/pendaftaran');
 			}
 		}else{
-			$id = $request->input("id");
+			$id = $request->id;
 			$klinikTerapi = KlinikTerapi::where('id',$id)->delete();
 			if($klinikTerapi){
 				Session::flash('pesanSukses', 'Data Klinik Berhasil Dihapus');
@@ -1400,7 +1400,7 @@ class KlinikController extends Controller
 
     public function tambahTerapi(Request $request){
         $var['url'] = $this->url;
-        $id = $request->input('hewan');
+		$id = $request->hewan;
     try {
         DB::beginTransaction();            
         $klinik = Klinik::find($id);
@@ -1412,20 +1412,20 @@ class KlinikController extends Controller
             $klinikTerapi->terapi_id = $item['terapi'];
             $klinikTerapi->dosis = $item['dosis'];
             $klinikTerapi->input_by = $klinik->input_by;
-            $klinikTerapi->tindakan = $request->input('tindakan');
+			$klinikTerapi->tindakan = $request->tindakan;
             $klinik->klinikDosis()->save($klinikTerapi);
         }
 
         foreach($listDataTerapi as $item){
         $terapi->terapi_id = $item['terapi'];
-        $terapi->pemeriksa = $request->input('pemeriksa');
-        $terapi->paramedis = $request->input('paramedis');
-        $terapi->tanggal_periksa = $request->input('tanggal_periksa');
-        $terapi->signalement = $request->input('signalement');
-        $terapi->anamnesia = $request->input('anamnesia');
-        $terapi->diagnosa = $request->input('diagnosa');
-        $terapi->keterangan = $request->input('keterangan');
-        $terapi->tindakan = $request->input('tindakan');
+	$terapi->pemeriksa = $request->pemeriksa;
+	$terapi->paramedis = $request->paramedis;
+	$terapi->tanggal_periksa = $request->tanggal_periksa;
+	$terapi->signalement = $request->signalement;
+	$terapi->anamnesia = $request->anamnesia;
+	$terapi->diagnosa = $request->diagnosa;
+	$terapi->keterangan = $request->keterangan;
+	$terapi->tindakan = $request->tindakan;
         $klinik->klinikTerapi()->save($terapi);
         }
         unset($_SESSION['klinikTerapi']);
@@ -1600,7 +1600,7 @@ class KlinikController extends Controller
 		
     }
 	public function cari_layanan(Request $request){
-		$layanan = Layanan::find($request->input("id"));
+	$layanan = Layanan::find($request->id);
 		return json_encode($layanan);
 	}
 	public function get_obat_aktif(){

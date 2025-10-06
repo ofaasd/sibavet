@@ -99,8 +99,8 @@ class PemilikController extends Controller
             
             $input = $request->all();
             
-			$nama = $request->input('nama');
-			$telepon = $request->input('telepon');
+                $nama = $request->nama;
+                $telepon = $request->telepon;
 			//echo $nama;
 			$kode = substr($request->kode,0,3);
 			echo $nama;
@@ -113,12 +113,12 @@ class PemilikController extends Controller
 			}else{
 				$pemilik = Pemilik::create($input);
 				$klinik = new Klinik();
-				if(!empty($request->input("nama_hewan"))){
+                    if(!empty($request->nama_hewan)){
 					$klinik->no_pasien = $pemilik->kode . "/01";
 					$klinik->pemilik_id = $pemilik->id;
-					$klinik->nama_hewan = $request->input("nama_hewan");
-					$klinik->spesies_id = $request->input("spesies_id");
-					$klinik->jenis_kelamin = $request->input("jenis_kelamin");
+                        $klinik->nama_hewan = $request->nama_hewan;
+                        $klinik->spesies_id = $request->spesies_id;
+                        $klinik->jenis_kelamin = $request->jenis_kelamin;
 					$klinik->input_by = Auth::user()->id;
 					$klinik->sub_satuan_kerja_id = Auth::user()->sub_satuan_kerja_id;
 					if($klinik->save()){
@@ -132,7 +132,7 @@ class PemilikController extends Controller
 					else
 						Session::flash('pesanError', 'Data Pasien Gagal Disimpan');
 				}
-				return redirect('master-data/pemilik/' . $pemilik->id .'/edit');
+                    return redirect('master-data/pemilik/' . $pemilik->id . "/edit");
 			}
 			
 			
@@ -150,7 +150,7 @@ class PemilikController extends Controller
     }
 	
 	public function store_pasien(Request $request){
-		$cari_pasien = Klinik::where("no_pasien","like","%".$request->input("kode_pemilik") . "/%")->orderBy("id","desc")->first();
+        $cari_pasien = Klinik::where("no_pasien","like","%".$request->kode_pemilik . "/%")->orderBy("id","desc")->first();
 		if(!empty($cari_pasien)){
 			$pecah = explode("/",$cari_pasien->no_pasien);
 			$nomor = (int)$pecah[1];
@@ -162,11 +162,11 @@ class PemilikController extends Controller
 		$jml = Pemilik::where('kode','like','%SMG%')->orderBy("id","desc")->first();
 		
 		$klinik = new Klinik();
-		$klinik->no_pasien = $request->input('kode_pemilik') . "/" . $format_baru;
-		$klinik->pemilik_id = $request->input('id_pemilik');
-		$klinik->nama_hewan = $request->input("nama_hewan");
-		$klinik->spesies_id = $request->input("spesies_id");
-		$klinik->jenis_kelamin = $request->input("jenis_kelamin");
+        $klinik->no_pasien = $request->kode_pemilik . "/" . $format_baru;
+        $klinik->pemilik_id = $request->id_pemilik;
+        $klinik->nama_hewan = $request->nama_hewan;
+        $klinik->spesies_id = $request->spesies_id;
+        $klinik->jenis_kelamin = $request->jenis_kelamin;
 		$klinik->input_by = Auth::user()->id;
 		$klinik->sub_satuan_kerja_id = Auth::user()->sub_satuan_kerja_id;
 		if($klinik->save()){
@@ -174,7 +174,7 @@ class PemilikController extends Controller
 		}else{
 			Session::flash('pesanError', 'Data Pasien Gagal Disimpan');
 		}
-		return redirect('master-data/pemilik/'. $request->input('id_pemilik') . "/edit");
+        return redirect('master-data/pemilik/'. $request->id_pemilik . "/edit");
 	}
 	
 	
@@ -238,12 +238,12 @@ class PemilikController extends Controller
             Session::flash('pesanError', 'Data Pemilik Gagal Diupdate');
         }
 
-        return redirect('master-data/pemilik'.$var['url']['all']);
+            return redirect('master-data/pemilik' . $var['url']['all']);
     }
 	
 	public function update_pasien(Request $request){
 		$var['url'] = $this->url;
-		$klinik = Klinik::find($request->input("id"));
+    $klinik = Klinik::find($request->id);
 		$input= $request->all();
 		if($klinik->update($input)){
 			Session::flash('pesanSukses', 'Data Pasien Berhasil Diupdate');
@@ -286,7 +286,7 @@ class PemilikController extends Controller
         return redirect('master-data/pemilik'.$var['url']['all']);
     }
 	public function delete_pasien(Request $request){
-		$id = $request->input("id");
+    $id = $request->id;
 		$klinik_terapi = KlinikTerapi::where("klinik_id",$id)->delete();
 		$klinik = Klinik::where("id",$id);
 		$hasil = $klinik->delete();
@@ -294,7 +294,7 @@ class PemilikController extends Controller
 		//exit;
 		if($hasil){
 			Session::flash('pesanSukses', 'Data Pasien Berhasil Dihapus');
-			return redirect('master-data/pemilik/'.$request->input('id_pemilik')."/edit");
+            return redirect('master-data/pemilik/' . $request->id_pemilik . "/edit");
 		}
 	}
     public function cekValidasi(Request $request)

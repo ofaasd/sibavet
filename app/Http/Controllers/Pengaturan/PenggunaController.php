@@ -82,7 +82,7 @@ class PenggunaController extends Controller
             $input['password'] = $request->username;
             $user = User::create($input);
 
-            $roles = $request->input('role') ? $request->input('role') : [];
+            $roles = $request->role ? $request->role : [];
             $user->assignRole($roles);
 
             DB::commit();
@@ -151,7 +151,7 @@ class PenggunaController extends Controller
             $user = User::find($id);
             $user->update($input);
 
-            $roles = $request->input('role') ? $request->input('role') : [];
+            $roles = $request->role ? $request->role : [];
             $user->syncRoles($roles);
 
             DB::commit();

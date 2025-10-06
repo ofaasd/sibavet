@@ -135,8 +135,8 @@ class HomeController extends Controller
         return view('home', compact('var'));
     }
 	public function get_jumlah_jenis_pasien(Request $request){
-		$curr_bulan = $request->input("bulan");
-		$curr_tahun = $request->input("tahun");
+		$curr_bulan = $request->bulan;
+		$curr_tahun = $request->tahun;
 		//echo $bulan;
 		//echo $tahun;
 		$var['spesies'] = DB::table('klinik_terapi')->select("spesies.*")->join("klinik","klinik_terapi.klinik_id","klinik.id")->join("spesies","spesies.id","klinik.spesies_id")->whereMonth("klinik_terapi.tanggal_periksa",$curr_bulan)->whereYear("klinik_terapi.tanggal_periksa",$curr_tahun)->groupBy("spesies_id")->get();
@@ -155,8 +155,8 @@ class HomeController extends Controller
 		return view('home/grafik_jumlah_jenis_pasien', compact('var'));
 	}
 	public function get_jumlah_pelayanan(Request $request){
-		$curr_bulan = $request->input("bulan");
-		$curr_tahun = $request->input("tahun");
+		$curr_bulan = $request->bulan;
+		$curr_tahun = $request->tahun;
 		//echo $bulan;
 		//echo $tahun;
 		$var['pelayanan'] = array();
@@ -186,8 +186,8 @@ class HomeController extends Controller
 		return view('home/grafik_jumlah_pelayanan', compact('var'));
 	}
 	public function get_jumlah_pasien(Request $request){
-		$curr_bulan = $request->input("bulan");
-		$curr_tahun = $request->input("tahun");
+		$curr_bulan = $request->bulan;
+		$curr_tahun = $request->tahun;
 		//echo $bulan;
 		//echo $tahun;
 		$date = date('Y-m-d',strtotime($curr_tahun . '-' . $curr_bulan . '-01'));//Current Month Year

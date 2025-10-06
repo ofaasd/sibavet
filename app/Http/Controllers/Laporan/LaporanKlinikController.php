@@ -270,7 +270,7 @@ class LaporanKlinikController extends Controller
         }elseif($var['jenis'] == "bulanan"){
 			$var['bulan'] = $this->bulan;
 			$var['obat'] = Obat::get()->where("klinik",1);
-			$tahun = $request->input("tahun");
+			$tahun = $request->tahun;
 			$var['tahun'] = $tahun;
 			//var_dump($tahun);
 			//exit;
@@ -496,7 +496,7 @@ class LaporanKlinikController extends Controller
         }elseif($var['jenis'] == "bulanan"){
 			$var['bulan'] = $this->bulan;
 			$var['obat'] = Obat::get()->where("klinik",1);
-			$tahun = $request->input("tahun");
+			$tahun = $request->tahun;
 			$var['tahun'] = $tahun;
 			//var_dump($tahun);
 			//exit;

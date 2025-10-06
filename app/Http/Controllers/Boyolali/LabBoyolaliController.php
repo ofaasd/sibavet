@@ -91,19 +91,19 @@ class LabBoyolaliController extends Controller
         try {
 			
             $labBoyolali = new LaboratoriumBoyolali();
-			$labBoyolali->kel_kerja_id = $request->input('kel_kerja_id');
-			$labBoyolali->provinsi = $request->input('provinsi');
-			$labBoyolali->kota = $request->input('kota');
-			$labBoyolali->kecamatan_id = $request->input('kecamatan_id');
-			$labBoyolali->tanggal = $request->input('tanggal_input');
+            $labBoyolali->kel_kerja_id = $request->kel_kerja_id;
+            $labBoyolali->provinsi = $request->provinsi;
+            $labBoyolali->kota = $request->kota;
+            $labBoyolali->kecamatan_id = $request->kecamatan_id;
+            $labBoyolali->tanggal = $request->tanggal_input;
 			$labBoyolali->save();
 			//echo $request->get('pengujian')[0];
                 
-                foreach( $request->get('sampel') as $key=>$value){
+                foreach( $request->sampel as $key=>$value){
                     $detailLab = new DetailLabBoyolali();
                     $detailLab->id_sampel = $value;
-                    $detailLab->id_pengujian = $request->get('pengujian')[$key];
-                    $detailLab->hasil_pengujian = $request->get('hasil_pengujian')[$key];
+                    $detailLab->id_pengujian = $request->pengujian[$key];
+                    $detailLab->hasil_pengujian = $request->hasil_pengujian[$key];
                     $labBoyolali->DetailLabBoyolali()->save($detailLab);
                 }
 				
@@ -187,25 +187,25 @@ class LabBoyolaliController extends Controller
             DB::beginTransaction();
 			
 			$labBoyolali = LaboratoriumBoyolali::find($id);
-			$labBoyolali->kel_kerja_id = $request->input('kel_kerja_id');
-			$labBoyolali->provinsi = $request->input('provinsi');
-			$labBoyolali->kota = $request->input('kota');
-			$labBoyolali->kecamatan_id = $request->input('kecamatan_id');
-			$labBoyolali->tanggal = $request->input('tanggal_input');
+            $labBoyolali->kel_kerja_id = $request->kel_kerja_id;
+            $labBoyolali->provinsi = $request->provinsi;
+            $labBoyolali->kota = $request->kota;
+            $labBoyolali->kecamatan_id = $request->kecamatan_id;
+            $labBoyolali->tanggal = $request->tanggal_input;
 			$labBoyolali->update();
 			//echo $request->get('pengujian')[0];
             //var_dump($request->get('id_detail'));
-			foreach( $request->get('sampel') as $key=>$value){
-				if(empty($request->get('id_detail')[$key])){
-					$detailLab = new DetailLabBoyolali();
-					$detailLab->id_sampel = $value;
-					$detailLab->id_pengujian = $request->get('pengujian')[$key];
-					$detailLab->hasil_pengujian = $request->get('hasil_pengujian')[$key];
-					$labBoyolali->DetailLabBoyolali()->save($detailLab);
-					echo "baru";
-					echo "<br />";
-				}
-			}
+            foreach( $request->sampel as $key=>$value){
+                if(empty($request->id_detail[$key])){
+                    $detailLab = new DetailLabBoyolali();
+                    $detailLab->id_sampel = $value;
+                    $detailLab->id_pengujian = $request->pengujian[$key];
+                    $detailLab->hasil_pengujian = $request->hasil_pengujian[$key];
+                    $labBoyolali->DetailLabBoyolali()->save($detailLab);
+                    echo "baru";
+                    echo "<br />";
+                }
+            }
 			
             /* $input = $request->all();
             

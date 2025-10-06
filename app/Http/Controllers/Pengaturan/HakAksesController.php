@@ -75,7 +75,7 @@ class HakAksesController extends Controller
         try {
             DB::beginTransaction();
             $role = Role::create($request->except('permission'));
-            $permissions = $request->input('permission') ? $request->input('permission') : [];
+            $permissions = $request->permission ? $request->permission : [];
             $role->givePermissionTo($permissions);
 
             DB::commit();
@@ -148,7 +148,7 @@ class HakAksesController extends Controller
             DB::beginTransaction();
             $role = Role::findOrFail($id);
             $role->update($request->except('permission', 'page', 'cari'));
-            $permissions = $request->input('permission') ? $request->input('permission') : [];
+            $permissions = $request->permission ? $request->permission : [];
             $role->syncPermissions($permissions);
 
             DB::commit();

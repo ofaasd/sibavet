@@ -59,9 +59,9 @@ class StockController extends Controller
 		$tahun = date('Y');
 		$url = "stock";
 		
-		if(!empty($request->input("bulan"))){
-			$bulan = $request->input("bulan");
-			$tahun = $request->input("tahun");
+		if(!empty($request->bulan)){
+			$bulan = $request->bulan;
+			$tahun = $request->tahun;
 		}
 		$bulan_sebelumnya = $bulan-1;
 		$tahun_sebelumnya = $tahun;
@@ -152,10 +152,10 @@ class StockController extends Controller
 	}
 	public function simpan_stock(Request $request){
 		$penambahan_stock = new PenambahanStock();
-		$penambahan_stock->obat_id = $request->input("obat");
-		$penambahan_stock->jumlah = $request->input("jumlah");
-		$penambahan_stock->satuan = $request->input("satuan");
-		$penambahan_stock->tanggal = date('Y-m-d', strtotime($request->input("tanggal")));
+		$penambahan_stock->obat_id = $request->obat;
+		$penambahan_stock->jumlah = $request->jumlah;
+		$penambahan_stock->satuan = $request->satuan;
+		$penambahan_stock->tanggal = date('Y-m-d', strtotime($request->tanggal));
 		if($penambahan_stock->save()){
 			Session::flash('pesanSukses', 'Data Berhasil Disimpan');
 
@@ -169,11 +169,11 @@ class StockController extends Controller
 	}
 	public function simpan_stock_awal(Request $request){
 		$penambahan_stock = new StockOpname();
-		$penambahan_stock->obat_id = $request->input("obat");
-		$penambahan_stock->stock = $request->input("jumlah");
-		$penambahan_stock->satuan = $request->input("satuan");
-		$penambahan_stock->bulan = $request->input("bulan");
-		$penambahan_stock->tahun = $request->input("tahun");
+		$penambahan_stock->obat_id = $request->obat;
+		$penambahan_stock->stock = $request->jumlah;
+		$penambahan_stock->satuan = $request->satuan;
+		$penambahan_stock->bulan = $request->bulan;
+		$penambahan_stock->tahun = $request->tahun;
 		if($penambahan_stock->save()){
 			Session::flash('pesanSukses', 'Data Berhasil Disimpan');
 
@@ -186,11 +186,11 @@ class StockController extends Controller
 		
 	}
 	public function update_stock(Request $request){
-		$penambahan_stock = PenambahanStock::find($request->input("id"));
-		$penambahan_stock->obat_id = $request->input("obat");
-		$penambahan_stock->jumlah = $request->input("jumlah");
-		$penambahan_stock->satuan = $request->input("satuan");
-		$penambahan_stock->tanggal = date('Y-m-d', strtotime($request->input("tanggal")));
+		$penambahan_stock = PenambahanStock::find($request->id);
+		$penambahan_stock->obat_id = $request->obat;
+		$penambahan_stock->jumlah = $request->jumlah;
+		$penambahan_stock->satuan = $request->satuan;
+		$penambahan_stock->tanggal = date('Y-m-d', strtotime($request->tanggal));
 		if($penambahan_stock->save()){
 			Session::flash('pesanSukses', 'Data Berhasil Disimpan');
 
@@ -198,18 +198,18 @@ class StockController extends Controller
 		}else{
 			Session::flash('pesanSukses', 'Data Gagal Disimpan');
 
-			return redirect('stock/edit_stock/' . $request->input("id"));
+			return redirect('stock/edit_stock/' . $request->id);
 		}
 		
 	}
 	
 	public function update_stock_awal(Request $request){
-		$penambahan_stock = StockOpname::find($request->input("id"));
-		$penambahan_stock->obat_id = $request->input("obat");
-		$penambahan_stock->stock = $request->input("jumlah");
-		$penambahan_stock->satuan = $request->input("satuan");
-		$penambahan_stock->bulan = $request->input("bulan");
-		$penambahan_stock->tahun = $request->input("tahun");
+		$penambahan_stock = StockOpname::find($request->id);
+		$penambahan_stock->obat_id = $request->obat;
+		$penambahan_stock->stock = $request->jumlah;
+		$penambahan_stock->satuan = $request->satuan;
+		$penambahan_stock->bulan = $request->bulan;
+		$penambahan_stock->tahun = $request->tahun;
 		if($penambahan_stock->save()){
 			Session::flash('pesanSukses', 'Data Berhasil Disimpan');
 
@@ -217,15 +217,15 @@ class StockController extends Controller
 		}else{
 			Session::flash('pesanSukses', 'Data Gagal Disimpan');
 
-			return redirect('stock/edit_stock_awal/' . $request->input("id"));
+			return redirect('stock/edit_stock_awal/' . $request->id);
 		}
 		
 	}
 	public function update_stock_opname(Request $request){
-		$bulan = $request->input("bulan");
-		$tahun = $request->input("tahun");
-		$obat = $request->input("obat");
-		$stock = $request->input("stock");
+		$bulan = $request->bulan;
+		$tahun = $request->tahun;
+		$obat = $request->obat;
+		$stock = $request->stock;
 		$stockOpname = StockOpname::where('bulan', $bulan)->where('tahun',$tahun)->delete();
 		$berhasil = 0;
 		$jum_array = count($obat);
