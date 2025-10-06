@@ -6,7 +6,7 @@ use PDF;
 use Session;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Input;
+// Input facade deprecated; use Request->query() or request()->query()
 use App\Models\Modul\Klinik;
 use App\Models\Modul\KlinikDosis;
 use App\Models\Modul\KlinikTerapi;
@@ -36,12 +36,12 @@ class KlinikController extends Controller
     private $cari;
     private $jumPerPage = 10;
 
-    function __construct(Request $request)
-    {
-        $this->middleware('auth');
-        $this->cari = Input::get('cari', '');
-        $this->url = makeUrl($request->query());
-    }
+	function __construct(Request $request)
+	{
+		$this->middleware('auth');
+		$this->cari = $request->query('cari', '');
+		$this->url = makeUrl($request->query());
+	}
 
     /**
      * Display a listing of the resource.

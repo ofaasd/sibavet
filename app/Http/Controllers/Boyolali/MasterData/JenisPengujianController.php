@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Boyolali\MasterData;
 use Session;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Input;
+// Input facade deprecated; prefer Request->query()
 use App\Models\MasterData\JenisPengujian;
 use App\Models\MasterData\SeksiLaboratorium;
 use Illuminate\Support\Facades\DB;
@@ -20,7 +20,7 @@ class JenisPengujianController extends Controller
     function __construct(Request $request)
     {
         $this->middleware('auth');
-        $this->cari = Input::get('cari', '');
+        $this->cari = $request->query('cari', '');
         $this->url = makeUrl($request->query());
     }
 

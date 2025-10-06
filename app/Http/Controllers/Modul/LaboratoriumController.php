@@ -6,7 +6,7 @@ use PDF;
 use Session;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Input;
+// Input facade deprecated; use Request->query() or request()->input()
 use App\Models\Modul\Laboratorium;
 use App\Models\Modul\LaboratoriumFile;
 use App\Models\Pengaturan\User;
@@ -31,7 +31,7 @@ class LaboratoriumController extends Controller
     function __construct(Request $request)
     {
         $this->middleware('auth');
-        $this->cari = Input::get('cari', '');
+        $this->cari = $request->query('cari', '');
         $this->url = makeUrl($request->query());
     }
 

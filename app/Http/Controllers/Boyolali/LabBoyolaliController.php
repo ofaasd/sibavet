@@ -8,7 +8,7 @@ use PDF;
 use Session;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Input;
+// Input facade deprecated; prefer Request->query() or request()->query()
 use App\Models\Boyolali\MasterData\KelompokKerja;
 use App\Models\Boyolali\MasterData\JenisHasilUji;
 use App\Models\Boyolali\MasterData\Sampel;
@@ -32,7 +32,7 @@ class LabBoyolaliController extends Controller
     function __construct(Request $request)
     {
         $this->middleware('auth');
-        $this->cari = Input::get('cari', '');
+        $this->cari = $request->query('cari', '');
         $this->url = makeUrl($request->query());
     }
 

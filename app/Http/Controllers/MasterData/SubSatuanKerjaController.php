@@ -5,7 +5,7 @@ namespace App\Http\Controllers\MasterData;
 use Session;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Input;
+// Input facade is deprecated; use Request->query() or the global request() helper instead
 use App\Models\MasterData\SatuanKerja;
 use App\Models\MasterData\SubSatuanKerja;
 use Illuminate\Support\Facades\DB;
@@ -20,7 +20,8 @@ class SubSatuanKerjaController extends Controller
     function __construct(Request $request)
     {
         $this->middleware('auth');
-        $this->cari = Input::get('cari', '');
+        // prefer request query() instead of the deprecated Input facade
+        $this->cari = $request->query('cari', '');
         $this->url = makeUrl($request->query());
     }
 

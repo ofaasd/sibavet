@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Modul;
 use Session;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Input;
+// Input facade deprecated; use Request->query() or request()->input()
 use App\Models\Modul\Pllt;
 use App\Models\Modul\PlltFile;
 use App\Models\Modul\PlltHewan;
@@ -30,7 +30,7 @@ class PlltController extends Controller
     function __construct(Request $request)
     {
         $this->middleware('auth');
-        $this->cari = Input::get('cari', '');
+        $this->cari = $request->query('cari', '');
         $this->url = makeUrl($request->query());
     }
 
@@ -387,8 +387,8 @@ class PlltController extends Controller
 
     public function getFile(Request $request)
     {
-        $method = Input::get('method', '');
-        $id = Input::get('id', '');
+    $method = $request->input('method', '');
+    $id = $request->input('id', '');
         $listBerkasAll = array();
 
         if($method == 'edit'){
