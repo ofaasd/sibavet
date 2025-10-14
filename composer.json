@@ -36,7 +36,8 @@
         },
         "files": [
             "app/Helpers/Url.php",
-            "app/Helpers/Angka.php"
+            "app/Helpers/Angka.php",
+            "app/Helpers/global.php"
         ]
         
     },

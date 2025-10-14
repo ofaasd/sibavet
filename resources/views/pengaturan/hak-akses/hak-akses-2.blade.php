@@ -32,22 +32,25 @@
                             <div class="tab-pane active">
                                 <div class="pad">
                                     @if($var['method']=='edit')
-                                        {!! Form::model($listHakAkses, ['method'=>'PATCH', 'url'=> '/pengaturan/hak-akses/'.$listHakAkses->id.$var['url']['all'], 'id'=>'form-hak-akses']) !!}
+                                        <form id="form-hak-akses" method="POST" action="{{ url('/pengaturan/hak-akses/'.$listHakAkses->id.$var['url']['all']) }}">
+                                            @csrf
+                                            @method('PATCH')
                                     @elseif($var['method']=='create')
-                                        {!! Form::open(['id'=>'form-hak-akses', 'method'=>'POST', 'url'=>'/pengaturan/hak-akses']) !!}
+                                        <form id="form-hak-akses" method="POST" action="{{ url('/pengaturan/hak-akses') }}">
+                                            @csrf
                                     @else
-                                        {!! Form::model($listHakAkses, ['class'=>'form-hak-akses']) !!}
+                                        <form class="form-hak-akses">
                                     @endif
                                         <div class="form-group row">
-                                            {!! Form::label('name', 'Nama Hak Akses', ['class' => 'col-sm-2 col-form-label']) !!}
+                                            {!! \Html::label('name', 'Nama Hak Akses', ['class' => 'col-sm-2 col-form-label']) !!}
                                             <div class="col-sm-10">
-                                                {!! Form::text('name', null, ['class'=>'form-control', 'placeholder'=>'Inputkan Nama Hak Akses']) !!}
+                                                {!! \Html::text('name', old('name', $listHakAkses->name ?? null), ['class'=>'form-control', 'placeholder'=>'Inputkan Nama Hak Akses']) !!}
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            {!! Form::label('keterangan', 'Keterangan', ['class' => 'col-sm-2 col-form-label']) !!}
+                                            {!! \Html::label('keterangan', 'Keterangan', ['class' => 'col-sm-2 col-form-label']) !!}
                                             <div class="col-sm-10">
-                                                {!! Form::textarea('keterangan', null, ['class'=>'form-control', 'placeholder'=>'Inputkan Keterangan', 'rows'=>4]) !!}
+                                                {!! \Html::textarea('keterangan', old('keterangan', $listHakAkses->keterangan ?? null), ['class'=>'form-control', 'placeholder'=>'Inputkan Keterangan', 'rows'=>4]) !!}
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -81,7 +84,7 @@
                                                                 <td style="text-align:center;">
                                                                     @if(!empty($read))
                                                                         <div style="margin:-15px;">
-                                                                            {!! Form::checkbox('permission[]', $read->name, (in_array($read->name, $var['permission'])?'checked':null), ['id'=>$read->id]) !!}
+                                                                            {!! \Html::checkbox('permission[]', $read->name, in_array($read->name, $var['permission']), ['id'=>$read->id]) !!}
                                                                             <label for="{!! $read->id !!}"></label>
                                                                         </div>
                                                                     @endif
@@ -89,7 +92,7 @@
                                                                 <td style="text-align:center;">
                                                                     @if(!empty($create))
                                                                         <div style="margin:-15px;">
-                                                                            {!! Form::checkbox('permission[]', $create->name, (in_array($create->name, $var['permission'])?'checked':null), ['id'=>$create->id]) !!}
+                                                                            {!! \Html::checkbox('permission[]', $create->name, in_array($create->name, $var['permission']), ['id'=>$create->id]) !!}
                                                                             <label for="{!! $create->id !!}"></label>
                                                                         </div>
                                                                     @endif
@@ -97,7 +100,7 @@
                                                                 <td style="text-align:center;">
                                                                     @if(!empty($update))
                                                                         <div style="margin:-15px;">
-                                                                            {!! Form::checkbox('permission[]', $update->name, (in_array($update->name, $var['permission'])?'checked':null), ['id'=>$update->id]) !!}
+                                                                            {!! \Html::checkbox('permission[]', $update->name, in_array($update->name, $var['permission']), ['id'=>$update->id]) !!}
                                                                             <label for="{!! $update->id !!}"></label>
                                                                         </div>
                                                                     @endif
@@ -105,7 +108,7 @@
                                                                 <td style="text-align:center;">
                                                                     @if(!empty($delete))
                                                                         <div style="margin:-15px;">
-                                                                            {!! Form::checkbox('permission[]', $delete->name, (in_array($delete->name, $var['permission'])?'checked':null), ['id'=>$delete->id]) !!}
+                                                                            {!! \Html::checkbox('permission[]', $delete->name, in_array($delete->name, $var['permission']), ['id'=>$delete->id]) !!}
                                                                             <label for="{!! $delete->id !!}"></label>
                                                                         </div>
                                                                     @endif
@@ -124,17 +127,17 @@
                                         <div class="form-group">
                                             <div class="col-lg-4 ml-auto">
                                                 @if($var['method']=='edit')
-                                                    {!! Form::submit('Update', ['class'=>'btn btn-primary']) !!}
-                                                    {!! Form::reset('Reset', ['class'=>'btn btn-danger']) !!}
+                                                    <button type="submit" class="btn btn-primary">Update</button>
+                                                    <button type="reset" class="btn btn-danger">Reset</button>
                                                 @elseif($var['method']=='create')
-                                                    {!! Form::submit('Simpan', ['class'=>'btn btn-primary']) !!}
-                                                    {!! Form::reset('Reset', ['class'=>'btn btn-danger']) !!}
+                                                    <button type="submit" class="btn btn-primary">Simpan</button>
+                                                    <button type="reset" class="btn btn-danger">Reset</button>
                                                 @else
                                                     <a href="{{ url()->previous() }}" class="btn btn-primary">Kembali</a>
                                                 @endif
                                             </div>
                                         </div>
-                                    {!! Form::close() !!}
+                                    </form>
                                 </div>
                             </div>
                         </div>

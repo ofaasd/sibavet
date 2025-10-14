@@ -32,74 +32,82 @@
                             <div class="tab-pane active">
                                 <div class="pad">
                                     @if($var['method']=='edit')
-                                        {!! Form::model($listSubSatuanKerja, ['method'=>'PATCH', 'url'=> '/master-data/sub-satuan-kerja/'.$listSubSatuanKerja->id.$var['url']['all'], 'id'=>'form-sub-satuan-kerja']) !!}
+                                        <form id="form-sub-satuan-kerja" method="POST" action="{{ url('/master-data/sub-satuan-kerja/'.$listSubSatuanKerja->id.$var['url']['all']) }}">
+                                            @csrf
+                                            @method('PATCH')
                                     @elseif($var['method']=='create')
-                                        {!! Form::open(['id'=>'form-sub-satuan-kerja', 'method'=>'POST', 'url'=>'/master-data/sub-satuan-kerja']) !!}
+                                        <form id="form-sub-satuan-kerja" method="POST" action="{{ url('/master-data/sub-satuan-kerja') }}">
+                                            @csrf
                                     @else
-                                        {!! Form::model($listSubSatuanKerja, ['class'=>'form-sub-satuan-kerja']) !!}
+                                        <form class="form-sub-satuan-kerja">
                                     @endif
                                         <div class="form-group row">
-                                            {!! Form::label('kode', 'Kode', ['class' => 'col-sm-2 col-form-label']) !!}
+                                            <label for="kode" class="col-sm-2 col-form-label">Kode</label>
                                             <div class="col-sm-10">
-                                                {!! Form::text('kode', null, ['class'=>'form-control', 'placeholder'=>'Inputkan Kode']) !!}
+                                                <input type="text" name="kode" id="kode" value="{{ old('kode', $listSubSatuanKerja->kode ?? '') }}" class="form-control" placeholder="Inputkan Kode" />
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            {!! Form::label('satuan_kerja_id', 'Satuan Kerja', ['class' => 'col-sm-2 col-form-label']) !!}
+                                            <label for="satuan_kerja_id" class="col-sm-2 col-form-label">Satuan Kerja</label>
                                             <div class="col-sm-10">
-                                                {!! Form::select('satuan_kerja_id', $var['satuanKerja'], null, ['class'=>'form-control', 'placeholder'=>'Pilih Satuan Kerja']) !!}
+                                                <select name="satuan_kerja_id" id="satuan_kerja_id" class="form-control">
+                                                    <option value="">Pilih Satuan Kerja</option>
+                                                    @foreach($var['satuanKerja'] as $key => $value)
+                                                        <option value="{{ $key }}" {{ old('satuan_kerja_id', $listSubSatuanKerja->satuan_kerja_id ?? '') == $key ? 'selected' : '' }}>{{ $value }}</option>
+                                                    @endforeach
+                                                </select>
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            {!! Form::label('sub_satuan_kerja', 'Sub Satuan Kerja', ['class' => 'col-sm-2 col-form-label']) !!}
+                                            <label for="sub_satuan_kerja" class="col-sm-2 col-form-label">Sub Satuan Kerja</label>
                                             <div class="col-sm-10">
-                                                {!! Form::text('sub_satuan_kerja', null, ['class'=>'form-control', 'placeholder'=>'Inputkan Sub Satuan Kerja']) !!}
+                                                <input type="text" name="sub_satuan_kerja" id="sub_satuan_kerja" value="{{ old('sub_satuan_kerja', $listSubSatuanKerja->sub_satuan_kerja ?? '') }}" class="form-control" placeholder="Inputkan Sub Satuan Kerja" />
+                                            </div>
+                                        </div>
+                                        <div class="mb-3 row">
+                                            <label for="nama_kepala" class="col-form-label col-md-2">Nama Kepala</label>
+                                            <div class="col-md-10">
+                                                <input type="text" name="nama_kepala" id="nama_kepala" value="{{ old('nama_kepala', $listSubSatuanKerja->nama_kepala ?? '') }}" class="form-control" placeholder="Inputkan Nama Kepala" />
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            {!! Form::label('nama_kepala', 'Nama Kepala', ['class' => 'col-sm-2 col-form-label']) !!}
+                                            <label for="nama_kepala" class="col-sm-2 col-form-label">Nama Kepala</label>
                                             <div class="col-sm-10">
-                                                {!! Form::text('nama_kepala', null, ['class'=>'form-control', 'placeholder'=>'Inputkan Nama Kepala']) !!}
+                                                <input type="text" name="nama_kepala" id="nama_kepala" value="{{ old('nama_kepala', $listSubSatuanKerja->nama_kepala ?? '') }}" class="form-control" placeholder="Inputkan Nama Kepala" />
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            {!! Form::label('nama_kepala', 'Nama Kepala', ['class' => 'col-sm-2 col-form-label']) !!}
+                                            <label for="nip" class="col-sm-2 col-form-label">NIP.</label>
                                             <div class="col-sm-10">
-                                                {!! Form::text('nama_kepala', null, ['class'=>'form-control', 'placeholder'=>'Inputkan Nama Kepala']) !!}
+                                                <input type="text" name="nip" id="nip" value="{{ old('nip', $listSubSatuanKerja->nip ?? '') }}" class="form-control" placeholder="Inputkan NIP." />
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            {!! Form::label('nip', 'NIP.', ['class' => 'col-sm-2 col-form-label']) !!}
+                                            <label for="alamat" class="col-sm-2 col-form-label">Alamat.</label>
                                             <div class="col-sm-10">
-                                                {!! Form::text('nip', null, ['class'=>'form-control', 'placeholder'=>'Inputkan NIP.']) !!}
+                                                <input type="text" name="alamat" id="alamat" value="{{ old('alamat', $listSubSatuanKerja->alamat ?? '') }}" class="form-control" placeholder="Inputkan Alamat" />
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            {!! Form::label('alamat', 'Alamat.', ['class' => 'col-sm-2 col-form-label']) !!}
+                                            <label for="telp" class="col-sm-2 col-form-label">Telepon.</label>
                                             <div class="col-sm-10">
-                                                {!! Form::text('alamat', null, ['class'=>'form-control', 'placeholder'=>'Inputkan Alamat']) !!}
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            {!! Form::label('telp', 'Telepon.', ['class' => 'col-sm-2 col-form-label']) !!}
-                                            <div class="col-sm-10">
-                                                {!! Form::text('telp', null, ['class'=>'form-control', 'placeholder'=>'Inputkan Telepon']) !!}
+                                                <input type="text" name="telp" id="telp" value="{{ old('telp', $listSubSatuanKerja->telp ?? '') }}" class="form-control" placeholder="Inputkan Telepon" />
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <div class="col-lg-4 ml-auto">
                                                 @if($var['method']=='edit')
-                                                    {!! Form::submit('Update', ['class'=>'btn btn-primary']) !!}
-                                                    {!! Form::reset('Reset', ['class'=>'btn btn-danger']) !!}
+                                                    <button type="submit" class="btn btn-primary">Update</button>
+                                                    <button type="reset" class="btn btn-danger">Reset</button>
                                                 @elseif($var['method']=='create')
-                                                    {!! Form::submit('Simpan', ['class'=>'btn btn-primary']) !!}
-                                                    {!! Form::reset('Reset', ['class'=>'btn btn-danger']) !!}
+                                                    <button type="submit" class="btn btn-primary">Simpan</button>
+                                                    <button type="reset" class="btn btn-danger">Reset</button>
                                                 @else
                                                     <a href="{{ url()->previous() }}" class="btn btn-primary">Kembali</a>
                                                 @endif
                                             </div>
                                         </div>
-                                    {!! Form::close() !!}
+                                    </form>
                                 </div>
                             </div>
                         </div>
