@@ -92,7 +92,7 @@
                                                 @php
                                                     $no++;
                                                 @endphp
-                                                <tr>
+                                                <tr class="item-row">
                                                     <td style="text-align:center">
 													@if($url == "pemeriksaan")
 														@if($item->status == 1)
@@ -102,19 +102,22 @@
 														@endif
 													@endif
 													@if($url == "pendaftaran")
-														{!! Form::open(['method'=>'post', 'url'=>'/klinik/hapus_pendaftaran', 'class'=> 'delete_form']) !!}
-														{!! Form::hidden('id', $item->id, ['class'=>'form-control']) !!}
+														<form method="post" action="/klinik/hapus_pendaftaran" class="delete_form">
+															<input type="hidden" name="_token" value="{{ csrf_token() }}">
+															<input type="hidden" name="id" value="{{ $item->id }}" class="form-control">
 														
 														<div class="btn-group btn-group-xs" role="group" aria-label="Basic example">
 															<button type="submit" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></button>
 															<a href="{{ url('/klinik/edit_pendaftaran/'.$item->id.'/awal')}}" class="btn btn-primary btn-xs"><i class="fa fa-edit"></i></a>
 														</div>
-														{!! Form::close() !!}
+														</form>
 													@endif
 													@if($url == "rekap")
-														<div class="btn-group">
-                                                            {!! Form::open(['method'=>'delete', 'url'=>'/klinik/'.$item->id.$var['url']['all'], 'class'=> 'delete_form']) !!}
-                                                            {!! Form::hidden('nomor', $no, ['class'=>'form-control']) !!}
+														<div class="btn-group"> {{-- This div is already present in the original code --}}
+                                                            <form method="post" action="/klinik/{{ $item->id }}{{ $var['url']['all'] }}" class="delete_form">
+                                                                @csrf
+                                                                @method('delete')
+                                                                <input type="hidden" name="nomor" value="{{ $no }}" class="form-control">
                                                             <div class="btn-group btn-group-xs" role="group" aria-label="Basic example">
                                                                 @can('Delete Klinik')
                                                                     <button type="submit" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></button>
@@ -122,7 +125,7 @@
                                                                 <a href="{{ url('/klinik/detailPeriksa/'.$item->klinik_id.$var['url']['all'])}}" class="btn btn-info btn-xs"><i class="fa fa-search"></i></a>
                                                                 <a href="{{ url('/klinik/cetakRM/'.$item->klinik_id)}}" class="btn btn-success btn-xs"><i class="fa fa-print"></i></a>
                                                             </div>
-                                                            {!! Form::close() !!}
+                                                            </form>
                                                         </div>
 													@endif
 													@if($url == "pembayaran")

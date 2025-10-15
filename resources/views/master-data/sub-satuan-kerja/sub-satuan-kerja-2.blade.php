@@ -64,12 +64,6 @@
                                                 <input type="text" name="sub_satuan_kerja" id="sub_satuan_kerja" value="{{ old('sub_satuan_kerja', $listSubSatuanKerja->sub_satuan_kerja ?? '') }}" class="form-control" placeholder="Inputkan Sub Satuan Kerja" />
                                             </div>
                                         </div>
-                                        <div class="mb-3 row">
-                                            <label for="nama_kepala" class="col-form-label col-md-2">Nama Kepala</label>
-                                            <div class="col-md-10">
-                                                <input type="text" name="nama_kepala" id="nama_kepala" value="{{ old('nama_kepala', $listSubSatuanKerja->nama_kepala ?? '') }}" class="form-control" placeholder="Inputkan Nama Kepala" />
-                                            </div>
-                                        </div>
                                         <div class="form-group row">
                                             <label for="nama_kepala" class="col-sm-2 col-form-label">Nama Kepala</label>
                                             <div class="col-sm-10">

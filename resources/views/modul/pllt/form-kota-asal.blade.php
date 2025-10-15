@@ -1,7 +1,12 @@
 <div class="form-group row">
-    {!! Form::label('kabupaten_asal_id', 'Kota / Kabupaten', ['class' => 'col-sm-2 col-form-label']) !!}
+    <label for="kabupaten_asal_id" class="col-sm-2 col-form-label">Kota / Kabupaten</label>
     <div class="col-sm-10">
-        {!! Form::select('kabupaten_asal_id', $listKota, $var['kotaId'], ['class'=>'form-control select2', 'placeholder'=>'Pilih Kota / Kabupaten', 'style'=>'width: 100%;', 'onchange'=>'dataKecamatanAsal()']) !!}
+        <select name="kabupaten_asal_id" id="kabupaten_asal_id" class="form-control select2" style="width: 100%;" onchange="dataKecamatanAsal()">
+            <option value="">Pilih Kota / Kabupaten</option>
+            @foreach($listKota as $key => $value)
+                <option value="{{ $key }}" {{ $var['kotaId'] == $key ? 'selected' : '' }}>{{ $value }}</option>
+            @endforeach
+        </select>
     </div>
 </div>
 

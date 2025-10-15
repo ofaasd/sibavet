@@ -24,9 +24,9 @@
                 <div class="box-body wizard-content">
                     <section>
                         <div class="form-group row">
-                            {!! Form::label('no_epid', 'No. EPID :', ['class' => 'col-sm-2 col-form-label', 'style' => 'font-weight:bold;']) !!}
+                            <label for="no_epid" class="col-sm-2 col-form-label" style="font-weight:bold;">No. EPID :</label>
                             <div class="col-sm-2">
-                                {!! Form::text('no_epid', null, ['class'=>'form-control', 'style'=> 'font-weight:bold;','readonly']) !!}
+                                <input type="text" name="no_epid" id="no_epid" class="form-control" style="font-weight:bold;" value="{{ $kesmavet->no_epid ?? '' }}" readonly>
                             </div>
                         </div>
                         <div class="form-group row">
@@ -36,7 +36,7 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            {!! Form::label('seksi_laboratorium_id', 'Seksi Laboratorium', ['class' => 'col-sm-2 col-form-label']) !!}
+                            <label for="seksi_laboratorium_id" class="col-sm-2 col-form-label">Seksi Laboratorium</label>
                             <div class="col-sm-7">
                                 <input class="form-control" readonly="" type="text" value="{!! @$kesmavet->seksiLaboratorium->kode !!} - {!! @$kesmavet->seksiLaboratorium->seksi_laboratorium !!}">
                             </div>
@@ -47,8 +47,8 @@
                                 <input class="form-control" readonly="" type="text" value="{!! $kesmavet->tanggal_penerimaan !!}">
                             </div>
                         </div>
-                        <div class="form-group row">
-                            {!! Form::label('', 'Contoh :', ['class' => 'col-sm-2 col-form-label']) !!}
+                        <div class="form-group row">                            
+                            <label for="" class="col-sm-2 col-form-label">Contoh :</label>
                             <div class="col-sm-8">
                                 <table class="table table-bordered mb-0" id='tabel_contoh'>
                                     <tr>
@@ -67,27 +67,31 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            {!! Form::label('permintaan_uji', 'Permintaan Uji :', ['class' => 'col-sm-2 col-form-label', 'style' => 'font-weight:bold;']) !!}
+                            <label for="permintaan_uji" class="col-sm-2 col-form-label" style="font-weight:bold;">Permintaan Uji :</label>
                             <div class="col-sm-10">
                                 @php
                                 $pengujian = "";
                                 foreach($kesmavet->labPengujian as $key=>$uji){
                                         $pengujian .= ($key==0?'':', ').$uji->jenis_pengujian;
                                 }
-                                @endphp
-                                {!! Form::textarea('', $pengujian, array('class'=> 'form-control', 'rows' => '2','readonly')) !!}
+                                @endphp                                
+                                <textarea class="form-control" rows="2" readonly>{{ $pengujian }}</textarea>
                             </div>
                         </div>
                         <div class="form-group row">
-                            {!! Form::label('penguji_ditunjuk', 'Penguji yang Ditunjuk', ['class' => 'col-sm-2 col-form-label']) !!}
+                            <label for="penguji_ditunjuk" class="col-sm-2 col-form-label">Penguji yang Ditunjuk</label>
                             <div class="col-sm-10">
-                                {!! viewSelectPegawai(3,'penguji_ditunjuk',$kesmavet->penguji_ditunjuk) !!}
+                                <select name="penguji_ditunjuk" id="penguji_ditunjuk" class="form-control col-sm-5">
+                                    @foreach($pegawai as $id => $name)
+                                        <option value="{{ $id }}" {{ ($kesmavet->penguji_ditunjuk == $id) ? 'selected' : '' }}>{{ $name }}</option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
                         <div class="form-group row">
-                            {!! Form::label('catatan_04', 'Catatan/Saran :', ['class' => 'col-sm-2 col-form-label']) !!}
+                            <label for="catatan_04" class="col-sm-2 col-form-label">Catatan/Saran :</label>
                             <div class="col-sm-10">
-                                {!! Form::textarea('catatan_04', $kesmavet->catatan_04, array('class'=> 'form-control', 'rows' => '2','placeholder'=>'Catatan/Saran')) !!}
+                                <textarea name="catatan_04" id="catatan_04" class="form-control" rows="2" placeholder="Catatan/Saran">{{ $kesmavet->catatan_04 ?? '' }}</textarea>
                             </div>
                         </div>
                     </section>

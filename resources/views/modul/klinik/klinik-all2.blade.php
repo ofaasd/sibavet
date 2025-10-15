@@ -69,14 +69,14 @@
 														@endif
 													@endif
 													@if($url == "pendaftaran")
-														{!! Form::open(['method'=>'post', 'url'=>'/klinik/hapus_pendaftaran', 'class'=> 'delete_form']) !!}
-														{!! Form::hidden('id', $item->id, ['class'=>'form-control']) !!}
+														<form method="post" action="/klinik/hapus_pendaftaran" class="delete_form">
+															@csrf
+															<input type="hidden" name="id" value="{{ $item->id }}" class="form-control">
 														
 														<div class="btn-group btn-group-xs" role="group" aria-label="Basic example">
 															<button type="submit" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></button>
 															<a href="{{ url('/klinik/edit_pendaftaran/'.$item->id.'/awal')}}" class="btn btn-primary btn-xs"><i class="fa fa-edit"></i></a>
 														</div>
-														{!! Form::close() !!}
 													@endif
 													@if($url == "rekap")
 														<div class="btn-group">
@@ -89,7 +89,7 @@
                                                                 @can('Update Klinik')
                                                                     <a href="{{ url('/klinik/editRM/'.$item->klinik_id.'/'.$var['url']['all'])}}" class="btn btn-primary btn-xs"><i class="fa fa-edit"></i></a>
                                                                 @endcan                                                   <a href="{{ url('/klinik/detailPeriksa/'.$item->klinik_id.$var['url']['all'])}}" class="btn btn-info btn-xs"><i class="fa fa-search"></i></a>
-                                                                <a href="{{ url('/klinik/cetakRM/'.$item->klinik_id)}}" class="btn btn-success btn-xs"><i class="fa fa-print"></i></a>
+                                                                <a href="{{ url('/klinik/cetakRM/'.$item->klinik_id)}}" class="btn btn-success btn-xs" target="_blank"><i class="fa fa-print"></i></a>
                                                             </div>
                                                             {!! Form::close() !!}
                                                         </div>

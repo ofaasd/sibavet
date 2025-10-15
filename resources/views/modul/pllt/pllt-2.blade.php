@@ -32,140 +32,202 @@
                                 <div class="pad">
                                     <div class="box-body wizard-content">
                                         @if($var['method']=='edit')
-                                            {!! Form::model($listPllt, ['method'=>'PATCH', 'url'=> '/pllt/'.$listPllt->id.$var['url']['all'], 'id'=>'form-pllt', 'class'=>'tab-wizard wizard-circle', 'files'=>true]) !!}
+                                            <form method="POST" action="/pllt/{{ $listPllt->id }}{{ $var['url']['all'] }}" id="form-pllt" class="tab-wizard wizard-circle" enctype="multipart/form-data">
+                                                @csrf
+                                                @method('PATCH')
                                         @elseif($var['method']=='create')
-                                            {!! Form::open(['id'=>'form-pllt', 'method'=>'POST', 'url'=>'/pllt', 'class'=>'validation-wizard wizard-circle', 'files'=>true]) !!}
+                                            <form method="POST" action="/pllt" id="form-pllt" class="validation-wizard wizard-circle" enctype="multipart/form-data">
+                                                @csrf
                                         @else
-                                            {!! Form::model($listPllt, ['id'=>'form-pllt', 'class'=>'tab-wizard wizard-circle']) !!}
+                                            <form id="form-pllt" class="tab-wizard wizard-circle">
                                         @endif
                                             <!-- Step 1 -->
                                             <h6>Bagian 1</h6>
                                             <section>
                                                 <div class="form-group row">
-                                                    {!! Form::label('input_by', 'User', ['class' => 'col-sm-2 col-form-label']) !!}
+                                                    <label for="input_by" class="col-sm-2 col-form-label">User</label>
                                                     <div class="col-sm-10">
-                                                        {!! Form::select('input_by', $var['user'], $var['currentUser'], ['class'=>'form-control select2', 'placeholder'=>'Pilih User', 'style'=>'width: 100%;', 'onchange'=>'subSatuanKerja(); pemeriksa()']) !!}
+                                                        <select name="input_by" id="input_by" class="form-control select2" style="width: 100%;" onchange="subSatuanKerja(); pemeriksa()">
+                                                            <option value="">Pilih User</option>
+                                                            @foreach($var['user'] as $key => $value)
+                                                                <option value="{{ $key }}" {{ $var['currentUser'] == $key ? 'selected' : '' }}>{{ $value }}</option>
+                                                            @endforeach
+                                                        </select>
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
-                                                    {!! Form::label('sub_satuan_kerja_id', 'Nama Laboratorium', ['class' => 'col-sm-2 col-form-label']) !!}
+                                                    <label for="nama_sub_satuan_kerja" class="col-sm-2 col-form-label">Nama Laboratorium</label>
                                                     <div class="col-sm-10">
-                                                        {!! Form::text('nama_sub_satuan_kerja', ($var['method']=='edit'||$var['method']=='show'?@$listPllt->inputBy->subSatuanKerja->sub_satuan_kerja:$var['namaPllt']), ['class'=>'form-control', 'id'=>'nama_sub_satuan_kerja', 'placeholder'=>'Inputkan Nama PLLT', 'readonly']) !!}
-                                                        {!! Form::hidden('sub_satuan_kerja_id', $var['idPllt'], ['class'=>'form-control']) !!}
+                                                        <input type="text" name="nama_sub_satuan_kerja" id="nama_sub_satuan_kerja" class="form-control" placeholder="Inputkan Nama PLLT" readonly 
+                                                            value="{{ ($var['method']=='edit'||$var['method']=='show') ? @$listPllt->inputBy->subSatuanKerja->sub_satuan_kerja : $var['namaPllt'] }}">
+                                                        <input type="hidden" name="sub_satuan_kerja_id" id="sub_satuan_kerja_id" class="form-control" value="{{ $var['idPllt'] }}">
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
-                                                    {!! Form::label('jenis_form', 'Jenis Form', ['class' => 'col-sm-2 col-form-label']) !!}
+                                                    <label for="jenis_form" class="col-sm-2 col-form-label">Jenis Form</label>
                                                     <div class="col-sm-4">
-                                                        {!! Form::select('jenis_form', ['Ternak Masuk'=>'Ternak Masuk', 'Ternak Keluar'=>'Ternak Keluar', 'Ternak Lewat'=>'Ternak Lewat'], null,
-                                                            ['class'=>'form-control', 'placeholder'=>'Pilih Jenis Form']) !!}
+                                                        <select name="jenis_form" id="jenis_form" class="form-control">
+                                                            <option value="">Pilih Jenis Form</option>
+                                                            <option value="Ternak Masuk" {{ old('jenis_form', isset($listPllt) ? $listPllt->jenis_form : '') == 'Ternak Masuk' ? 'selected' : '' }}>Ternak Masuk</option>
+                                                            <option value="Ternak Keluar" {{ old('jenis_form', isset($listPllt) ? $listPllt->jenis_form : '') == 'Ternak Keluar' ? 'selected' : '' }}>Ternak Keluar</option>
+                                                            <option value="Ternak Lewat" {{ old('jenis_form', isset($listPllt) ? $listPllt->jenis_form : '') == 'Ternak Lewat' ? 'selected' : '' }}>Ternak Lewat</option>
+                                                        </select>
                                                     </div>
-                                                    {!! Form::label('jam_masuk', 'Jam Masuk', ['class' => 'col-sm-2 col-form-label']) !!}
+                                                    <label for="jam_masuk" class="col-sm-2 col-form-label">Jam Masuk</label>
                                                     <div class="col-sm-4">
                                                         <div class="bootstrap-timepicker">
-                                                            {!! Form::text('jam_masuk', null, ['class'=>'form-control timepicker', 'placeholder'=>'Inputkan Jam Masuk']) !!}
+                                                            <input type="text" name="jam_masuk" id="jam_masuk" class="form-control timepicker" 
+                                                                value="{{ old('jam_masuk', isset($listPllt) ? $listPllt->jam_masuk : '') }}" placeholder="Inputkan Jam Masuk">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <legend>Data Hewan</legend>
                                                 <div class="form-group row">
-                                                    {!! Form::label('jenis_spesies_id', 'Jenis Spesies / Hewan / Komoditas', ['class' => 'col-sm-2 col-form-label']) !!}
+                                                    <label for="jenis_spesies_id" class="col-sm-2 col-form-label">Jenis Spesies / Hewan / Komoditas</label>
                                                     <div class="col-sm-10">
-                                                        {!! Form::select('jenis_spesies_id', $var['spesies'], null, ['class'=>'form-control select2', 'placeholder'=>'Pilih Jenis Spesies / Hewan / Komoditas', 'style'=>'width: 100%;', 'onchange'=>'jenisHewan()']) !!}
+                                                        <select name="jenis_spesies_id" id="jenis_spesies_id" class="form-control select2" style="width: 100%;" onchange="jenisHewan()">
+                                                            <option value="">Pilih Jenis Spesies / Hewan / Komoditas</option>
+                                                            @foreach($var['spesies'] as $key => $value)
+                                                                <option value="{{ $key }}" {{ old('jenis_spesies_id', isset($listPllt) ? $listPllt->jenis_spesies_id : '') == $key ? 'selected' : '' }}>{{ $value }}</option>
+                                                            @endforeach
+                                                        </select>
                                                     </div>
                                                 </div>
                                                 <div id="areaJenisHewan">
                                                     <div class="form-group row">
-                                                        {!! Form::label('jenis_hewan_id', 'Ras', ['class' => 'col-sm-2 col-form-label']) !!}
+                                                        <label for="jenis_hewan_id" class="col-sm-2 col-form-label">Ras</label>
                                                         <div class="col-sm-10">
-                                                            {!! Form::select('jenis_hewan_id', $var['ras'], null, ['class'=>'form-control select2', 'placeholder'=>'Pilih Ras', 'style'=>'width: 100%;']) !!}
+                                                            <select name="jenis_hewan_id" id="jenis_hewan_id" class="form-control select2" style="width: 100%;">
+                                                                <option value="">Pilih Ras</option>
+                                                                @foreach($var['ras'] as $key => $value)
+                                                                    <option value="{{ $key }}" {{ old('jenis_hewan_id', isset($listPllt) ? $listPllt->jenis_hewan_id : '') == $key ? 'selected' : '' }}>{{ $value }}</option>
+                                                                @endforeach
+                                                            </select>
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
-                                                    {!! Form::label('jumlah', 'Jumlah', ['class' => 'col-sm-2 col-form-label']) !!}
+                                                    <label for="jumlah" class="col-sm-2 col-form-label">Jumlah</label>
                                                     <div class="col-sm-4">
-                                                        {!! Form::number('jumlah', null, ['class'=>'form-control', 'placeholder'=>'Inputkan Jumlah']) !!}
+                                                        <input type="number" name="jumlah" id="jumlah" class="form-control" placeholder="Inputkan Jumlah" 
+                                                            value="{{ old('jumlah', isset($listPllt) ? $listPllt->jumlah : '') }}">
                                                     </div>
-                                                    {!! Form::label('satuan', 'Satuan', ['class' => 'col-sm-2 col-form-label']) !!}
+                                                    <label for="satuan" class="col-sm-2 col-form-label">Satuan</label>
                                                     <div class="col-sm-4">
-                                                        {!! Form::select('satuan', ['Kilogram'=>'Kilogram','Ekor'=>'Ekor'], null, ['class'=>'form-control']) !!}
+                                                        <select name="satuan" id="satuan" class="form-control">
+                                                            <option value="Kilogram" {{ old('satuan', isset($listPllt) ? $listPllt->satuan : '') == 'Kilogram' ? 'selected' : '' }}>Kilogram</option>
+                                                            <option value="Ekor" {{ old('satuan', isset($listPllt) ? $listPllt->satuan : '') == 'Ekor' ? 'selected' : '' }}>Ekor</option>
+                                                        </select>
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
-                                                    {!! Form::label('jumlah_jantan', 'Jumlah Jantan', ['class' => 'col-sm-2 col-form-label']) !!}
+                                                    <label for="jumlah_jantan" class="col-sm-2 col-form-label">Jumlah Jantan</label>
                                                     <div class="col-sm-4">
-                                                        {!! Form::number('jumlah_jantan', null, ['class'=>'form-control', 'placeholder'=>'Inputkan Jumlah Jantan']) !!}
+                                                        <input type="number" name="jumlah_jantan" id="jumlah_jantan" class="form-control" placeholder="Inputkan Jumlah Jantan" 
+                                                            value="{{ old('jumlah_jantan', isset($listPllt) ? $listPllt->jumlah_jantan : '') }}">
                                                     </div>
-                                                    {!! Form::label('jumlah_betina', 'Jumlah Betina', ['class' => 'col-sm-2 col-form-label']) !!}
+                                                    <label for="jumlah_betina" class="col-sm-2 col-form-label">Jumlah Betina</label>
                                                     <div class="col-sm-4">
-                                                        {!! Form::number('jumlah_betina', null, ['class'=>'form-control', 'placeholder'=>'Inputkan Jumlah Betina']) !!}
+                                                        <input type="number" name="jumlah_betina" id="jumlah_betina" class="form-control" placeholder="Inputkan Jumlah Betina" 
+                                                            value="{{ old('jumlah_betina', isset($listPllt) ? $listPllt->jumlah_betina : '') }}">
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
                                                     <div class="col-lg-4 ml-auto">
-                                                        {!! Form::submit('Tambah', ['class'=>'btn btn-primary', 'id'=>'buttonTambahDataHewan']) !!}
-                                                        {!! Form::reset('Reset', ['class'=>'btn btn-danger', 'id'=>'buttonResetDataHewan']) !!}
+                                                        <button type="button" class="btn btn-primary" id="buttonTambahDataHewan">Tambah</button>
+                                                        <button type="reset" class="btn btn-danger" id="buttonResetDataHewan">Reset</button>
                                                     </div>
                                                 </div>
                                                 <div id="areaDataHewan"></div>
 
                                                 <div class="form-group row">
-                                                    {!! Form::label('nopol_kendaraaan', 'NOPOL Kendaraan', ['class' => 'col-sm-2 col-form-label']) !!}
+                                                    <label for="nopol_kendaraaan" class="col-sm-2 col-form-label">NOPOL Kendaraan</label>
                                                     <div class="col-sm-10">
-                                                        {!! Form::text('nopol_kendaraaan', null, ['class'=>'form-control', 'placeholder'=>'Inputkan NOPOL Kendaraan']) !!}
+                                                        <input type="text" name="nopol_kendaraaan" id="nopol_kendaraaan" class="form-control" placeholder="Inputkan NOPOL Kendaraan" 
+                                                            value="{{ old('nopol_kendaraaan', isset($listPllt) ? $listPllt->nopol_kendaraaan : '') }}">
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
-                                                    {!! Form::label('peruntukan', 'Peruntukan', ['class' => 'col-sm-2 col-form-label']) !!}
+                                                    <label for="peruntukan" class="col-sm-2 col-form-label">Peruntukan</label>
                                                     <div class="col-sm-10">
-                                                        {!! Form::text('peruntukan', null, ['class'=>'form-control', 'placeholder'=>'Inputkan Peruntukan']) !!}
+                                                        <input type="text" name="peruntukan" id="peruntukan" class="form-control" placeholder="Inputkan Peruntukan" 
+                                                            value="{{ old('peruntukan', isset($listPllt) ? $listPllt->peruntukan : '') }}">
                                                     </div>
                                                 </div>
 
                                                 <legend><b>Daerah Asal</b></legend>
                                                 <div class="form-group row">
-                                                    {!! Form::label('provinsi_asal_id', 'Provinsi', ['class' => 'col-sm-2 col-form-label']) !!}
+                                                    <label for="provinsi_asal_id" class="col-sm-2 col-form-label">Provinsi</label>
                                                     <div class="col-sm-10">
-                                                        {!! Form::select('provinsi_asal_id', $var['provinsiAsal'], null, ['class'=>'form-control select2', 'placeholder'=>'Pilih Provinsi', 'style'=>'width: 100%;', 'onchange'=>'dataKotaAsal()']) !!}
+                                                        <select name="provinsi_asal_id" id="provinsi_asal_id" class="form-control select2" style="width: 100%;" onchange="dataKotaAsal()">
+                                                            <option value="">Pilih Provinsi</option>
+                                                            @foreach($var['provinsiAsal'] as $key => $value)
+                                                                <option value="{{ $key }}" {{ old('provinsi_asal_id', isset($listPllt) ? $listPllt->provinsi_asal_id : '') == $key ? 'selected' : '' }}>{{ $value }}</option>
+                                                            @endforeach
+                                                        </select>
                                                     </div>
                                                 </div>
                                                 <div id="areaFormKotaKabupatenAsal">
                                                     <div class="form-group row">
-                                                        {!! Form::label('kabupaten_asal_id', 'Kota / Kabupaten', ['class' => 'col-sm-2 col-form-label']) !!}
+                                                        <label for="kabupaten_asal_id" class="col-sm-2 col-form-label">Kota / Kabupaten</label>
                                                         <div class="col-sm-10">
-                                                            {!! Form::select('kabupaten_asal_id', $var['kotaKabupatenAsal'], null, ['class'=>'form-control select2', 'placeholder'=>'Pilih Kota / Kabupaten', 'style'=>'width: 100%;', 'onchange'=>'dataKecamatanAsal()']) !!}
+                                                            <select name="kabupaten_asal_id" id="kabupaten_asal_id" class="form-control select2" style="width: 100%;" onchange="dataKecamatanAsal()">
+                                                                <option value="">Pilih Kota / Kabupaten</option>
+                                                                @foreach($var['kotaKabupatenAsal'] as $key => $value)
+                                                                    <option value="{{ $key }}" {{ old('kabupaten_asal_id', isset($listPllt) ? $listPllt->kabupaten_asal_id : '') == $key ? 'selected' : '' }}>{{ $value }}</option>
+                                                                @endforeach
+                                                            </select>
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div id="areaFormKecamatanAsal">
                                                     <div class="form-group row">
-                                                        {!! Form::label('kecamatan_asal_id', 'Kecamatan', ['class' => 'col-sm-2 col-form-label']) !!}
+                                                        <label for="kecamatan_asal_id" class="col-sm-2 col-form-label">Kecamatan</label>
                                                         <div class="col-sm-10">
-                                                            {!! Form::select('kecamatan_asal_id', $var['kecamatanAsal'], null, ['class'=>'form-control select2', 'placeholder'=>'Pilih Kecamatan', 'style'=>'width: 100%;']) !!}
+                                                            <select name="kecamatan_asal_id" id="kecamatan_asal_id" class="form-control select2" style="width: 100%;">
+                                                                <option value="">Pilih Kecamatan</option>
+                                                                @foreach($var['kecamatanAsal'] as $key => $value)
+                                                                    <option value="{{ $key }}" {{ old('kecamatan_asal_id', isset($listPllt) ? $listPllt->kecamatan_asal_id : '') == $key ? 'selected' : '' }}>{{ $value }}</option>
+                                                                @endforeach
+                                                            </select>
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <legend><b>Daerah Tujuan</b></legend>
                                                 <div class="form-group row">
-                                                    {!! Form::label('provinsi_tujuan_id', 'Provinsi', ['class' => 'col-sm-2 col-form-label']) !!}
+                                                    <label for="provinsi_tujuan_id" class="col-sm-2 col-form-label">Provinsi</label>
                                                     <div class="col-sm-10">
-                                                        {!! Form::select('provinsi_tujuan_id', $var['provinsiTujuan'], null, ['class'=>'form-control select2', 'placeholder'=>'Pilih Provinsi', 'style'=>'width: 100%;', 'onchange'=>'dataKotaTujuan()']) !!}
+                                                        <select name="provinsi_tujuan_id" id="provinsi_tujuan_id" class="form-control select2" style="width: 100%;" onchange="dataKotaTujuan()">
+                                                            <option value="">Pilih Provinsi</option>
+                                                            @foreach($var['provinsiTujuan'] as $key => $value)
+                                                                <option value="{{ $key }}" {{ old('provinsi_tujuan_id', isset($listPllt) ? $listPllt->provinsi_tujuan_id : '') == $key ? 'selected' : '' }}>{{ $value }}</option>
+                                                            @endforeach
+                                                        </select>
                                                     </div>
                                                 </div>
                                                 <div id="areaFormKotaKabupatenTujuan">
                                                     <div class="form-group row">
-                                                        {!! Form::label('kabupaten_tujuan_id', 'Kota / Kabupaten', ['class' => 'col-sm-2 col-form-label']) !!}
+                                                        <label for="kabupaten_tujuan_id" class="col-sm-2 col-form-label">Kota / Kabupaten</label>
                                                         <div class="col-sm-10">
-                                                            {!! Form::select('kabupaten_tujuan_id', $var['kotaKabupatenTujuan'], null, ['class'=>'form-control select2', 'placeholder'=>'Pilih Kota / Kabupaten', 'style'=>'width: 100%;', 'onchange'=>'dataKecamatanTujuan()']) !!}
+                                                            <select name="kabupaten_tujuan_id" id="kabupaten_tujuan_id" class="form-control select2" style="width: 100%;" onchange="dataKecamatanTujuan()">
+                                                                <option value="">Pilih Kota / Kabupaten</option>
+                                                                @foreach($var['kotaKabupatenTujuan'] as $key => $value)
+                                                                    <option value="{{ $key }}" {{ old('kabupaten_tujuan_id', isset($listPllt) ? $listPllt->kabupaten_tujuan_id : '') == $key ? 'selected' : '' }}>{{ $value }}</option>
+                                                                @endforeach
+                                                            </select>
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div id="areaFormKecamatanTujuan">
                                                     <div class="form-group row">
-                                                        {!! Form::label('kecamatan_tujuan_id', 'Kecamatan', ['class' => 'col-sm-2 col-form-label']) !!}
+                                                        <label for="kecamatan_tujuan_id" class="col-sm-2 col-form-label">Kecamatan</label>
                                                         <div class="col-sm-10">
-                                                            {!! Form::select('kecamatan_tujuan_id', $var['kecamatanTujuan'], null, ['class'=>'form-control select2', 'placeholder'=>'Pilih Kecamatan', 'style'=>'width: 100%;']) !!}
+                                                            <select name="kecamatan_tujuan_id" id="kecamatan_tujuan_id" class="form-control select2" style="width: 100%;">
+                                                                <option value="">Pilih Kecamatan</option>
+                                                                @foreach($var['kecamatanTujuan'] as $key => $value)
+                                                                    <option value="{{ $key }}" {{ old('kecamatan_tujuan_id', isset($listPllt) ? $listPllt->kecamatan_tujuan_id : '') == $key ? 'selected' : '' }}>{{ $value }}</option>
+                                                                @endforeach
+                                                            </select>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -174,61 +236,76 @@
                                             <h6>Bagian 2</h6>
                                             <section>
                                                 <div class="form-group row">
-                                                    {!! Form::label('jenis_dokumen', 'Jenis Dokumen', ['class' => 'col-sm-2 col-form-label']) !!}
+                                                    <label for="jenis_dokumen" class="col-sm-2 col-form-label">Jenis Dokumen</label>
                                                     <div class="col-sm-10">
-                                                       {!! Form::select('jenis_dokumen', ['SPT'=>'SPT', 'SKKH'=>'SKKH', 'SKSR'=>'SKSR', 'SKB'=>'SKB', 'Tanpa Surat'=>'Tanpa Surat', 'Lainnya'=>'Lainnya'],
-                                                            null, ['class'=>'form-control', 'placeholder'=>'Pilih Jenis Dokumen']) !!}
-														
+                                                        <select name="jenis_dokumen" id="jenis_dokumen" class="form-control">
+                                                            <option value="">Pilih Jenis Dokumen</option>
+                                                            <option value="SPT" {{ old('jenis_dokumen', isset($listPllt) ? $listPllt->jenis_dokumen : '') == 'SPT' ? 'selected' : '' }}>SPT</option>
+                                                            <option value="SKKH" {{ old('jenis_dokumen', isset($listPllt) ? $listPllt->jenis_dokumen : '') == 'SKKH' ? 'selected' : '' }}>SKKH</option>
+                                                            <option value="SKSR" {{ old('jenis_dokumen', isset($listPllt) ? $listPllt->jenis_dokumen : '') == 'SKSR' ? 'selected' : '' }}>SKSR</option>
+                                                            <option value="SKB" {{ old('jenis_dokumen', isset($listPllt) ? $listPllt->jenis_dokumen : '') == 'SKB' ? 'selected' : '' }}>SKB</option>
+                                                            <option value="Tanpa Surat" {{ old('jenis_dokumen', isset($listPllt) ? $listPllt->jenis_dokumen : '') == 'Tanpa Surat' ? 'selected' : '' }}>Tanpa Surat</option>
+                                                            <option value="Lainnya" {{ old('jenis_dokumen', isset($listPllt) ? $listPllt->jenis_dokumen : '') == 'Lainnya' ? 'selected' : '' }}>Lainnya</option>
+                                                        </select>
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
-                                                    {!! Form::label('nomor_dokumen', 'Nomor Dokumen', ['class' => 'col-sm-2 col-form-label']) !!}
+                                                    <label for="nomor_dokumen" class="col-sm-2 col-form-label">Nomor Dokumen</label>
                                                     <div class="col-sm-10">
-                                                        {!! Form::text('nomor_dokumen', null, ['class'=>'form-control', 'placeholder'=>'Inputkan Nomor Dokumen']) !!}
+                                                        <input type="text" name="nomor_dokumen" id="nomor_dokumen" class="form-control" placeholder="Inputkan Nomor Dokumen" 
+                                                            value="{{ old('nomor_dokumen', isset($listPllt) ? $listPllt->nomor_dokumen : '') }}">
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
-                                                    {!! Form::label('tanggal_dokumen', 'Tanggal Input', ['class' => 'col-sm-2 col-form-label']) !!}
+                                                    <label for="tanggal_dokumen" class="col-sm-2 col-form-label">Tanggal Input</label>
                                                     <div class="col-sm-10">
-                                                        {!! Form::text('tanggal_dokumen', null, ['class'=>'form-control', 'placeholder'=>'Inputkan Tanggal Input']) !!}
+                                                        <input type="text" name="tanggal_dokumen" id="tanggal_dokumen" class="form-control" placeholder="Inputkan Tanggal Input" 
+                                                            value="{{ old('tanggal_dokumen', isset($listPllt) ? $listPllt->tanggal_dokumen : '') }}">
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
-                                                    {!! Form::label('pengirim', 'Pemilik / Pengirim', ['class' => 'col-sm-2 col-form-label']) !!}
+                                                    <label for="pengirim" class="col-sm-2 col-form-label">Pemilik / Pengirim</label>
                                                     <div class="col-sm-10">
-                                                        {!! Form::text('pengirim', null, ['class'=>'form-control', 'placeholder'=>'Inputkan Pemilik / Pengirim']) !!}
+                                                        <input type="text" name="pengirim" id="pengirim" class="form-control" placeholder="Inputkan Pemilik / Pengirim" 
+                                                            value="{{ old('pengirim', isset($listPllt) ? $listPllt->pengirim : '') }}">
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
-                                                    {!! Form::label('penerima', 'Penerima', ['class' => 'col-sm-2 col-form-label']) !!}
+                                                    <label for="penerima" class="col-sm-2 col-form-label">Penerima</label>
                                                     <div class="col-sm-10">
-                                                        {!! Form::text('penerima', null, ['class'=>'form-control', 'placeholder'=>'Inputkan Penerima']) !!}
+                                                        <input type="text" name="penerima" id="penerima" class="form-control" placeholder="Inputkan Penerima" 
+                                                            value="{{ old('penerima', isset($listPllt) ? $listPllt->penerima : '') }}">
                                                     </div>
                                                 </div>
                                                 <div id="areaPemeriksa">
                                                     <div class="form-group row">
-                                                        {!! Form::label('pemeriksa_id', 'Dokter / Petugas Pemeriksa', ['class' => 'col-sm-2 col-form-label']) !!}
+                                                        <label for="pemeriksa_id" class="col-sm-2 col-form-label">Dokter / Petugas Pemeriksa</label>
                                                         <div class="col-sm-10">
-                                                            {!! Form::select('pemeriksa_id', $var['pemeriksa'], null, ['class'=>'form-control select2', 'placeholder'=>'Pilih Dokter / Petugas Pemeriksa', 'style'=>'width: 100%;']) !!}
+                                                            <select name="pemeriksa_id" id="pemeriksa_id" class="form-control select2" style="width: 100%;">
+                                                                <option value="">Pilih Dokter / Petugas Pemeriksa</option>
+                                                                @foreach($var['pemeriksa'] as $key => $value)
+                                                                    <option value="{{ $key }}" {{ old('pemeriksa_id', isset($listPllt) ? $listPllt->pemeriksa_id : '') == $key ? 'selected' : '' }}>{{ $value }}</option>
+                                                                @endforeach
+                                                            </select>
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
-                                                    {!! Form::label('keterangan', 'Keterangan', ['class' => 'col-sm-2 col-form-label']) !!}
+                                                    <label for="keterangan" class="col-sm-2 col-form-label">Keterangan</label>
                                                     <div class="col-sm-10">
-                                                        {!! Form::textarea('keterangan', null, ['class'=>'form-control', 'placeholder'=>'Inputkan Keterangan', 'rows'=>4]) !!}
+                                                        <textarea name="keterangan" id="keterangan" class="form-control" placeholder="Inputkan Keterangan" rows="4">{{ old('keterangan', isset($listPllt) ? $listPllt->keterangan : '') }}</textarea>
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
-                                                    {!! Form::label('upload_file', 'Upload File', ['class' => 'col-sm-2 col-form-label']) !!}
+                                                    <label for="upload_file" class="col-sm-2 col-form-label">Upload File</label>
                                                     <div class="col-sm-10">
-                                                        {!! Form::file('upload_file[]', ['class'=>'form-control', 'placeholder'=>'Upload File', 'multiple'=>'multiple']) !!}
+                                                        <input type="file" name="upload_file[]" id="upload_file" class="form-control" placeholder="Upload File" multiple>
                                                         <br>
                                                         <div id="areaFile"></div>
                                                     </div>
                                                 </div>
                                             </section>
-                                        {!! Form::close() !!}
+                                        </form>
                                     </div>
                                 </div>
                             </div>

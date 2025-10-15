@@ -31,82 +31,76 @@
                         <div class="tab-content tabcontent-border">
                             <div class="tab-pane active">
                                 <div class="pad">
-                                    @if($var['method']=='edit')
-                                        {!! Form::model($listObat, ['method'=>'PATCH', 'url'=> '/master-data/obat/'.$listObat->id.$var['url']['all'], 'id'=>'form-obat']) !!}
-                                    @elseif($var['method']=='create')
-                                        {!! Form::open(['id'=>'form-obat', 'method'=>'POST', 'url'=>'/master-data/obat']) !!}
+                                    @if($var['method'] == 'edit')
+                                        <form id="form-daftar-harga" method="POST" action="{{ url('/master-data/daftar-harga/'.$listHarga->id.$var['url']['all']) }}">
+                                            @csrf
+                                            @method('PATCH')
+                                    @elseif($var['method'] == 'create')
+                                        <form id="form-daftar-harga" method="POST" action="{{ url('/master-data/daftar-harga') }}">
+                                            @csrf
                                     @else
-                                        {!! Form::model($listObat, ['class'=>'form-obat']) !!}
+                                        <form class="form-daftar-harga">
                                     @endif
+
                                         <div class="form-group row">
-											{!! Form::label('Spesies', 'Spesies', ['class' => 'col-sm-2 col-form-label required']) !!}
-											<div class="col-sm-10">
-												{!! Form::select('spesies_id', $var['spesies'],null, ['class'=>'form-control select2', 'placeholder'=>'Pilih Spesies', 'style'=>'width: 100%;', 'required'=>'required']) !!}
-											</div>
-										</div>
-										@if(!empty($var['curr_pad']))
-										<script>
-											window.addEventListener("load", function(){
-												$("#spesies_id").val({{$var['curr_pad']->spesies_id}}).trigger("change");
-											});
-										</script>
-										@endif
-										
-										<div class="form-group row">
-											{!! Form::label('Tindakan', 'Tindakan', ['class' => 'col-sm-2 col-form-label required']) !!}
-											<div class="col-sm-10">
-												{!! Form::select('tindakan', $var['spesies'],null, ['class'=>'form-control select2', 'placeholder'=>'Pilih Tindakan', 'style'=>'width: 100%;', 'required'=>'required']) !!}
-											</div>
-										</div>
-										@if(!empty($var['curr_pad']))
-										<script>
-											window.addEventListener("load", function(){
-												$("#tindakan").val({{$var['curr_pad']->tindakan}}).trigger("change");
-											});
-										</script>
-										@endif
-										
-										<div class="form-group row">
-											{!! Form::label('Terapi', 'Terapi', ['class' => 'col-sm-2 col-form-label required']) !!}
-											<div class="col-sm-10">
-												{!! Form::select('spesies_id', $var['spesies'],null, ['class'=>'form-control select2', 'placeholder'=>'Pilih Pemeriksa', 'style'=>'width: 100%;', 'required'=>'required']) !!}
-											</div>
-										</div>
-										@if(!empty($var['curr_pad']))
-										<script>
-											window.addEventListener("load", function(){
-												$("#spesies_id").val({{$var['curr_pad']->spesies_id}}).trigger("change");
-											});
-										</script>
-										@endif
-										
-										
-                                        <div class="form-group row">
-                                            {!! Form::label('obat', 'Obat', ['class' => 'col-sm-2 col-form-label']) !!}
+                                            <label for="spesies_id" class="col-sm-2 col-form-label required">Spesies</label>
                                             <div class="col-sm-10">
-                                                {!! Form::text('obat', null, ['class'=>'form-control', 'placeholder'=>'Inputkan Obat']) !!}
+                                                <select name="spesies_id" id="spesies_id" class="form-control select2" style="width: 100%;" required>
+                                                    <option value="">Pilih Spesies</option>
+                                                    @foreach($var['spesies'] as $id => $nama)
+                                                        <option value="{{ $id }}" {{ old('spesies_id', $listHarga->spesies_id ?? '') == $id ? 'selected' : '' }}>{{ $nama }}</option>
+                                                    @endforeach
+                                                </select>
                                             </div>
                                         </div>
-										<div class="form-group row">
-                                            {!! Form::label('Status', 'Status', ['class' => 'col-sm-2 col-form-label']) !!}
+
+                                        <div class="form-group row">
+                                            <label for="tindakan" class="col-sm-2 col-form-label required">Tindakan</label>
                                             <div class="col-sm-10">
-                                                {!! Form::select('klinik', [0=>'Tidak Aktif',1=>'Aktif'], null, ['class'=>'form-control select2', 'placeholder'=>'Pilih Jenis Obat', 'style'=>'width: 100%;']) !!}
+                                                <select name="tindakan" id="tindakan" class="form-control select2" style="width: 100%;" required>
+                                                    <option value="">Pilih Tindakan</option>
+                                                    {{-- Assuming $var['tindakan'] is available --}}
+                                                    @foreach($var['tindakan'] ?? [] as $id => $nama)
+                                                        <option value="{{ $id }}" {{ old('tindakan', $listHarga->tindakan ?? '') == $id ? 'selected' : '' }}>{{ $nama }}</option>
+                                                    @endforeach
+                                                </select>
                                             </div>
                                         </div>
+
+                                        <div class="form-group row">
+                                            <label for="terapi_id" class="col-sm-2 col-form-label required">Terapi</label>
+                                            <div class="col-sm-10">
+                                                <select name="terapi_id" id="terapi_id" class="form-control select2" style="width: 100%;" required>
+                                                    <option value="">Pilih Terapi</option>
+                                                    {{-- Assuming $var['terapi'] is available --}}
+                                                    @foreach($var['terapi'] ?? [] as $id => $nama)
+                                                        <option value="{{ $id }}" {{ old('terapi_id', $listHarga->terapi_id ?? '') == $id ? 'selected' : '' }}>{{ $nama }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row">
+                                            <label for="harga" class="col-sm-2 col-form-label">Harga</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" name="harga" id="harga" value="{{ old('harga', $listHarga->harga ?? '') }}" class="form-control" placeholder="Inputkan Harga">
+                                            </div>
+                                        </div>
+
                                         <div class="form-group">
                                             <div class="col-lg-4 ml-auto">
-                                                @if($var['method']=='edit')
-                                                    {!! Form::submit('Update', ['class'=>'btn btn-primary']) !!}
-                                                    {!! Form::reset('Reset', ['class'=>'btn btn-danger']) !!}
-                                                @elseif($var['method']=='create')
-                                                    {!! Form::submit('Simpan', ['class'=>'btn btn-primary']) !!}
-                                                    {!! Form::reset('Reset', ['class'=>'btn btn-danger']) !!}
+                                                @if($var['method'] == 'edit')
+                                                    <button type="submit" class="btn btn-primary">Update</button>
+                                                    <button type="reset" class="btn btn-danger">Reset</button>
+                                                @elseif($var['method'] == 'create')
+                                                    <button type="submit" class="btn btn-primary">Simpan</button>
+                                                    <button type="reset" class="btn btn-danger">Reset</button>
                                                 @else
                                                     <a href="{{ url()->previous() }}" class="btn btn-primary">Kembali</a>
                                                 @endif
                                             </div>
                                         </div>
-                                    {!! Form::close() !!}
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -126,34 +120,24 @@
 @section('javascript')
     <script>
         $(document).ready(function() {
-            @if($var['method']=='edit' || $var['method']=='show')
-                var pk = "{{ $listObat->id }}";
+            @if(isset($listHarga) && ($var['method'] == 'edit' || $var['method'] == 'show'))
+                var pk = "{{ $listHarga->id }}";
             @else
                 var pk = null;
             @endif
 
-            $("#form-obat").validate({
+            $("#form-daftar-harga").validate({
                 rules: {
-                    kode: {
-                        required: true,
-                        remote: {
-                            url: "{{ url('master-data/obat/cek-validasi') }}",
-                            type: "post",
-                            data: {
-                                "kolom" : "kode",
-                                "aksi" : "{{ $var['method'] }}",
-                                "pk" : pk
-                            }
-                        }
-                    },
-                    obat: "required",
+                    spesies_id: "required",
+                    tindakan: "required",
+                    terapi_id: "required",
+                    harga: "required",
                 },
                 messages: {
-                    kode: {
-                        required: "Kolom kode harus diisi",
-                        remote: "Kode sudah digunakan"
-                    },
-                    obat: "Kolom obat harus diisi",
+                    spesies_id: "Kolom spesies harus diisi",
+                    tindakan: "Kolom tindakan harus diisi",
+                    terapi_id: "Kolom terapi harus diisi",
+                    harga: "Kolom harga harus diisi",
                 }
             });
         });

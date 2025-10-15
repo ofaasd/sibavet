@@ -74,8 +74,10 @@
                                                 <tr>
                                                     <td style="text-align:center">
                                                         <div class="btn-group">
-                                                            {!! Form::open(['method'=>'delete', 'url'=>'/laboratorium/'.$item->id.$var['url']['all'], 'class'=> 'delete_form']) !!}
-                                                            {!! Form::hidden('nomor', $no, ['class'=>'form-control']) !!}
+                                                            <form method="post" action="/laboratorium/{{ $item->id }}{{ $var['url']['all'] }}" class="delete_form">
+                                                                @csrf
+                                                                @method('delete')
+                                                                <input type="hidden" name="nomor" value="{{ $no }}" class="form-control">
                                                             <div class="btn-group btn-group-xs" role="group" aria-label="Basic example">
                                                                 @can('Delete Laboratorium')
                                                                     <button type="submit" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></button>
@@ -86,7 +88,7 @@
                                                                 <a href="{{ url('/laboratorium/'.$item->id.$var['url']['all'])}}" class="btn btn-info btn-xs"><i class="fa fa-search"></i></a>
                                                                 <a href="{{ url('/laboratorium/cetak/'.$item->id)}}" class="btn btn-success btn-xs" target="_blank"><i class="fa fa-print"></i></a>
                                                             </div>
-                                                            {!! Form::close() !!}
+                                                            </form>
                                                         </div>
                                                     </td>
                                                     <td>{{ @$item->subSatuanKerja->sub_satuan_kerja }}</td>

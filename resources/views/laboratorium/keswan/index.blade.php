@@ -18,11 +18,11 @@
                                             <a href="#" id="tombol-tambah" class="btn btn-primary"><b>Tambah Data</b></a>
                                     </div>
                                     <div class="col-lg-6">
-                                        <form method="get" action="">
+                                        <form method="get" action="{{ url()->current() }}">
                                             <div class="input-group">
-                                                <input name="cari" type="text" class="form-control" placeholder="Inputkan Pencarian" value="{{ Request::get('cari') }}" />
-                                                <div class="input-group-prepend">
-                                                    <button type="button" class="btn btn-info">Cari</button>
+                                                <input type="text" name="cari" class="form-control" placeholder="Inputkan Pencarian" value="{{ Request::get('cari') }}">
+                                                <div class="input-group-append">
+                                                    <button class="btn btn-info" type="submit">Cari</button>
                                                 </div>
                                             </div>
                                         </form>
@@ -33,7 +33,7 @@
                                     <table class="table table-hover" id="tabel_keswan">
                                         <thead>
                                             <tr class="bg-dark">
-                                                <!-- <th width="130px" style="text-align:center;">Aksi</th> -->
+                                                <th width="130px" style="text-align:center;">Aksi</th>  
                                                 <th style="text-align:center;">No. Epid</th>
                                                 <th style="text-align:center;">Laboratorium</th>
                                                 <th style="text-align:center;">Nama Pengirim</th>
@@ -52,23 +52,25 @@
                                                 $no++;
                                             @endphp
                                             <tr recid="{!! $keswan->id !!}">
-                                                <!-- <td style="text-align:center">
-                                                    <div class="btn-group">
-                                                        {!! Form::open(['method'=>'delete', 'url'=>'/laboratorium/'.$keswan->id.$var['url']['all'], 'class'=> 'delete_form']) !!}
-                                                        {!! Form::hidden('nomor', $no, ['class'=>'form-control']) !!}
+                                                <td style="text-align:center">
+                                                    <div class="btn-group"> 
+                                                        <form method="post" action="/laboratorium/{{ $keswan->id }}{{ $var['url']['all'] }}" class="delete_form">
+                                                            @csrf
+                                                            @method('delete')
+                                                            <input type="hidden" name="nomor" value="{{ $no }}" class="form-control"> 
                                                         <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
                                                             @can('Delete Laboratorium')
                                                                 <button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
-                                                            @endcan -->
-                                                            <!-- @can('Update Laboratorium')
+                                                            @endcan
+                                                            {{-- @can('Update Laboratorium')
                                                                 <a href="{{ url('/laboratorium/'.$keswan->id.'/edit'.$var['url']['all'])}}" class="btn btn-primary btn-sm"><i class="fa fa-edit"></i></a>
-                                                            @endcan -->
-                                                           <!--  <a href="{{ url('/laboratorium/'.$keswan->id.$var['url']['all'])}}" class="btn btn-info btn-sm"><i class="fa fa-search"></i></a>
-                                                            <a href="{{ url('/laboratorium/cetak/'.$keswan->id)}}" class="btn btn-success btn-sm" target="_blank"><i class="fa fa-print"></i></a>
+                                                            @endcan  --}}
+                                                          {{-- <a href="{{ url('/laboratorium/'.$keswan->id.$var['url']['all'])}}" class="btn btn-info btn-sm"><i class="fa fa-search"></i></a>
+                                                            <a href="{{ url('/laboratorium/cetak/'.$keswan->id)}}" class="btn btn-success btn-sm" target="_blank"><i class="fa fa-print"></i></a> --}}
                                                         </div>
-                                                        {!! Form::close() !!}
+                                                        </form>
                                                     </div>
-                                                </td> -->
+                                                </td>
                                                 <td>{{ $keswan->no_epid }}</td>
                                                 <td>{{ @$keswan->subSatuanKerja->sub_satuan_kerja }}</td>
                                                 <td>{{ @$keswan->customer->nama_pelanggan }}</td>

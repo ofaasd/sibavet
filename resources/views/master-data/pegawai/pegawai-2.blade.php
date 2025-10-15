@@ -30,40 +30,55 @@
                         <!-- Tab panes -->
                         <div class="tab-content tabcontent-border">
                             <div class="tab-pane active">
-                                <div class="pad">
+                                <div class="pad"> 
                                     @if($var['method']=='edit')
-                                        {!! Form::model($listOperasi, ['method'=>'PATCH', 'url'=> '/master-data/pegawai/'.$listOperasi->id.$var['url']['all'], 'id'=>'form-operasi']) !!}
+                                        <form id="form-operasi" method="POST" action="{{ url('/master-data/pegawai/'.$listOperasi->id.$var['url']['all']) }}">
+                                            @csrf
+                                            @method('PATCH')
                                     @elseif($var['method']=='create')
-                                        {!! Form::open(['id'=>'form-operasi', 'method'=>'POST', 'url'=>'/master-data/pegawai']) !!}
+                                        <form id="form-operasi" method="POST" action="{{ url('/master-data/pegawai') }}">
+                                            @csrf
                                     @else
-                                        {!! Form::model($listOperasi, ['class'=>'form-operasi']) !!}
+                                        <form class="form-operasi">
                                     @endif
                                         <div class="form-group row">
-                                            {!! Form::label('nipname', 'NIP', ['class' => 'col-sm-2 col-form-label']) !!}
+                                            <label for="nipname" class="col-sm-2 col-form-label">NIP</label>
                                             <div class="col-sm-10">
-                                                {!! Form::text('nipname', null, ['class'=>'form-control', 'placeholder'=>'Inputkan NIP']) !!}
+                                                <input type="text" name="nipname" id="nipname" value="{{ old('nipname', $listOperasi->nipname ?? '') }}" class="form-control" placeholder="Inputkan NIP" />
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            {!! Form::label('email', 'Email', ['class' => 'col-sm-2 col-form-label']) !!}
+                                            <label for="email" class="col-sm-2 col-form-label">Email</label>
                                             <div class="col-sm-10">
-                                                {!! Form::text('email', null, ['class'=>'form-control', 'placeholder'=>'Inputkan Email']) !!}
+                                                <input type="email" name="email" id="email" value="{{ old('email', $listOperasi->email ?? '') }}" class="form-control" placeholder="Inputkan Email" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="password" class="col-sm-2 col-form-label">Password</label>
+                                            <div class="col-sm-10">
+                                                <input type="password" name="password" id="password" class="form-control" placeholder="Inputkan Password" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="password_confirmation" class="col-sm-2 col-form-label">Konfirmasi Password</label>
+                                            <div class="col-sm-10">
+                                                <input type="password" name="password_confirmation" id="password_confirmation" class="form-control" placeholder="Konfirmasi Password" />
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <div class="col-lg-4 ml-auto">
                                                 @if($var['method']=='edit')
-                                                    {!! Form::submit('Update', ['class'=>'btn btn-primary']) !!}
-                                                    {!! Form::reset('Reset', ['class'=>'btn btn-danger']) !!}
+                                                    <button type="submit" class="btn btn-primary">Update</button>
+                                                    <button type="reset" class="btn btn-danger">Reset</button>
                                                 @elseif($var['method']=='create')
-                                                    {!! Form::submit('Simpan', ['class'=>'btn btn-primary']) !!}
-                                                    {!! Form::reset('Reset', ['class'=>'btn btn-danger']) !!}
+                                                    <button type="submit" class="btn btn-primary">Simpan</button>
+                                                    <button type="reset" class="btn btn-danger">Reset</button>
                                                 @else
                                                     <a href="{{ url()->previous() }}" class="btn btn-primary">Kembali</a>
                                                 @endif
                                             </div>
                                         </div>
-                                    {!! Form::close() !!}
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -103,14 +118,33 @@
                             }
                         }
                     },
-                    obat: "required",
+                    email: {
+                        required: true,
+                        email: true
+                    },
+                    password: {
+                        @if($var['method']=='create') required: true, @endif
+                        minlength: 6
+                    },
+                    password_confirmation: {
+                        @if($var['method']=='create') required: true, @endif
+                        equalTo: "#password"
+                    }
                 },
                 messages: {
                     kode: {
                         required: "Kolom kode harus diisi",
                         remote: "Kode sudah digunakan"
                     },
-                    tindakan: "Kolom tindakan harus diisi",
+                    email: "Kolom email harus diisi dengan format email yang benar",
+                    password: {
+                        required: "Kolom password harus diisi",
+                        minlength: "Password minimal 6 karakter"
+                    },
+                    password_confirmation: {
+                        required: "Kolom konfirmasi password harus diisi",
+                        equalTo: "Konfirmasi password tidak cocok dengan password"
+                    }
                 }
             });
         });

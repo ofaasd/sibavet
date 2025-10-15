@@ -8,7 +8,7 @@
         <li class="breadcrumb-item active">FORM 01</li>
     </ol>
 </section>
-{!! Form::open(['id'=>'form-keswan', 'method'=>'POST', 'url'=>'/lab/keswan/create', 'class'=>'validation-wizard wizard-circle', 'files'=>true]) !!}
+<form id="form-keswan" method="POST" action="/lab/keswan/create" class="validation-wizard wizard-circle" enctype="multipart/form-data">
 @csrf
 <section class="content">
     <div class="row">
@@ -24,32 +24,45 @@
                 <div class="box-body wizard-content">
                     <section>
                         <div class="form-group row">
-                            {!! Form::label('no_epid', 'No. EPID :', ['class' => 'col-sm-2 col-form-label', 'style' => 'font-weight:bold;text-align:right;']) !!}
+                            <label for="no_epid" class="col-sm-2 col-form-label" style="font-weight:bold;text-align:right;">No. EPID :</label>
                             <div class="col-sm-2">
-                                {!! Form::select('status_epid', ['ES'=>'ES (Pasif)', 'ED'=>'ED (Aktif)'], null, ['class'=>'form-control', 'id'=>'status_epid', 'placeholder'=>'- Status EPID -']) !!}
+                                <select name="status_epid" id="status_epid" class="form-control" placeholder="- Status EPID -">
+                                    <option value="">- Status EPID -</option>
+                                    <option value="ES">ES (Pasif)</option>
+                                    <option value="ED">ED (Aktif)</option>
+                                </select>
                             </div>
                             <div class="col-sm-5">
-                                {!! Form::text('no_epid', null, ['class'=>'form-control', 'placeholder'=>'Inputkan Nomor EPID', 'style'=> 'font-weight:bold;']) !!}
+                                <input type="text" name="no_epid" id="no_epid" class="form-control" placeholder="Inputkan Nomor EPID" style="font-weight:bold;">
                             </div>
                         </div>
                         @if(Auth::user()->role == 'Administrator')
                         <div class="form-group row">
-                            {!! Form::label('sub_satuan_kerja_id', 'Nama Laboratorium :', ['class' => 'col-sm-2 col-form-label']) !!}
+                            <label for="sub_satuan_kerja_id" class="col-sm-2 col-form-label">Nama Laboratorium :</label>
                             <div class="col-sm-10">
-                                {!! viewSelectLab(1,'sub_satuan_kerja_id','','col-sm-5') !!}
+                                <select name="sub_satuan_kerja_id" id="sub_satuan_kerja_id" class="form-control col-sm-5">
+                                    @foreach($subSatuanKerja as $id => $name)
+                                        <option value="{{ $id }}">{{ $name }}</option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
                         @endif
                         <div class="form-group row">
-                            {!! Form::label('nama_pengirim_id', 'Nama Pengirim :', ['class' => 'col-sm-2 col-form-label']) !!}
+                            <label for="nama_pengirim_id" class="col-sm-2 col-form-label">Nama Pengirim :</label>
                             <div class="col-sm-10">
-                                {!! viewSelectCustomer('nama_pengirim_id','','col-sm-5') !!}
+                                <select name="nama_pengirim_id" id="nama_pengirim_id" class="form-control col-sm-5">
+                                    @foreach($customers as $id => $name)
+                                        <option value="{{ $id }}">{{ $name }}</option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
                         <div class="form-group row">
-                            {!! Form::label('alamat_pengirim', 'Alamat Pengirim :', ['class' => 'col-sm-2 col-form-label']) !!}
+                            <label for="alamat_pengirim" class="col-sm-2 col-form-label">Alamat Pengirim :</label>
                             <div class="col-sm-10">
-                                {!! Form::text('alamat_pengirim', ($var['method']=='edit' || $var['method']=='show'?@$listLaboratorium->customer->alamat:null), ['class'=>'form-control', 'placeholder'=>'Alamat Pengirim', 'readonly']) !!}
+                                <input type="text" name="alamat_pengirim" id="alamat_pengirim" class="form-control" placeholder="Alamat Pengirim" readonly
+                                    value="{{ ($var['method']=='edit' || $var['method']=='show') ? (@$listLaboratorium->customer->alamat) : '' }}">
                             </div>
                         </div>
                         <div class="form-group row">
@@ -57,6 +70,11 @@
                             <div class="col-sm-10">
                                 {!! viewSelectSpesies(1,'jenis_hewan_id','','col-sm-4') !!}
                             </div>
+                            <select name="jenis_hewan_id" id="jenis_hewan_id" class="form-control col-sm-4">
+                                @foreach($spesies as $id => $name)
+                                    <option value="{{ $id }}">{{ $name }}</option>
+                                @endforeach
+                            </select>
                         </div>
                         <div class="form-group row">
                             {!! Form::label('', 'Contoh :', ['class' => 'col-sm-2 col-form-label']) !!}
@@ -67,16 +85,23 @@
                                         <th>Jenis Contoh</th>
                                         <th style="width: 20pt;">#</th>
                                     </tr>
+                                    <thead>
+                                    </tr>
                                 </table>
                                 <br>
                                 <a href="#" class="btn btn-rounded btn-sm btn-info" id="tambah_contoh">Tambah Contoh</a>
                             </div>
                         </div>
                         <div id="areaJenisPengujian">
-                            <div class="form-group row">
-                                {!! Form::label('permintaan_uji_id[]', 'Permintaan Uji :', ['class' => 'col-sm-2 col-form-label']) !!}
+                            <div class="form-group row">                                
+                                <label for="permintaan_uji_id[]" class="col-sm-2 col-form-label">Permintaan Uji :</label>
                                 <div class="col-sm-10">
-                                    {!! viewSelectPermintaanUji('1','permintaan_uji[]')!!}
+                                    <select name="permintaan_uji[]" id="permintaan_uji[]" class="form-control select2" multiple="multiple" data-placeholder="Pilih Permintaan Uji">
+                                        @foreach($permintaanUji as $id => $name)
+                                            <option value="{{ $id }}">{{ $name }}</option>
+                                        @endforeach
+                                    </select>
+                                <a href="#" class="btn btn-rounded btn-sm btn-info" id="tambah_contoh">Tambah Contoh</a>
                                 </div>
                             </div>
                         </div>
@@ -119,19 +144,19 @@
                         <div class="form-group row">
                             {!! Form::label('catatan', 'Catatan/Saran :', ['class' => 'col-sm-2 col-form-label']) !!}
                             <div class="col-sm-10">
-                                {!! Form::textarea('catatan', null, array('class'=> 'form-control', 'rows' => '2','placeholder'=>'Catatan/Saran')) !!}
+                                <textarea name="catatan" id="catatan" class="form-control" rows="2" placeholder="Catatan/Saran"></textarea>
                             </div>
                         </div>
                         <div class="form-group row">
                             {!! Form::label('pengirim', 'Pengirim :', ['class' => 'col-sm-2 col-form-label']) !!}
                             <div class="col-sm-10">
-                                {!! Form::text('pengirim', null, ['class'=>'form-control col-sm-4', 'placeholder'=>'Nama Pengirim']) !!}
+                                <input type="text" name="pengirim" id="pengirim" class="form-control col-sm-4" placeholder="Nama Pengirim">
                             </div>
                         </div>
                         <div class="form-group row">
-                            {!! Form::label('penerima', 'Penerima :', ['class' => 'col-sm-2 col-form-label']) !!}
+                            {!! Form::label('penerima_01', 'Penerima :', ['class' => 'col-sm-2 col-form-label']) !!}
                             <div class="col-sm-10">
-                                {!! Form::text('penerima', null, ['class'=>'form-control col-sm-4', 'placeholder'=>'Nama Penerima']) !!}
+                                <input type="text" name="penerima_01" id="penerima_01" class="form-control col-sm-4" placeholder="Nama Penerima">
                             </div>
                         </div>
                     </section>
@@ -146,7 +171,7 @@
         </div>
     </div>
 </section>
-{!! Form::close() !!}
+</form>
 <script>
     $(document).ready(function() {
         $('.select2').select2();
@@ -204,7 +229,12 @@
         $('#tabel_contoh tbody').append(
             '<tr>'
                 +'<td class="center"><input class="form-control" value="1" name="jumlah_contoh[]" type="number" style="text-align: center;"/></td>'
-                +'<td>{!! viewSelectJenisContoh("1","jenis_contoh[]") !!}</td>'
+                +'<td>'
+                    +'<select name="jenis_contoh[]" class="form-control select2">'
+                        +'@foreach($jenisContoh as $id => $name)'
+                            +'<option value="{{ $id }}">{{ $name }}</option>'
+                        +'@endforeach'
+                    +'</select></td>'
                 +'<td class="center delete_contoh"><a class="text-danger" style="cursor:pointer"><i class="fa fa-times-circle"></i></a></td>'
             +'</tr>'
         );

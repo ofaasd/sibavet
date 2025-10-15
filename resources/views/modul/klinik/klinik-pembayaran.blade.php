@@ -75,7 +75,9 @@
 										</div>
 										
 										<div class="col-md-12">
-											{!! Form::open(['id'=>'form-klinik', 'method'=>'POST', 'url'=>'/klinik/simpan_pembayaran']) !!}
+											<form id="form-klinik" method="POST" action="/klinik/simpan_pembayaran">
+											@csrf
+											
 											<input type="hidden" name="from_url" value="{{$var['from_url']}}">
 											<input type="hidden" name="hewan" value="{{$var['curr_klinik']->klinik_id}}">
 											<div class="row">
@@ -83,7 +85,7 @@
 													<h4>Rincian Pembayaran</h4>
 												</div>
 												<div class="col-md-4" style="text-align:right">
-													<a href="#" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Tambah Pelayanan</a>
+													<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Tambah Pelayanan</button>
 												</div>
 												<!-- Modal -->
 												<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -226,10 +228,18 @@
 												</tfoot>
 											</table>
 											<div class="form-group row">
-												{!! Form::label('no_kwitansi', 'No. Kwitansi', ['class' => 'col-sm-2 col-form-label required']) !!}
+												<label for="no_kwitansi" class="col-sm-2 col-form-label required">No. Kwitansi</label>
 												<div class="col-sm-10">
-													
-													{!! Form::text('no_kwitansi', (!empty($var['pembayaran']->first())?$var['pembayaran']->first()->no_kwitansi:""), ['class'=>'form-control', 'placeholder'=>'Inputkan No. kwitansi', 'required']) !!}
+													<input type="text" name="no_kwitansi" id="no_kwitansi" class="form-control" placeholder="Inputkan No. kwitansi" required value="{{ (!empty($var['pembayaran']->first())?$var['pembayaran']->first()->no_kwitansi:"") }}">
+												</div>
+											</div>
+											<div class="form-group row">
+												<label for="kegiatan" class="col-sm-2 col-form-label">Kegiatan</label>
+												<div class="col-sm-10">
+													<select name="kegiatan" class="form-control">
+														<option value="1">Pasif</option>
+														<option value="2">Aktif</option>
+													</select>
 												</div>
 											</div>
 											<tr class="bg-secondary">
@@ -244,8 +254,8 @@
 													<th></th>
 												</tr>
 											<hr />
-											{!! Form::submit('Bayar', ['class'=>'btn btn-primary col-md-12']) !!}
-											{!! Form::close() !!}
+											<button type="submit" class="btn btn-primary col-md-12">Bayar</button>
+											</form>
 										</div>
 										<div class="col-md-12">
 											

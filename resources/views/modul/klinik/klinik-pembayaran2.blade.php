@@ -10,10 +10,10 @@
         <title>{{ env('APP_NAME', 'Laravel') }}</title>
 
         <style>
-            @page{
-			size:auto;
-			margin:5mm;
-		}
+ @page{
+ size:auto;
+ margin:5mm;
+ }
 		body{
 			background-color:#ffffff;
 			

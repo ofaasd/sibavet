@@ -8,7 +8,7 @@
         <li class="breadcrumb-item active">FORM 01</li>
     </ol>
 </section>
-{!! Form::model($kesmavet, ['id'=>'form-kesmavet', 'method'=>'POST', 'url'=>'/lab/kesmavet/create', 'class'=>'validation-wizard wizard-circle', 'files'=>true]) !!}
+<form id="form-kesmavet" method="POST" action="/lab/kesmavet/create" class="validation-wizard wizard-circle" enctype="multipart/form-data">
 @csrf
 <input type="hidden" id="id" name="id" value="{!! @$id?$kesmavet->id:0 !!}">
 <section class="content">
@@ -25,42 +25,60 @@
                 <div class="box-body wizard-content">
                     <section>
                         <div class="form-group row">
-                            {!! Form::label('no_epid', 'No. EPID :', ['class' => 'col-sm-2 col-form-label', 'style' => 'font-weight:bold;text-align:right;']) !!}
+                            <label for="no_epid" class="col-sm-2 col-form-label" style="font-weight:bold;text-align:right;">No. EPID :</label>
                             @if($id==0)
                                 <div class="col-sm-2">
-                                    {!! Form::select('status_epid', ['ES'=>'ES (Pasif)', 'ED'=>'ED (Aktif)'], null, ['class'=>'form-control', 'id'=>'status_epid', 'placeholder'=>'- Status EPID -']) !!}
+                                    <select name="status_epid" id="status_epid" class="form-control" placeholder="- Status EPID -">
+                                        <option value="">- Status EPID -</option>
+                                        <option value="ES" {{ (isset($kesmavet) && $kesmavet->status_epid == 'ES') ? 'selected' : '' }}>ES (Pasif)</option>
+                                        <option value="ED" {{ (isset($kesmavet) && $kesmavet->status_epid == 'ED') ? 'selected' : '' }}>ED (Aktif)</option>
+                                    </select>
                                 </div>
                             @endif
                             <div class="col-sm-5">
-                                {!! Form::text('no_epid', null, ['class'=>'form-control', 'readonly'=> $id, 'style'=> 'font-weight:bold;']) !!}
+                                <input type="text" name="no_epid" id="no_epid" class="form-control" placeholder="Inputkan Nomor EPID" style="font-weight:bold;" value="{{ old('no_epid', $kesmavet->no_epid ?? '') }}" {{ $id ? 'readonly' : '' }}>
                             </div>
                         </div>
                         @if(Auth::user()->view_data > 2)
                             <input type="hidden" name="sub_satuan_kerja_id" value="{!! Auth::user()->sub_satuan_kerja_id !!}">
                         @else
                         <div class="form-group row">
-                            {!! Form::label('sub_satuan_kerja_id', 'Nama Laboratorium :', ['class' => 'col-sm-2 col-form-label']) !!}
+                            <label for="sub_satuan_kerja_id" class="col-sm-2 col-form-label">
+                                Nama Laboratorium :
+                            </label>
                             <div class="col-sm-10">
-                                {!! viewSelectLab(3,'sub_satuan_kerja_id',@$kesmavet->sub_satuan_kerja_id,'col-sm-5') !!}
+                                <select name="sub_satuan_kerja_id" id="sub_satuan_kerja_id" class="form-control col-sm-5">
+                                    @foreach($subSatuanKerja as $id => $name)
+                                        <option value="{{ $id }}" {{ (isset($kesmavet) && $kesmavet->sub_satuan_kerja_id == $id) ? 'selected' : '' }}>{{ $name }}</option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
                         @endif
                         <div class="form-group row">
                             {!! Form::label('nama_pengirim_id', 'Nama Pengirim :', ['class' => 'col-sm-2 col-form-label']) !!}
                             <div class="col-sm-10">
-                                {!! viewSelectCustomer('nama_pengirim_id',@$kesmavet->nama_pengirim_id,'col-sm-5') !!}
+                                <select name="nama_pengirim_id" id="nama_pengirim_id" class="form-control col-sm-5">
+                                    @foreach($customers as $id => $name)
+                                        <option value="{{ $id }}" {{ (isset($kesmavet) && $kesmavet->nama_pengirim_id == $id) ? 'selected' : '' }}>{{ $name }}</option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
                         <div class="form-group row">
                             {!! Form::label('alamat_pengirim', 'Alamat Pengirim :', ['class' => 'col-sm-2 col-form-label']) !!}
                             <div class="col-sm-10">
-                                {!! Form::text('alamat_pengirim',@$kesmavet->customer->alamat, ['class'=>'form-control', 'placeholder'=>'Alamat Pengirim', 'readonly']) !!}
+                                <input type="text" name="alamat_pengirim" id="alamat_pengirim" class="form-control" placeholder="Alamat Pengirim" readonly value="{{ ($var['method']=='edit' || $var['method']=='show') ? (@$kesmavet->customer->alamat) : '' }}">
                             </div>
                         </div>
                         <div class="form-group row">
                             {!! Form::label('jenis_hewan_id', 'Jenis Contoh :', ['class' => 'col-sm-2 col-form-label']) !!}
                             <div class="col-sm-10">
-                                {!! viewSelectSpesies(3,'jenis_hewan_id',@$kesmavet->jenis_hewan_id,'col-sm-4') !!}
+                                <select name="jenis_hewan_id" id="jenis_hewan_id" class="form-control col-sm-4">
+                                    @foreach($spesies as $id => $name)
+                                        <option value="{{ $id }}" {{ (isset($kesmavet) && $kesmavet->jenis_hewan_id == $id) ? 'selected' : '' }}>{{ $name }}</option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
                         <div class="form-group row">
@@ -76,7 +94,13 @@
                                         @foreach($kesmavet->labContoh as $key=>$lc)
                                             <tr>
                                                 <td class="center"><input class="form-control" value="{!! $id?@$lc->pcontoh->jumlah:1 !!}" name="jumlah_contoh[]" type="number" style="text-align: center;"/></td>
-                                                <td>{!! viewSelectJenisContoh("3","jenis_contoh[]", @$lc->id) !!}</td>
+                                                <td>
+                                                    <select name="jenis_contoh[]" class="form-control select2">
+                                                        @foreach($jenisContoh as $id => $name)
+                                                            <option value="{{ $id }}" {{ ($lc->jenis_contoh_id == $id) ? 'selected' : '' }}>{{ $name }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </td>
                                                 <td class="center delete_contoh"><a class="text-danger" style="cursor:pointer"><i class="fa fa-times-circle"></i></a></td>
                                             </tr>
                                         @endforeach
@@ -90,68 +114,72 @@
                             <div class="form-group row">
                                 {!! Form::label('permintaan_uji[]', 'Permintaan Uji :', ['class' => 'col-sm-2 col-form-label']) !!}
                                 <div class="col-sm-10">
-                                    {!! viewSelectPermintaanUji('3','permintaan_uji[]',$id?@$kesmavet->labPengujian->pluck('id'):"") !!}
+                                    <select name="permintaan_uji[]" id="permintaan_uji[]" class="form-control select2" multiple="multiple" data-placeholder="Pilih Permintaan Uji">
+                                        @foreach($permintaanUji as $id => $name)
+                                            <option value="{{ $id }}" {{ (isset($kesmavet) && in_array($id, $kesmavet->labPengujian->pluck('permintaan_uji_id')->toArray())) ? 'selected' : '' }}>{{ $name }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group row">
                             {!! Form::label('kriteria_contoh', 'Kriteria Contoh :', ['class' => 'col-sm-2 col-form-label']) !!}
                             <div class="col-sm-10"
->                               <input name="kriteria_contoh" class="with-gap radio-col-blue form-control" type="radio" id="memenuhi" value="MS" {!! $id?$kesmavet->kriteria_contoh=="MS"?"checked":"":"checked" !!}>
+>                               <input name="kriteria_contoh" class="with-gap radio-col-blue form-control" type="radio" id="memenuhi" value="MS" {{ (isset($kesmavet) && $kesmavet->kriteria_contoh == 'MS') ? 'checked' : '' }}>
                                 <label for="memenuhi">Memenuhi Syarat</label>&nbsp;&nbsp;&nbsp;
-                                <input name="kriteria_contoh" class="with-gap radio-col-red form-control" type="radio" id="tidak_memenuhi" value="TMS" {!! $id?$kesmavet->kriteria_contoh=="TMS"?"checked":"":"" !!}>
+                                <input name="kriteria_contoh" class="with-gap radio-col-red form-control" type="radio" id="tidak_memenuhi" value="TMS" {{ (isset($kesmavet) && $kesmavet->kriteria_contoh == 'TMS') ? 'checked' : '' }}>
                                 <label for="tidak_memenuhi">Tidak Memenuhi Syarat</label>
                             </div>
                         </div>
                         <div class="form-group row">
                             {!! Form::label('peralatan', 'Peralatan :', ['class' => 'col-sm-2 col-form-label']) !!}
                             <div class="col-sm-10"
->                               <input name="peralatan" class="with-gap radio-col-blue form-control" type="radio" id="peralatan_mampu" value="Mampu" {!! $id?$kesmavet->peralatan=="Mampu"?"checked":"":"checked" !!}>
+>                               <input name="peralatan" class="with-gap radio-col-blue form-control" type="radio" id="peralatan_mampu" value="Mampu" {{ (isset($kesmavet) && $kesmavet->peralatan == 'Mampu') ? 'checked' : '' }}>
                                 <label for="peralatan_mampu">Mampu</label>&nbsp;&nbsp;&nbsp;
-                                <input name="peralatan" class="with-gap radio-col-red form-control" type="radio" id="peralatan_tidak_mampu" value="Tidak Mampu" {!! $id?$kesmavet->peralatan=="Tidak Mampu"?"checked":"":"" !!}>
+                                <input name="peralatan" class="with-gap radio-col-red form-control" type="radio" id="peralatan_tidak_mampu" value="Tidak Mampu" {{ (isset($kesmavet) && $kesmavet->peralatan == 'Tidak Mampu') ? 'checked' : '' }}>
                                 <label for="peralatan_tidak_mampu">Tidak Mampu</label>
                             </div>
                         </div>
                         <div class="form-group row">
                             {!! Form::label('bahan', 'Bahan :', ['class' => 'col-sm-2 col-form-label']) !!}
                             <div class="col-sm-10"
->                               <input name="bahan" class="with-gap radio-col-blue form-control" type="radio" id="bahan_mampu" value="Mampu" {!! $id?$kesmavet->bahan=="Mampu"?"checked":"":"checked" !!}>
+>                               <input name="bahan" class="with-gap radio-col-blue form-control" type="radio" id="bahan_mampu" value="Mampu" {{ (isset($kesmavet) && $kesmavet->bahan == 'Mampu') ? 'checked' : '' }}>
                                 <label for="bahan_mampu">Mampu</label>&nbsp;&nbsp;&nbsp;
-                                <input name="bahan" class="with-gap radio-col-red form-control" type="radio" id="bahan_tidak_mampu" value="Tidak Mampu" {!! $id?$kesmavet->bahan=="Tidak Mampu"?"checked":"":"" !!}>
+                                <input name="bahan" class="with-gap radio-col-red form-control" type="radio" id="bahan_tidak_mampu" value="Tidak Mampu" {{ (isset($kesmavet) && $kesmavet->bahan == 'Tidak Mampu') ? 'checked' : '' }}>
                                 <label for="bahan_tidak_mampu">Tidak Mampu</label>
                             </div>
                         </div>
                         <div class="form-group row">
                             {!! Form::label('personil', 'Personil :', ['class' => 'col-sm-2 col-form-label']) !!}
                             <div class="col-sm-10"
->                               <input name="personil" class="with-gap radio-col-blue form-control" type="radio" id="personil_mampu" value="Mampu" {!! $id?$kesmavet->personil=="Mampu"?"checked":"":"checked" !!}>
+>                               <input name="personil" class="with-gap radio-col-blue form-control" type="radio" id="personil_mampu" value="Mampu" {{ (isset($kesmavet) && $kesmavet->personil == 'Mampu') ? 'checked' : '' }}>
                                 <label for="personil_mampu">Mampu</label>&nbsp;&nbsp;&nbsp;
-                                <input name="personil" class="with-gap radio-col-red form-control" type="radio" id="personil_tidak_mampu" value="Tidak Mampu" {!! $id?$kesmavet->personil=="Tidak Mampu"?"checked":"":"" !!}>
+                                <input name="personil" class="with-gap radio-col-red form-control" type="radio" id="personil_tidak_mampu" value="Tidak Mampu" {{ (isset($kesmavet) && $kesmavet->personil == 'Tidak Mampu') ? 'checked' : '' }}>
                                 <label for="personil_tidak_mampu">Tidak Mampu</label>
                             </div>
                         </div>
                         <div class="form-group row">
                             {!! Form::label('catatan', 'Catatan/Saran :', ['class' => 'col-sm-2 col-form-label']) !!}
                             <div class="col-sm-10">
-                                {!! Form::textarea('catatan', null, array('class'=> 'form-control', 'rows' => '2','placeholder'=>'Catatan/Saran')) !!}
+                                <textarea name="catatan" id="catatan" class="form-control" rows="2" placeholder="Catatan/Saran">{{ old('catatan', $kesmavet->catatan ?? '') }}</textarea>
                             </div>
                         </div>
                         <div class="form-group row">
                             {!! Form::label('tanggal_penerimaan', 'Tanggal Diterima Contoh :', ['class' => 'col-sm-2 col-form-label']) !!}
                             <div class="col-sm-4">
-                                {!! viewSelectTanggal('tanggal_penerimaan', @$kesmavet->tanggal_penerimaan==""?date('d-m-Y'):@$kesmavet->tanggal_penerimaan)  !!}
+                                <input type="text" name="tanggal_penerimaan" id="tanggal_penerimaan" class="form-control" placeholder="Tanggal Diterima Contoh" value="{{ old('tanggal_penerimaan', @$kesmavet->tanggal_penerimaan==""?date('d-m-Y'):@$kesmavet->tanggal_penerimaan) }}">
                             </div>
                         </div>
                         <div class="form-group row">
                             {!! Form::label('pengirim', 'Pengirim :', ['class' => 'col-sm-2 col-form-label']) !!}
                             <div class="col-sm-10">
-                                {!! Form::text('pengirim', null, ['class'=>'form-control col-sm-4', 'placeholder'=>'Nama Pengirim']) !!}
+                                <input type="text" name="pengirim" id="pengirim" class="form-control col-sm-4" placeholder="Nama Pengirim" value="{{ old('pengirim', $kesmavet->pengirim ?? '') }}">
                             </div>
                         </div>
                         <div class="form-group row">
                             {!! Form::label('penerima', 'Penerima :', ['class' => 'col-sm-2 col-form-label']) !!}
                             <div class="col-sm-10">
-                                {!! Form::text('penerima', null, ['class'=>'form-control col-sm-4', 'placeholder'=>'Nama Penerima']) !!}
+                                <input type="text" name="penerima" id="penerima" class="form-control col-sm-4" placeholder="Nama Penerima" value="{{ old('penerima', $kesmavet->penerima ?? '') }}">
                             </div>
                         </div>
                     </section>
@@ -168,7 +196,7 @@
         </div>
     </div>
 </section>
-{!! Form::close() !!}
+</form>
 <script>
     $jid = {!! $id?$kesmavet->id:0 !!};
     $(document).ready(function() {
@@ -249,7 +277,13 @@
         $('#tabel_contoh tbody').append(
             '<tr>'
                 +'<td class="center"><input class="form-control" value="1" name="jumlah_contoh[]" type="number" style="text-align: center;"/></td>'
-                +'<td>{!! viewSelectJenisContoh("3","jenis_contoh[]") !!}</td>'
+                +'<td>'
+                    +'<select name="jenis_contoh[]" class="form-control select2">'
+                        +'@foreach($jenisContoh as $id => $name)'
+                            +'<option value="{{ $id }}">{{ $name }}</option>'
+                        +'@endforeach'
+                    +'</select>'
+                +'</td>'
                 +'<td class="center delete_contoh"><a class="text-danger" style="cursor:pointer"><i class="fa fa-times-circle"></i></a></td>'
             +'</tr>'
         );

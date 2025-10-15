@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers\Laboratorium;
 
-use PDF, Session, Request, Auth, DB;
+use PDF, Session, Auth, DB;
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Input;
 
@@ -14,7 +15,7 @@ use App\Models\MasterData\Customer;
 // use App\Models\Pengaturan\User;
 // use App\Models\MasterData\SubSatuanKerja;
 // use App\Models\MasterData\Spesies;
-// use App\Models\MasterData\JenisContoh;02
+use App\Models\MasterData\JenisContoh;
 // use App\Models\MasterData\BentukContoh;
 // use App\Models\MasterData\SeksiLaboratorium;
 // use App\Models\MasterData\JenisPengujian;
@@ -31,8 +32,8 @@ class KeswanController extends Controller
     function __construct(Request $request)
     {
         $this->middleware('auth');
-        $this->cari = Input::get('cari', '');
-        $this->url = makeUrl($request::query());
+        $this->cari = $request->query('cari', '');
+        $this->url = makeUrl($request->query());
     }
 
     public function index()
@@ -71,8 +72,8 @@ class KeswanController extends Controller
                 return view('errors.403');
             }
         }
-
-        return view("laboratorium.keswan.form01", compact('id','keswan'));
+        $jenisContoh = JenisContoh::get();
+        return view("laboratorium.keswan.form01", compact('id','keswan','jenisContoh'));
     }
 // get2
     public function getForm02($id)

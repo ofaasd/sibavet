@@ -36,9 +36,14 @@
 										@csrf
 											<input type="hidden" name="id" value="{{(!empty($item))?$item->id:""}}">
 											<div class="form-group row">
-												{!! Form::label('obat', 'Jenis Obat', ['class' => 'col-sm-2 col-form-label']) !!}
+												<label for="obat" class="col-sm-2 col-form-label">Jenis Obat</label>
 												<div class="col-sm-10">
-													{!! Form::select('obat', $obat, (!empty($item))?$item->obat_id:"", ['class'=>'form-control select2', 'placeholder'=>'Pilih Jenis Obat', 'style'=>'width: 100%;']) !!}
+													<select name="obat" id="obat" class="form-control select2" style="width: 100%;">
+														<option value="">Pilih Jenis Obat</option>
+														@foreach($obat as $key => $value)
+															<option value="{{ $key }}" {{ (!empty($item) && $item->obat_id == $key) ? 'selected' : '' }}>{{ $value }}</option>
+														@endforeach
+													</select>
 												</div>
 											</div>
 											@if(!empty($item))
@@ -49,22 +54,22 @@
 												</script>
 												@endif
 											<div class="form-group row">
-												{!! Form::label('Jumlah', 'Jumlah', ['class' => 'col-sm-2 col-form-label']) !!}
+												<label for="jumlah" class="col-sm-2 col-form-label">Jumlah</label>
 												<div class="col-sm-4">
-													{!! Form::text('jumlah',(!empty($item))?$item->stock:"", ['class'=>'form-control', 'placeholder'=>'Jumlah, Ex : 0']) !!}
+													<input type="text" name="jumlah" id="jumlah" class="form-control" placeholder="Jumlah, Ex : 0" value="{{ !empty($item) ? $item->stock : '' }}">
 												</div>
 											</div>
 											<div class="form-group row">
-												{!! Form::label('Satuan', 'Satuan', ['class' => 'col-sm-2 col-form-label']) !!}
+												<label for="satuan" class="col-sm-2 col-form-label">Satuan</label>
 												<div class="col-sm-4">
-													{!! Form::text('satuan',(!empty($item))?$item->satuan:"ML", ['class'=>'form-control', 'placeholder'=>'Ex : ML']) !!}
+													<input type="text" name="satuan" id="satuan" class="form-control" placeholder="Ex : ML" value="{{ !empty($item) ? $item->satuan : 'ML' }}">
 												</div>
 											</div>
 											
 											<div class="form-group row">
-												{!! Form::label('Bulan', 'Bulan', ['class' => 'col-sm-2 col-form-label']) !!}
+												<label for="bulan" class="col-sm-2 col-form-label">Bulan</label>
 												<div class="col-sm-4">
-													<select name="bulan" class="form-control" style="float:right">
+													<select name="bulan" id="bulan" class="form-control" style="float:right">
 														@foreach($l_bulan as $key=>$value)
 															<option value='{{$key}}'  {{($key==$bulan)?'selected':''}}>{{$value}}</option>
 														@endforeach
@@ -72,9 +77,9 @@
 												</div>
 											</div>
 											<div class="form-group row">
-												{!! Form::label('Tahun', 'Tahun', ['class' => 'col-sm-2 col-form-label']) !!}
+												<label for="tahun" class="col-sm-2 col-form-label">Tahun</label>
 												<div class="col-sm-4">
-													<select name="tahun" class="form-control">
+													<select name="tahun" id="tahun" class="form-control">
 														@for($i=date('Y');$i>((int)date('Y')-5);$i--)
 															<option value='{{$i}}' {{($i==$tahun)?'selected':''}}>{{$i}}</option>
 														@endfor

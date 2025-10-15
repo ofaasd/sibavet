@@ -56,17 +56,14 @@
 													
 													
 														<div class="btn-group">
-                                                            {!! Form::open(['method'=>'post', 'url'=>'/stock/hapus_stock', 'class'=> 'delete_form']) !!}
-                                                            {!! Form::hidden('id', $item->id, ['class'=>'form-control']) !!}
-                                                            <div class="btn-group btn-group-xs" role="group" aria-label="Basic example">
-                                                                
-																<button type="submit" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></button>
-                                                                
-                                                                
-																<a href="{{url('stock/edit_stock/' . $item->id)}}" class="btn btn-primary btn-xs"><i class="fa fa-edit"></i></a>
-                                                               
-                                                            </div>
-                                                            {!! Form::close() !!}
+                                                            <form method="POST" action="/stock/hapus_stock" class="delete_form">
+                                                                @csrf
+                                                                <input type="hidden" name="id" value="{{ $item->id }}" class="form-control">
+                                                                <div class="btn-group btn-group-xs" role="group" aria-label="Basic example">
+                                                                    <button type="submit" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></button>
+                                                                    <a href="{{url('stock/edit_stock/' . $item->id)}}" class="btn btn-primary btn-xs"><i class="fa fa-edit"></i></a>
+                                                                </div>
+                                                            </form>
                                                         </div>
 													
                                                     </td>

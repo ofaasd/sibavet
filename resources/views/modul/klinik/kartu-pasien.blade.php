@@ -140,7 +140,7 @@
             <tr>
                 <td width="20%">UMUR</td>
                 <td width="3%">:</td>
-                <td style="border-bottom-style: dotted; border-width: 1px;">{{ $klinik->umur }}</td>
+                <td style="border-bottom-style: dotted; border-width: 1px;">{{ $klinik->umur }} Tahun</td>
             </tr>
             <tr>
                 <td width="20%">CIRI - CIRI SPESIFIK</td>

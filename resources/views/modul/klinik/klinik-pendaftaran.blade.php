@@ -28,27 +28,32 @@
                             <div class="tab-pane active">
                                 <div class="pad">
                                     @if($var['method'] == 'create')
-									{!! Form::open(['id'=>'form-klinik', 'method'=>'POST', 'url'=>'/klinik/simpan_pendaftaran']) !!}
+									<form id="form-klinik" method="POST" action="{{ url('/klinik/simpan_pendaftaran') }}">
                                     @elseif($var['method'] == 'edit')
-									{!! Form::open(['id'=>'form-klinik', 'method'=>'POST', 'url'=>'/klinik/update_pendaftaran']) !!}
+									<form id="form-klinik" method="POST" action="{{ url('/klinik/update_pendaftaran') }}">
 									<input type="hidden" name="id_klinik_terapi" value="{{$var['curr_klinik']->id}}">
 									<input type="hidden" name="from_url" value="{{$var['from_url']}}">
 									@endif
+									@csrf
 									<div class="row">
 										<div class="col-md-12">
 											<div class="card">
 												<div class="card-content">
 													<div class="form-group row">
-														{!! Form::label('input_by', 'User', ['class' => 'col-sm-2 col-form-label']) !!}
-														<div class="col-sm-10">
-															{!! Form::select('input_by', $var['user'], $var['currentUser'], ['class'=>'form-control select2', 'placeholder'=>'Pilih User', 'style'=>'width: 100%;', 'onchange'=>'subSatuanKerja()']) !!}
+														<label for="input_by" class="col-sm-2 col-form-label">User</label>
+														<div class="col-sm-10">                                                            
+															<select name="input_by" id="input_by" class="form-control select2" placeholder="Pilih User" style="width: 100%;" onchange="subSatuanKerja()">
+																@foreach($var['user'] as $id => $name)
+																	<option value="{{ $id }}" {{ ($var['currentUser'] == $id) ? 'selected' : '' }}>{{ $name }}</option>
+																@endforeach
+															</select>
 														</div>
 													</div>
 													<div class="form-group row">
-														{!! Form::label('sub_satuan_kerja_id', 'Nama Klinik', ['class' => 'col-sm-2 col-form-label']) !!}
+														<label for="sub_satuan_kerja_id" class="col-sm-2 col-form-label">Nama Klinik</label>
 														<div class="col-sm-10">
-															{!! Form::text('nama_sub_satuan_kerja', ($var['method']=='edit'||$var['method']=='show'?@$var['curr_klinik']->inputBy->subSatuanKerja->sub_satuan_kerja:$var['namaKlinik']), ['class'=>'form-control', 'id'=>'nama_sub_satuan_kerja', 'placeholder'=>'Inputkan Nama Klinik', 'readonly']) !!}
-															{!! Form::hidden('sub_satuan_kerja_id', $var['idKlinik'], ['class'=>'form-control']) !!}
+															<input type="text" name="nama_sub_satuan_kerja" id="nama_sub_satuan_kerja" class="form-control" placeholder="Inputkan Nama Klinik" readonly value="{{ ($var['method']=='edit'||$var['method']=='show'?@$var['curr_klinik']->inputBy->subSatuanKerja->sub_satuan_kerja:$var['namaKlinik']) }}">
+															<input type="hidden" name="sub_satuan_kerja_id" value="{{ $var['idKlinik'] }}" class="form-control">
 														</div>
 													</div>
 												</div>
@@ -65,7 +70,7 @@
 													
 													
 													<div class="form-group row">
-														{!! Form::label('pemilik_id', 'Pemilik', ['class' => 'col-sm-2 col-form-label']) !!}
+														<label for="pemilik_id" class="col-sm-2 col-form-label">Pemilik</label>
 														<div class="col-sm-10">
 															
 															<select name="pemilik_id" id="pemilik_id" class="form-control select2" style="width:100%" onchange="pemilik()" required>
@@ -82,39 +87,43 @@
 													</div>
 													
 													<div class="form-group row">
-														{!! Form::label('alamat_pemilik', 'Alamat Pemilik', ['class' => 'col-sm-2 col-form-label']) !!}
+														<label for="alamat_pemilik" class="col-sm-2 col-form-label">Alamat Pemilik</label>
 														<div class="col-sm-10">
-															{!! Form::text('alamat_pemilik', (!empty($var['curr_klinik'])?$var['curr_klinik']->alamat_pemilik:""), ['class'=>'form-control', 'placeholder'=>'Inputkan Alamat Pemilik', 'readonly']) !!}
+															<input type="text" name="alamat_pemilik" value="{{ (!empty($var['curr_klinik'])?$var['curr_klinik']->alamat_pemilik:"") }}" class="form-control" placeholder="Inputkan Alamat Pemilik" readonly>
 														</div>
 													</div>
 													<div class="form-group row">
-														{!! Form::label('telepon_pemilik', 'Telepon Pemilik', ['class' => 'col-sm-2 col-form-label']) !!}
+														<label for="telepon_pemilik" class="col-sm-2 col-form-label">Telepon Pemilik</label>
 														<div class="col-sm-10">
-															{!! Form::text('telepon_pemilik',  (!empty($var['curr_klinik'])?$var['curr_klinik']->telepon_pemilik:""), ['class'=>'form-control', 'placeholder'=>'Inputkan Telepon Pemilik', 'readonly']) !!}
+															<input type="text" name="telepon_pemilik" value="{{ (!empty($var['curr_klinik'])?$var['curr_klinik']->telepon_pemilik:"") }}" class="form-control" placeholder="Inputkan Telepon Pemilik" readonly>
 														</div>
 													</div>
 													
 													
 													<!-- <div class="form-group row"> -->
-														<!-- {!! Form::label('ciri_ciri', 'Ciri - Ciri', ['class' => 'col-sm-2 col-form-label']) !!} -->
+														<!-- <label for="ciri_ciri" class="col-sm-2 col-form-label">Ciri - Ciri</label> -->
 														<!-- <div class="col-sm-10"> -->
-															{!! Form::hidden('ciri_ciri', null, ['class'=>'form-control', 'placeholder'=>'Inputkan Ciri - Ciri']) !!}
+															<input type="hidden" name="ciri_ciri" value="" class="form-control" placeholder="Inputkan Ciri - Ciri">
 														<!-- </div>
 													</div> -->
 													<div class="form-group row">
-														<!--{!! Form::label('no_periksa', 'Nomor Periksa', ['class' => 'col-sm-2 col-form-label']) !!}
+														<label for="no_periksa" class="col-sm-2 col-form-label">Nomor Periksa</label>
 														<div class="col-sm-4">
-															{!! Form::text('no_periksa', ($var['method']=='create'?$var['noPeriksa']:null), ['class'=>'form-control', 'placeholder'=>'Inputkan Nomor Periksa']) !!}
-														</div>-->
-														{!! Form::label('tanggal_periksa', 'Tanggal Periksa', ['class' => 'col-sm-2 col-form-label']) !!}
+															<input type="text" name="no_periksa" id="no_periksa" class="form-control" placeholder="Inputkan Nomor Periksa" value="{{ ($var['method']=='create' ? $var['noPeriksa'] : null) }}">
+														</div>
+														<label for="tanggal_periksa" class="col-sm-2 col-form-label">Tanggal Periksa</label>
 														<div class="col-sm-4">
-															{!! Form::text('tanggal_periksa', (!empty($var['curr_klinik'])?$var['curr_klinik']->tanggal_periksa:$var['tanggal_now']), ['class'=>'form-control', 'placeholder'=>'Inputkan Tanggal Periksa','autocomplete'=>'off']) !!}
+															<input type="text" name="tanggal_periksa" value="{{ (!empty($var['curr_klinik'])?$var['curr_klinik']->tanggal_periksa:$var['tanggal_now']) }}" class="form-control" placeholder="Inputkan Tanggal Periksa" autocomplete="off">
 														</div>
 													</div>
 													<div class="form-group row">
-														{!! Form::label('pemeriksa', 'Pemeriksa', ['class' => 'col-sm-2 col-form-label required']) !!}
+														<label for="pemeriksa" class="col-sm-2 col-form-label required">Pemeriksa</label>
 														<div class="col-sm-10">
-															{!! Form::select('pemeriksa', $var['pemeriksa'],null, ['class'=>'form-control select2', 'placeholder'=>'Pilih Pemeriksa', 'style'=>'width: 100%;', 'required'=>'required']) !!}
+															<select name="pemeriksa" id="pemeriksa" class="form-control select2" placeholder="Pilih Pemeriksa" style="width: 100%;" required="required">
+																@foreach($var['pemeriksa'] as $id => $name)
+																	<option value="{{ $id }}">{{ $name }}</option>
+																@endforeach
+															</select>
 														</div>
 													</div>
 													@if(!empty($var['curr_klinik']))
@@ -125,9 +134,9 @@
 													</script>
 													@endif
 													<div class="form-group row">
-														{!! Form::label('keluhan', 'Keluhan', ['class' => 'col-sm-2 col-form-label']) !!}
+														<label for="keluhan" class="col-sm-2 col-form-label">Keluhan</label>
 														<div class="col-sm-10">
-															{!! Form::textarea('keluhan', (!empty($var['curr_klinik'])?$var['curr_klinik']->keluhan:"-"), ['class'=>'form-control', 'placeholder'=>'Inputkan Keluhan', 'rows'=>4, 'required']) !!}
+															<textarea name="keluhan" class="form-control" placeholder="Inputkan Keluhan" rows="4" required>{{ (!empty($var['curr_klinik'])?$var['curr_klinik']->keluhan:"-") }}</textarea>
 														</div>
 													</div>
 													
@@ -141,7 +150,7 @@
 												</div>
 												<div class="card-content">
 													<div class="form-group row">
-														 {!! Form::label('nama_hewan', 'Nama Hewan', ['class' => 'col-sm-2 col-form-label']) !!}
+														 <label for="nama_hewan" class="col-sm-2 col-form-label">Nama Hewan</label>
 														<div class="col-sm-10" id="list_hewan">
 															<select name="hewan" id="hewan" class="form-control select2" placeholder="Pilih Nama Hewan" style="width:100%" onchange="dataHewan()" required>
 																@if(!empty($var['curr_klinik']))
@@ -157,37 +166,44 @@
 														</div>
 													</div>
 													<div class="form-group row">
-														{!! Form::label('no_pasien', 'No. RM', ['class' => 'col-sm-2 col-form-label']) !!}
+														<label for="no_pasien" class="col-sm-2 col-form-label">No. RM</label>
 														<div class="col-sm-10">
-															{!! Form::text('no_pasien', (!empty($var['curr_klinik'])?$var['curr_klinik']->no_pasien:""), ['class'=>'form-control', 'placeholder'=>'Inputkan No. RM','readonly','required']) !!}
+															<input type="text" name="no_pasien" value="{{ (!empty($var['curr_klinik'])?$var['curr_klinik']->no_pasien:"") }}" class="form-control" placeholder="Inputkan No. RM" readonly required>
 														</div>
 														<input type="hidden" id="new_no_pasien">
 													</div>
 													<div class="form-group row">
-														{!! Form::label('spesies_id', 'Jenis Hewan', ['class' => 'col-sm-2 col-form-labe required']) !!}
+														<label for="spesies_id" class="col-sm-2 col-form-labe required">Jenis Hewan</label>
 														<div class="col-sm-10">
-															{!! Form::select('spesies_id', $var['spesies'], (!empty($var['curr_klinik'])?$var['curr_klinik']->spesies_id:""), ['class'=>'form-control', 'placeholder'=>'Pilih Jenis Hewan', 'style'=>'width: 100%;','required'=>'required']) !!}
+															<select name="spesies_id" id="spesies_id" class="form-control" placeholder="Pilih Jenis Hewan" style="width: 100%;" required="required">
+																@foreach($var['spesies'] as $id => $name)
+																	<option value="{{ $id }}" {{ (!empty($var['curr_klinik']) && $var['curr_klinik']->spesies_id == $id) ? 'selected' : '' }}>{{ $name }}</option>
+																@endforeach
+															</select>
 														</div>
 													</div>
 													<!-- <div id="areaRas"> -->
-														<!-- <div class="form-group row"> -->
-															<!-- {!! Form::label('ras_id', 'Ras', ['class' => 'col-sm-2 col-form-label']) !!} -->
-															<!-- <div class="col-sm-10"> -->
-																{!! Form::hidden('ras_id',null, ['class'=>'form-control', 'placeholder'=>'Pilih Ras', 'style'=>'width: 100%;']) !!}
-															<!-- </div>
-														</div>
-													</div> -->
+							<!-- <div class="form-group row"> -->
+							<!-- <label for="ras_id" class="col-sm-2 col-form-label">Ras</label> -->
+							<!-- <div class="col-sm-10"> -->
+								<input type="hidden" name="ras_id" id="ras_id" class="form-control" placeholder="Pilih Ras" style="width: 100%;" value="">
+							<!-- </div>
+							</div>
+						    </div> -->
 													<div class="form-group row">
-														{!! Form::label('jenis_kelamin', 'Jenis Kelamin', ['class' => 'col-sm-2 col-form-label']) !!}
+														<label for="jenis_kelamin" class="col-sm-2 col-form-label">Jenis Kelamin</label>
 														<div class="col-sm-10">
-															{!! Form::select('jenis_kelamin', ['Jantan'=>'Jantan', 'Betina'=>'Betina'], (!empty($var['curr_klinik'])?$var['curr_klinik']->jenis_kelamin:""), ['class'=>'form-control', 'placeholder'=>'Pilih Jenis Kelamin']) !!}
+															<select name="jenis_kelamin" id="jenis_kelamin" class="form-control" placeholder="Pilih Jenis Kelamin">
+																<option value="Jantan" {{ (!empty($var['curr_klinik']) && $var['curr_klinik']->jenis_kelamin == 'Jantan') ? 'selected' : '' }}>Jantan</option>
+																<option value="Betina" {{ (!empty($var['curr_klinik']) && $var['curr_klinik']->jenis_kelamin == 'Betina') ? 'selected' : '' }}>Betina</option>
+															</select>
 														</div>
 													</div>
 													<div class="form-group row">
 													   
-														{!! Form::label('umur', 'Umur', ['class' => 'col-sm-2 col-form-label']) !!}
+														<label for="umur" class="col-sm-2 col-form-label">Umur</label>
 														<div class="col-sm-4">
-															{!! Form::text('umur', (!empty($var['curr_klinik'])?$var['curr_klinik']->umur:""), ['class'=>'form-control', 'placeholder'=>'Inputkan Umur','required'=>'required']) !!}
+															<input type="text" name="umur" value="{{ (!empty($var['curr_klinik'])?$var['curr_klinik']->umur:"") }}" class="form-control" placeholder="Inputkan Umur" required="required">
 														</div>
 													</div>
 												</div>
@@ -198,21 +214,20 @@
 										<div class="col-md-12">
 											<div class="form-group">
 												<div class="col-lg-4 ml-auto">
-													@if($var['method']=='edit')
-														{!! Form::submit('Update', ['class'=>'btn btn-primary']) !!}
-														{!! Form::reset('Reset', ['class'=>'btn btn-danger']) !!}
-													@elseif($var['method']=='create')
-														{!! Form::submit('Simpan', ['class'=>'btn btn-primary']) !!}
-														{!! Form::reset('Reset', ['class'=>'btn btn-danger']) !!}
+													@if($var['method'] == 'edit')
+														<button type="submit" class="btn btn-primary">Update</button>
+														<button type="reset" class="btn btn-danger">Reset</button>
+													@elseif($var['method'] == 'create')
+														<button type="submit" class="btn btn-primary">Simpan</button>
+														<button type="reset" class="btn btn-danger">Reset</button>
 													@else
 														<a href="{{ url()->previous() }}" class="btn btn-primary">Kembali</a>
 													@endif
 												</div>
 											</div>
 										</div>
-									</div>
-                                        
-                                    {!! Form::close() !!}
+									</div>                                        
+                                    </form>
                                 </div>
                             </div>
                         </div>

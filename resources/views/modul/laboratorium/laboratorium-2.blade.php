@@ -30,97 +30,131 @@
                         <div class="tab-content tabcontent-border">
                             <div class="tab-pane active">
                                 <div class="pad">
-                                    <div class="box-body wizard-content">
-                                        @if($var['method']=='edit')
-                                            {!! Form::model($listLaboratorium, ['method'=>'PATCH', 'url'=> '/laboratorium/'.$listLaboratorium->id.$var['url']['all'], 'id'=>'form-laboratorium', 'class'=>'tab-wizard wizard-circle', 'files'=>true]) !!}
-                                        @elseif($var['method']=='create')
-                                            {!! Form::open(['id'=>'form-laboratorium', 'method'=>'POST', 'url'=>'/laboratorium', 'class'=>'validation-wizard wizard-circle', 'files'=>true]) !!}
-                                        @else
-                                            {!! Form::model($listLaboratorium, ['id'=>'form-laboratorium', 'class'=>'tab-wizard wizard-circle']) !!}
-                                        @endif
+ <div class="box-body wizard-content">
+ @if($var['method']=='edit')
+ <form method="POST" action="{{ url('/laboratorium/'.$listLaboratorium->id.$var['url']['all']) }}" id="form-laboratorium" class="tab-wizard wizard-circle" enctype="multipart/form-data">
+ @method('PATCH')
+ @elseif($var['method']=='create')
+ <form method="POST" action="{{ url('/laboratorium') }}" id="form-laboratorium" class="validation-wizard wizard-circle" enctype="multipart/form-data">
+ @else
+ <form id="form-laboratorium" class="tab-wizard wizard-circle">
+ @endif
+ @csrf
                                             <!-- Step 1 -->
                                             <h6>Bagian 1</h6>
                                             <section>
                                                 <div class="form-group row">
-                                                    {!! Form::label('input_by', 'User', ['class' => 'col-sm-2 col-form-label']) !!}
+                                                    <label for="input_by" class="col-sm-2 col-form-label">User</label>
                                                     <div class="col-sm-10">
-                                                        {!! Form::select('input_by', $var['user'], $var['currentUser'], ['class'=>'form-control select2', 'placeholder'=>'Pilih User', 'style'=>'width: 100%;', 'onchange'=>'subSatuanKerja(); jenisContoh()']) !!}
+                                                        <select name="input_by" id="input_by" class="form-control select2" placeholder="Pilih User" style="width: 100%;" onchange="subSatuanKerja(); jenisContoh()">
+ @foreach($var['user'] as $id => $name)
+ <option value="{{ $id }}" {{ ($var['currentUser'] == $id) ? 'selected' : '' }}>{{ $name }}</option>
+ @endforeach
+ </select>                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label for="sub_satuan_kerja_id" class="col-sm-2 col-form-label">Nama Laboratorium</label>
+                                                    <div class="col-sm-10">
+                                                        <input type="text" name="nama_sub_satuan_kerja" id="nama_sub_satuan_kerja" class="form-control" placeholder="Inputkan Nama Laboratorium" readonly value="{{ ($var['method']=='edit'||$var['method']=='show') ? (@$listLaboratorium->inputBy->subSatuanKerja->sub_satuan_kerja) : $var['namaLaboratorium'] }}">
+                                                        <input type="hidden" name="sub_satuan_kerja_id" value="{{ $var['idLaboratorium'] }}" class="form-control">
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
-                                                    {!! Form::label('sub_satuan_kerja_id', 'Nama Laboratorium', ['class' => 'col-sm-2 col-form-label']) !!}
-                                                    <div class="col-sm-10">
-                                                        {!! Form::text('nama_sub_satuan_kerja', ($var['method']=='edit'||$var['method']=='show'?@$listLaboratorium->inputBy->subSatuanKerja->sub_satuan_kerja:$var['namaLaboratorium']), ['class'=>'form-control', 'id'=>'nama_sub_satuan_kerja', 'placeholder'=>'Inputkan Nama Laboratorium', 'readonly']) !!}
-                                                        {!! Form::hidden('sub_satuan_kerja_id', $var['idLaboratorium'], ['class'=>'form-control']) !!}
-                                                    </div>
-                                                </div>
-                                                <div class="form-group row">
-                                                    {!! Form::label('no_epid', 'Nomor EPID', ['class' => 'col-sm-2 col-form-label']) !!}
+                                                    <label for="no_epid" class="col-sm-2 col-form-label">Nomor EPID</label>
                                                     <div class="col-sm-5">
-                                                        {!! Form::select('status_epid', ['ES'=>'ES (Pasif)', 'ED'=>'ED (Aktif)'], null, ['class'=>'form-control', 'id'=>'status_epid', 'placeholder'=>'Pilih Status EPID']) !!}
+ <select name="status_epid" id="status_epid" class="form-control" placeholder="Pilih Status EPID">
+ <option value="">Pilih Status EPID</option>
+ <option value="ES" {{ (isset($listLaboratorium) && $listLaboratorium->status_epid == 'ES') ? 'selected' : '' }}>ES (Pasif)</option>
+ <option value="ED" {{ (isset($listLaboratorium) && $listLaboratorium->status_epid == 'ED') ? 'selected' : '' }}>ED (Aktif)</option>
+ </select>
                                                     </div>
                                                     <div class="col-sm-5">
-                                                        {!! Form::text('no_epid', null, ['class'=>'form-control', 'placeholder'=>'Inputkan Nomor EPID']) !!}
+                                                        <input type="text" name="no_epid" class="form-control" placeholder="Inputkan Nomor EPID" value="{{ old('no_epid', $listLaboratorium->no_epid ?? '') }}">
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
-                                                    {!! Form::label('nama_pengirim_id', 'Nama Pengirim', ['class' => 'col-sm-2 col-form-label']) !!}
+                                                    <label for="nama_pengirim_id" class="col-sm-2 col-form-label">Nama Pengirim</label>
                                                     <div class="col-sm-10">
-                                                        {!! Form::select('nama_pengirim_id', $var['customer'], null, ['class'=>'form-control select2', 'placeholder'=>'Pilih Nama Pengirim', 'style'=>'width: 100%;', 'onchange'=>'customer()']) !!}
+ <select name="nama_pengirim_id" id="nama_pengirim_id" class="form-control select2" placeholder="Pilih Nama Pengirim" style="width: 100%;" onchange="customer()">
+ @foreach($var['customer'] as $id => $name)
+ <option value="{{ $id }}" {{ (isset($listLaboratorium) && $listLaboratorium->nama_pengirim_id == $id) ? 'selected' : '' }}>{{ $name }}</option>
+ @endforeach
+ </select>
+                                                    </div> 
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label for="alamat_pengirim" class="col-sm-2 col-form-label">Alamat Pengirim</label>
+                                                    <div class="col-sm-10">
+                                                        <input type="text" name="alamat_pengirim" class="form-control" placeholder="Inputkan Alamat Pengirim" readonly value="{{ ($var['method']=='edit' || $var['method']=='show') ? (@$listLaboratorium->customer->alamat) : '' }}">
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
-                                                    {!! Form::label('alamat_pengirim', 'Alamat Pengirim', ['class' => 'col-sm-2 col-form-label']) !!}
+                                                    <label for="jenis_hewan_id" class="col-sm-2 col-form-label">Jenis Hewan</label>
                                                     <div class="col-sm-10">
-                                                        {!! Form::text('alamat_pengirim', ($var['method']=='edit' || $var['method']=='show'?@$listLaboratorium->customer->alamat:null), ['class'=>'form-control', 'placeholder'=>'Inputkan Alamat Pengirim', 'readonly']) !!}
-                                                    </div>
-                                                </div>
-                                                <div class="form-group row">
-                                                    {!! Form::label('jenis_hewan_id', 'Jenis Hewan', ['class' => 'col-sm-2 col-form-label']) !!}
-                                                    <div class="col-sm-10">
-                                                        {!! Form::select('jenis_hewan_id', $var['spesies'], null, ['class'=>'form-control select2', 'placeholder'=>'Pilih Jenis Hewan', 'style'=>'width: 100%;']) !!}
+ <select name="jenis_hewan_id" id="jenis_hewan_id" class="form-control select2" placeholder="Pilih Jenis Hewan" style="width: 100%;">
+ @foreach($var['spesies'] as $id => $name)
+ <option value="{{ $id }}" {{ (isset($listLaboratorium) && $listLaboratorium->jenis_hewan_id == $id) ? 'selected' : '' }}>{{ $name }}</option>
+ @endforeach
+ </select>
                                                     </div>
                                                 </div>
                                                 <div id="areaJenisContoh">
                                                     <div class="form-group row">
-                                                        {!! Form::label('jenis_contoh_id', 'Jenis Contoh', ['class' => 'col-sm-2 col-form-label']) !!}
+                                                        <label for="jenis_contoh_id" class="col-sm-2 col-form-label">Jenis Contoh</label>
                                                         <div class="col-sm-10">
-                                                            {!! Form::select('jenis_contoh_id', $var['jenisContoh'], null, ['class'=>'form-control select2', 'placeholder'=>'Pilih Jenis Contoh', 'style'=>'width: 100%;', 'onchange'=>'bentukContoh()']) !!}
-                                                        </div>
+ <select name="jenis_contoh_id" id="jenis_contoh_id" class="form-control select2" placeholder="Pilih Jenis Contoh" style="width: 100%;" onchange="bentukContoh()">
+ @foreach($var['jenisContoh'] as $id => $name)
+ <option value="{{ $id }}" {{ (isset($listLaboratorium) && $listLaboratorium->jenis_contoh_id == $id) ? 'selected' : '' }}>{{ $name }}</option>
+ @endforeach
+ </select>                                                        </div>
                                                     </div>
                                                 </div>
                                                 <div id="areaBentukContoh">
                                                     <div class="form-group row">
-                                                        {!! Form::label('bentuk_contoh_id', 'Bentuk Contoh', ['class' => 'col-sm-2 col-form-label']) !!}
+                                                        <label for="bentuk_contoh_id" class="col-sm-2 col-form-label">Bentuk Contoh</label>
                                                         <div class="col-sm-10">
-                                                            {!! Form::select('bentuk_contoh_id', $var['bentukContoh'], null, ['class'=>'form-control select2', 'placeholder'=>'Pilih Bentuk Contoh', 'style'=>'width: 100%;']) !!}
-                                                        </div>
+ <select name="bentuk_contoh_id" id="bentuk_contoh_id" class="form-control select2" placeholder="Pilih Bentuk Contoh" style="width: 100%;">
+ @foreach($var['bentukContoh'] as $id => $name)
+ <option value="{{ $id }}" {{ (isset($listLaboratorium) && $listLaboratorium->bentuk_contoh_id == $id) ? 'selected' : '' }}>{{ $name }}</option>
+ @endforeach
+ </select>                                                        </div>
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
-                                                    {!! Form::label('jumlah_contoh', 'Jumlah Contoh', ['class' => 'col-sm-2 col-form-label']) !!}
+                                                    <label for="jumlah_contoh" class="col-sm-2 col-form-label">Jumlah Contoh</label>
                                                     <div class="col-sm-10">
-                                                        {!! Form::number('jumlah_contoh', null, ['class'=>'form-control', 'placeholder'=>'Inputkan Jumlah Contoh']) !!}
+                                                        <input type="number" name="jumlah_contoh" class="form-control" placeholder="Inputkan Jumlah Contoh" value="{{ old('jumlah_contoh', $listLaboratorium->jumlah_contoh ?? '') }}">
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
-                                                    {!! Form::label('seksi_laboratorium_id', 'Seksi Laboratorium', ['class' => 'col-sm-2 col-form-label']) !!}
+                                                    <label for="seksi_laboratorium_id" class="col-sm-2 col-form-label">Seksi Laboratorium</label>
                                                     <div class="col-sm-10">
-                                                        {!! Form::select('seksi_laboratorium_id', $var['seksiLaboratorium'], null, ['class'=>'form-control select2', 'placeholder'=>'Pilih Seksi Laboratorium', 'style'=>'width: 100%;', 'onchange'=>'jenisPengujian()']) !!}
+ <select name="seksi_laboratorium_id" id="seksi_laboratorium_id" class="form-control select2" placeholder="Pilih Seksi Laboratorium" style="width: 100%;" onchange="jenisPengujian()">
+ @foreach($var['seksiLaboratorium'] as $id => $name)
+ <option value="{{ $id }}" {{ (isset($listLaboratorium) && $listLaboratorium->seksi_laboratorium_id == $id) ? 'selected' : '' }}>{{ $name }}</option>
+ @endforeach
+ </select>
                                                     </div>
                                                 </div>
                                                 <div id="areaJenisPengujian">
                                                     <div class="form-group row">
-                                                        {!! Form::label('permintaan_uji_id', 'Jenis Pengujian', ['class' => 'col-sm-2 col-form-label']) !!}
+                                                        <label for="permintaan_uji_id" class="col-sm-2 col-form-label">Jenis Pengujian</label>
                                                         <div class="col-sm-10">
-                                                            {!! Form::select('permintaan_uji_id', $var['jenisPengujian'], null, ['class'=>'form-control select2', 'placeholder'=>'Pilih Jenis Pengujian', 'style'=>'width: 100%;']) !!}
-                                                        </div>
+ <select name="permintaan_uji_id" id="permintaan_uji_id" class="form-control select2" placeholder="Pilih Jenis Pengujian" style="width: 100%;">
+ @foreach($var['jenisPengujian'] as $id => $name)
+ <option value="{{ $id }}" {{ (isset($listLaboratorium) && $listLaboratorium->permintaan_uji_id == $id) ? 'selected' : '' }}>{{ $name }}</option>
+ @endforeach
+ </select>                                                        </div>
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
-                                                    {!! Form::label('kriteria_contoh', 'Kriteria Contoh', ['class' => 'col-sm-2 col-form-label']) !!}
+                                                    <label for="kriteria_contoh" class="col-sm-2 col-form-label">Kriteria Contoh</label>
                                                     <div class="col-sm-10">
-                                                        {!! Form::select('kriteria_contoh', ['MS'=>'Memenuhi Syarat', 'TMS'=>'Tidak Memenuhi Syarat'], null, ['class'=>'form-control', 'placeholder'=>'Pilih Kriteria Contoh']) !!}
+ <select name="kriteria_contoh" id="kriteria_contoh" class="form-control" placeholder="Pilih Kriteria Contoh">
+ <option value="">Pilih Kriteria Contoh</option>
+ <option value="MS" {{ (isset($listLaboratorium) && $listLaboratorium->kriteria_contoh == 'MS') ? 'selected' : '' }}>Memenuhi Syarat</option>
+ <option value="TMS" {{ (isset($listLaboratorium) && $listLaboratorium->kriteria_contoh == 'TMS') ? 'selected' : '' }}>Tidak Memenuhi Syarat</option>
+ </select>
                                                     </div>
                                                 </div>
                                             </section>
@@ -128,81 +162,101 @@
                                             <h6>Bagian 2</h6>
                                             <section>
                                                 <div class="form-group row">
-                                                    {!! Form::label('metode_uji', 'Metode Uji', ['class' => 'col-sm-2 col-form-label']) !!}
+                                                    <label for="metode_uji" class="col-sm-2 col-form-label">Metode Uji</label>
                                                     <div class="col-sm-10">
-                                                        {!! Form::text('metode_uji', null, ['class'=>'form-control', 'placeholder'=>'Inputkan Metode Uji']) !!}
+                                                        <input type="text" name="metode_uji" class="form-control" placeholder="Inputkan Metode Uji" value="{{ old('metode_uji', $listLaboratorium->metode_uji ?? '') }}">
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
-                                                    {!! Form::label('peralatan', 'Peralatan', ['class' => 'col-sm-2 col-form-label']) !!}
+                                                    <label for="peralatan" class="col-sm-2 col-form-label">Peralatan</label>
                                                     <div class="col-sm-10">
-                                                        {!! Form::select('peralatan', ['Mampu'=>'Mampu', 'Tidak Mampu'=>'Tidak Mampu'], null, ['class'=>'form-control', 'placeholder'=>'Pilih Peralatan']) !!}
+ <select name="peralatan" id="peralatan" class="form-control" placeholder="Pilih Peralatan">
+ <option value="">Pilih Peralatan</option>
+ <option value="Mampu" {{ (isset($listLaboratorium) && $listLaboratorium->peralatan == 'Mampu') ? 'selected' : '' }}>Mampu</option>
+ <option value="Tidak Mampu" {{ (isset($listLaboratorium) && $listLaboratorium->peralatan == 'Tidak Mampu') ? 'selected' : '' }}>Tidak Mampu</option>
+ </select>
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
-                                                    {!! Form::label('bahan', 'Bahan', ['class' => 'col-sm-2 col-form-label']) !!}
+                                                    <label for="bahan" class="col-sm-2 col-form-label">Bahan</label>
                                                     <div class="col-sm-10">
-                                                        {!! Form::select('bahan', ['Mampu'=>'Mampu', 'Tidak Mampu'=>'Tidak Mampu'], null, ['class'=>'form-control', 'placeholder'=>'Pilih Bahan']) !!}
+                                                        <select name="bahan" id="bahan" class="form-control" placeholder="Pilih Bahan">
+ <option value="">Pilih Bahan</option>
+ <option value="Mampu" {{ (isset($listLaboratorium) && $listLaboratorium->bahan == 'Mampu') ? 'selected' : '' }}>Mampu</option>
+ <option value="Tidak Mampu" {{ (isset($listLaboratorium) && $listLaboratorium->bahan == 'Tidak Mampu') ? 'selected' : '' }}>Tidak Mampu</option>
+ </select>
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
-                                                    {!! Form::label('personil', 'Personil', ['class' => 'col-sm-2 col-form-label']) !!}
+                                                    <label for="personil" class="col-sm-2 col-form-label">Personil</label>
                                                     <div class="col-sm-10">
-                                                        {!! Form::select('personil', ['Mampu'=>'Mampu', 'Tidak Mampu'=>'Tidak Mampu'], null, ['class'=>'form-control', 'placeholder'=>'Pilih Personil']) !!}
+                                                        <select name="personil" id="personil" class="form-control" placeholder="Pilih Personil">
+                                                            <option value="">Pilih Personil</option>
+                                                            <option value="Mampu" {{ (isset($listLaboratorium) && $listLaboratorium->personil == 'Mampu') ? 'selected' : '' }}>Mampu</option>
+                                                            <option value="Tidak Mampu" {{ (isset($listLaboratorium) && $listLaboratorium->personil == 'Tidak Mampu') ? 'selected' : '' }}>Tidak Mampu</option>
+                                                        </select>
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
-                                                    {!! Form::label('catatan', 'Catatan / Saran', ['class' => 'col-sm-2 col-form-label']) !!}
+                                                    <label for="catatan" class="col-sm-2 col-form-label">Catatan / Saran</label>
                                                     <div class="col-sm-10">
-                                                        {!! Form::textarea('catatan', null, ['class'=>'form-control', 'placeholder'=>'Inputkan Catatan / Saran', 'rows'=>4]) !!}
+                                                        <textarea name="catatan" class="form-control" placeholder="Inputkan Catatan / Saran" rows="4">{{ old('catatan', $listLaboratorium->catatan ?? '') }}</textarea>
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
-                                                    {!! Form::label('jenis_kegiatan', 'Jenis Kegiatan', ['class' => 'col-sm-2 col-form-label']) !!}
+                                                    <label for="jenis_kegiatan" class="col-sm-2 col-form-label">Jenis Kegiatan</label>
                                                     <div class="col-sm-10">
-                                                        {!! Form::select('jenis_kegiatan', ['Aktif'=>'Aktif', 'Pasif'=>'Pasif'], null, ['class'=>'form-control', 'placeholder'=>'Pilih Jenis Kegiatan']) !!}
+ <select name="jenis_kegiatan" id="jenis_kegiatan" class="form-control" placeholder="Pilih Jenis Kegiatan">
+ <option value="">Pilih Jenis Kegiatan</option>
+ <option value="Aktif" {{ (isset($listLaboratorium) && $listLaboratorium->jenis_kegiatan == 'Aktif') ? 'selected' : '' }}>Aktif</option>
+ <option value="Pasif" {{ (isset($listLaboratorium) && $listLaboratorium->jenis_kegiatan == 'Pasif') ? 'selected' : '' }}>Pasif</option>
+ </select>
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
-                                                    {!! Form::label('pengirim', 'Pengirim', ['class' => 'col-sm-2 col-form-label']) !!}
+                                                    <label for="pengirim" class="col-sm-2 col-form-label">Pengirim</label>
                                                     <div class="col-sm-10">
-                                                        {!! Form::text('pengirim', null, ['class'=>'form-control', 'placeholder'=>'Inputkan Pengirim']) !!}
+                                                        <input type="text" name="pengirim" class="form-control" placeholder="Inputkan Pengirim" value="{{ old('pengirim', $listLaboratorium->pengirim ?? '') }}">
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
-                                                    {!! Form::label('tanggal_penerimaan', 'Tanggal Penerimaan', ['class' => 'col-sm-2 col-form-label']) !!}
+                                                    <label for="tanggal_penerimaan" class="col-sm-2 col-form-label">Tanggal Penerimaan</label>
                                                     <div class="col-sm-10">
-                                                        {!! Form::text('tanggal_penerimaan', null, ['class'=>'form-control datepicker', 'placeholder'=>'Inputkan Tanggal Penerimaan']) !!}
+                                                        <input type="text" name="tanggal_penerimaan" class="form-control datepicker" placeholder="Inputkan Tanggal Penerimaan" value="{{ old('tanggal_penerimaan', $listLaboratorium->tanggal_penerimaan ?? '') }}">
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
-                                                    {!! Form::label('penerima', 'Penerima', ['class' => 'col-sm-2 col-form-label']) !!}
+                                                    <label for="penerima" class="col-sm-2 col-form-label">Penerima</label>
                                                     <div class="col-sm-10">
-                                                        {!! Form::text('penerima', null, ['class'=>'form-control', 'placeholder'=>'Inputkan Penerima']) !!}
+                                                        <input type="text" name="penerima" class="form-control" placeholder="Inputkan Penerima" value="{{ old('penerima', $listLaboratorium->penerima ?? '') }}">
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
-                                                    {!! Form::label('nomor_asal', 'Nomor Asal', ['class' => 'col-sm-2 col-form-label']) !!}
+                                                    <label for="nomor_asal" class="col-sm-2 col-form-label">Nomor Asal</label>
                                                     <div class="col-sm-10">
-                                                        {!! Form::text('nomor_asal', null, ['class'=>'form-control', 'placeholder'=>'Inputkan Nomor Asal']) !!}
+                                                        <input type="text" name="nomor_asal" class="form-control" placeholder="Inputkan Nomor Asal" value="{{ old('nomor_asal', $listLaboratorium->nomor_asal ?? '') }}">
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
-                                                    {!! Form::label('nomor_baru', 'Nomor Baru', ['class' => 'col-sm-2 col-form-label']) !!}
+                                                    <label for="nomor_baru" class="col-sm-2 col-form-label">Nomor Baru</label>
                                                     <div class="col-sm-10">
-                                                        {!! Form::text('nomor_baru', null, ['class'=>'form-control', 'placeholder'=>'Inputkan Nomor Baru']) !!}
+                                                        <input type="text" name="nomor_baru" class="form-control" placeholder="Inputkan Nomor Baru" value="{{ old('nomor_baru', $listLaboratorium->nomor_baru ?? '') }}">
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
-                                                    {!! Form::label('asal_contoh_id', 'Asal Contoh', ['class' => 'col-sm-2 col-form-label']) !!}
+                                                    <label for="asal_contoh_id" class="col-sm-2 col-form-label">Asal Contoh</label>
                                                     <div class="col-sm-10">
-                                                        {!! Form::select('asal_contoh_id', $var['kotaKabupaten'], null, ['class'=>'form-control select2', 'placeholder'=>'Pilih Asal Contoh', 'style'=>'width: 100%;']) !!}
+ <select name="asal_contoh_id" id="asal_contoh_id" class="form-control select2" placeholder="Pilih Asal Contoh" style="width: 100%;">
+ @foreach($var['kotaKabupaten'] as $id => $name)
+ <option value="{{ $id }}" {{ (isset($listLaboratorium) && $listLaboratorium->asal_contoh_id == $id) ? 'selected' : '' }}>{{ $name }}</option>
+ @endforeach
+ </select>
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
-                                                    {!! Form::label('manajer_teknis', 'Manajer Teknis / Penyelia', ['class' => 'col-sm-2 col-form-label']) !!}
+                                                    <label for="manajer_teknis" class="col-sm-2 col-form-label">Manajer Teknis / Penyelia</label>
                                                     <div class="col-sm-10">
-                                                        {!! Form::text('manajer_teknis', null, ['class'=>'form-control', 'placeholder'=>'Inputkan Manajer Teknis / Penyelia']) !!}
+                                                        <input type="text" name="manajer_teknis" class="form-control" placeholder="Inputkan Manajer Teknis / Penyelia" value="{{ old('manajer_teknis', $listLaboratorium->manajer_teknis ?? '') }}">
                                                     </div>
                                                 </div>
                                             </section>
@@ -210,47 +264,60 @@
                                             <h6>Bagian 3</h6>
                                             <section>
                                                 <div class="form-group row">
-                                                    {!! Form::label('penguji_ditunjuk', 'Penguji yang Ditunjuk', ['class' => 'col-sm-2 col-form-label']) !!}
+                                                    <label for="penguji_ditunjuk" class="col-sm-2 col-form-label">Penguji yang Ditunjuk</label>
                                                     <div class="col-sm-10">
-                                                        {!! Form::text('penguji_ditunjuk', null, ['class'=>'form-control', 'placeholder'=>'Inputkan Penguji yang Ditunjuk']) !!}
+                                                        <input type="text" name="penguji_ditunjuk" class="form-control" placeholder="Inputkan Penguji yang Ditunjuk" value="{{ old('penguji_ditunjuk', $listLaboratorium->penguji_ditunjuk ?? '') }}">
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
-                                                    {!! Form::label('hasil_pengujian', 'Hasil Pengujian Kualitatif', ['class' => 'col-sm-2 col-form-label']) !!}
+                                                    <label for="hasil_pengujian" class="col-sm-2 col-form-label">Hasil Pengujian Kualitatif</label>
                                                     <div class="col-sm-10">
-                                                        {!! Form::select('hasil_pengujian', ['Positif'=>'Positif', 'Negatif'=>'Negatif'], null, ['class'=>'form-control', 'placeholder'=>'Pilih Hasil Pengujian Kualitatif']) !!}
+ <select name="hasil_pengujian" id="hasil_pengujian" class="form-control" placeholder="Pilih Hasil Pengujian Kualitatif">
+ <option value="">Pilih Hasil Pengujian Kualitatif</option>
+ <option value="Positif" {{ (isset($listLaboratorium) && $listLaboratorium->hasil_pengujian == 'Positif') ? 'selected' : '' }}>Positif</option>
+ <option value="Negatif" {{ (isset($listLaboratorium) && $listLaboratorium->hasil_pengujian == 'Negatif') ? 'selected' : '' }}>Negatif</option>
+ </select>
                                                         <div class="form-control-feedback"><small>PULLORUM, RBT, PCR, Parasit External</small></div>
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
-                                                    {!! Form::label('hasil_pengujian2', 'Hasil Pengujian Kualitatif', ['class' => 'col-sm-2 col-form-label']) !!}
+                                                    <label for="hasil_pengujian2" class="col-sm-2 col-form-label">Hasil Pengujian Kualitatif</label>
                                                     <div class="col-sm-10">
-                                                        {!! Form::select('hasil_pengujian2', ['Titer 0'=>'Titer 0', 'Titer Rendah'=>'Titer Rendah', 'Titer Tinggi'=>'Titer Tinggi'], null, ['class'=>'form-control', 'placeholder'=>'Pilih Hasil Pengujian Kualitatif']) !!}
+ <select name="hasil_pengujian2" id="hasil_pengujian2" class="form-control" placeholder="Pilih Hasil Pengujian Kualitatif">
+ <option value="">Pilih Hasil Pengujian Kualitatif</option>
+ <option value="Titer 0" {{ (isset($listLaboratorium) && $listLaboratorium->hasil_pengujian2 == 'Titer 0') ? 'selected' : '' }}>Titer 0</option>
+ <option value="Titer Rendah" {{ (isset($listLaboratorium) && $listLaboratorium->hasil_pengujian2 == 'Titer Rendah') ? 'selected' : '' }}>Titer Rendah</option>
+ <option value="Titer Tinggi" {{ (isset($listLaboratorium) && $listLaboratorium->hasil_pengujian2 == 'Titer Tinggi') ? 'selected' : '' }}>Titer Tinggi</option>
+ </select>
                                                         <div class="form-control-feedback"><small>AI & ND</small></div>
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
-                                                    {!! Form::label('pengujian_parasit', 'Hasil Pengujian Kualitatif', ['class' => 'col-sm-2 col-form-label']) !!}
+                                                    <label for="pengujian_parasit" class="col-sm-2 col-form-label">Hasil Pengujian Kualitatif</label>
                                                     <div class="col-sm-10">
-                                                        {!! Form::select('pengujian_parasit', ['Positif'=>'Positif', 'Negatif'=>'Negatif'], null, ['class'=>'form-control', 'placeholder'=>'Pilih Hasil Pengujian Kualitatif']) !!}
+ <select name="pengujian_parasit" id="pengujian_parasit" class="form-control" placeholder="Pilih Hasil Pengujian Kualitatif">
+ <option value="">Pilih Hasil Pengujian Kualitatif</option>
+ <option value="Positif" {{ (isset($listLaboratorium) && $listLaboratorium->pengujian_parasit == 'Positif') ? 'selected' : '' }}>Positif</option>
+ <option value="Negatif" {{ (isset($listLaboratorium) && $listLaboratorium->pengujian_parasit == 'Negatif') ? 'selected' : '' }}>Negatif</option>
+ </select>
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
-                                                    {!! Form::label('keterangan_hasil', 'Keterangan Hasil Uji', ['class' => 'col-sm-2 col-form-label']) !!}
+                                                    <label for="keterangan_hasil" class="col-sm-2 col-form-label">Keterangan Hasil Uji</label>
                                                     <div class="col-sm-10">
-                                                        {!! Form::textarea('keterangan_hasil', null, ['class'=>'form-control', 'placeholder'=>'Inputkan Keterangan Hasil Uji', 'rows'=>4]) !!}
+                                                        <textarea name="keterangan_hasil" class="form-control" placeholder="Inputkan Keterangan Hasil Uji" rows="4">{{ old('keterangan_hasil', $listLaboratorium->keterangan_hasil ?? '') }}</textarea>
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
-                                                    {!! Form::label('upload_file', 'Upload File', ['class' => 'col-sm-2 col-form-label']) !!}
+                                                    <label for="upload_file" class="col-sm-2 col-form-label">Upload File</label>
                                                     <div class="col-sm-10">
-                                                        {!! Form::file('upload_file[]', ['class'=>'form-control', 'placeholder'=>'Upload File', 'multiple'=>'multiple']) !!}
+ <input type="file" name="upload_file[]" id="upload_file" class="form-control" placeholder="Upload File" multiple="multiple">
                                                         <br>
                                                         <div id="areaFile"></div>
                                                     </div>
                                                 </div>
                                             </section>
-                                        {!! Form::close() !!}
+ </form>
                                     </div>
                                 </div>
                             </div>

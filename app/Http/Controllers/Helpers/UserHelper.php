@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Helpers;
 
 use Illuminate\Support\Facades\Auth;
-use App\Models\Pengaturan\User;
+use App\Models\User;
 use Spatie\Permission\Models\Permission;
 
 class UserHelper

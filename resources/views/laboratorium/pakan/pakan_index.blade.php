@@ -34,7 +34,7 @@
                                         <thead>
                                             <tr class="bg-dark">
                                                 <!-- <th width="130px" style="text-align:center;">Aksi</th> -->
-                                                <th style="text-align:center;">No. Epid</th>
+                                                <th style="text-align:center;">No. EPID</th>
                                                 <th style="text-align:center;">Laboratorium</th>
                                                 <th style="text-align:center;">Nama Pengirim</th>
                                                 <th style="text-align:center;">Seksi Laboratorium</th>
@@ -52,20 +52,18 @@
                                             @endphp
                                             <tr recid="{!! $pakan->id !!}">
                                                 <!-- <td style="text-align:center">
-                                                    <div class="btn-group">
-                                                        {!! Form::open(['method'=>'delete', 'url'=>'/laboratorium/'.$pakan->id.$var['url']['all'], 'class'=> 'delete_form']) !!}
-                                                        {!! Form::hidden('nomor', $no, ['class'=>'form-control']) !!}
-                                                        <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
-                                                            @can('Delete Laboratorium')
+                                                    <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+                                                        @can('Delete Laboratorium')
+                                                            <form method="POST" action="/laboratorium/{{ $pakan->id }}{{ $var['url']['all'] }}" class="delete_form">
+                                                                @csrf
+                                                                @method('delete')
+                                                                <input type="hidden" name="nomor" value="{{ $no }}" class="form-control">
                                                                 <button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
-                                                            @endcan -->
-                                                            <!-- @can('Update Laboratorium')
-                                                                <a href="{{ url('/laboratorium/'.$pakan->id.'/edit'.$var['url']['all'])}}" class="btn btn-primary btn-sm"><i class="fa fa-edit"></i></a>
-                                                            @endcan -->
-                                                            <!-- <a href="{{ url('/laboratorium/'.$pakan->id.$var['url']['all'])}}" class="btn btn-info btn-sm"><i class="fa fa-search"></i></a>
-                                                            <a href="{{ url('/laboratorium/cetak/'.$pakan->id)}}" class="btn btn-success btn-sm" target="_blank"><i class="fa fa-print"></i></a>
-                                                        </div>
-                                                        {!! Form::close() !!} -->
+                                                            </form>
+                                                        @endcan
+                                                        <a href="{{ url('/laboratorium/'.$pakan->id.'/edit'.$var['url']['all'])}}" class="btn btn-primary btn-sm"><i class="fa fa-edit"></i></a>
+                                                        <a href="{{ url('/laboratorium/'.$pakan->id.$var['url']['all'])}}" class="btn btn-info btn-sm"><i class="fa fa-search"></i></a>
+                                                        <a href="{{ url('/laboratorium/cetak/'.$pakan->id)}}" class="btn btn-success btn-sm" target="_blank"><i class="fa fa-print"></i></a>
                                                    <!--  </div>
                                                 </td> -->
                                                 <td>{{ $pakan->no_epid }}</td>

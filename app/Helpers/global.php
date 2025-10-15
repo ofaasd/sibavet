@@ -139,7 +139,18 @@ function viewSelectPermintaanUji($lab=0, $id='', $selected='',$class = ''){
             $arr['Seksi '.$d->seksi_laboratorium][$uji->id] = 'Uji '.$uji->jenis_pengujian;
         }
     }
-    return \Form::select($id, $arr, $selected, array('style'=>'width:100%','class'=>'select2 '.$class,'multiple'=>'multiple'));
+    $html = '<select name="'.$id.'" id="'.$id.'" class="select2 '.$class.'" style="width:100%" multiple="multiple">';
+    $selected_values = (array) $selected;
+    foreach ($arr as $group => $options) {
+        $html .= '<optgroup label="'.$group.'">';
+        foreach ($options as $value => $label) {
+            $is_selected = in_array($value, $selected_values) ? ' selected' : '';
+            $html .= '<option value="'.$value.'"'.$is_selected.'>'.$label.'</option>';
+        }
+        $html .= '</optgroup>';
+    }
+    $html .= '</select>';
+    return $html;
 }
 
 function viewSelectKota($id='', $selected='',$class = ''){
@@ -159,6 +170,7 @@ function viewSelectKota($id='', $selected='',$class = ''){
 
 function viewSelectTanggal($id='', $value='', $class = ''){
     return \Form::text($id, $value, ['class'=>'form-control datepicker'.$class]);
+    return '<input type="text" name="'.$id.'" id="'.$id.'" value="'.$value.'" class="form-control datepicker'.$class.'">';
 }
 
 function sumContohSeksi($lab,$seksi)

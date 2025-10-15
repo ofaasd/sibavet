@@ -39,7 +39,7 @@ class KlinikController extends Controller
     function __construct(Request $request)
     {
         $this->middleware('auth');
-        $this->cari = Input::get('cari', '');
+        $this->cari = $request->query('cari', '');
         $this->url = makeUrl($request->query());
     }
 

@@ -41,7 +41,7 @@
 											<p>Telah Diterima Dari</p>
 										</div>
 										<div class="col-md-8">
-											<p>: {{$var['curr_klinik']->nama_pemilik}}
+											<p>: {{ $var['curr_klinik']->nama_pemilik }}</p>
 										</div>
 									</div>
                                 </div>

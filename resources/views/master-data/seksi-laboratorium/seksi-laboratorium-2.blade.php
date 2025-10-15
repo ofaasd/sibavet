@@ -32,26 +32,29 @@
                             <div class="tab-pane active">
                                 <div class="pad">
                                     @if($var['method']=='edit')
-                                        {!! Form::model($listSeksiLaboratorium, ['method'=>'PATCH', 'url'=> '/master-data/seksi-laboratorium/'.$listSeksiLaboratorium->id.$var['url']['all'], 'id'=>'form-spesies']) !!}
+                                        <form id="form-seksi-laboratorium" method="POST" action="{{ url('/master-data/seksi-laboratorium/'.$listSeksiLaboratorium->id.$var['url']['all']) }}">
+                                            @csrf
+                                            @method('PATCH')
                                     @elseif($var['method']=='create')
-                                        {!! Form::open(['id'=>'form-seksi-laboratorium', 'method'=>'POST', 'url'=>'/master-data/seksi-laboratorium']) !!}
+                                        <form id="form-seksi-laboratorium" method="POST" action="{{ url('/master-data/seksi-laboratorium') }}">
+                                            @csrf
                                     @else
-                                        {!! Form::model($listSeksiLaboratorium, ['class'=>'form-seksi-laboratorium']) !!}
+                                        <form class="form-seksi-laboratorium">
                                     @endif
                                         <div class="form-group row">
-                                            {!! Form::label('kode', 'Kode', ['class' => 'col-sm-2 col-form-label']) !!}
+                                            <label for="kode" class="col-sm-2 col-form-label">Kode</label>
                                             <div class="col-sm-10">
-                                                {!! Form::text('kode', null, ['class'=>'form-control', 'placeholder'=>'Inputkan Kode']) !!}
+                                                <input type="text" name="kode" id="kode" value="{{ old('kode', $listSeksiLaboratorium->kode ?? '') }}" class="form-control" placeholder="Inputkan Kode" />
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            {!! Form::label('seksi_laboratorium', 'Seksi Laboratorium', ['class' => 'col-sm-2 col-form-label']) !!}
+                                            <label for="seksi_laboratorium" class="col-sm-2 col-form-label">Seksi Laboratorium</label>
                                             <div class="col-sm-10">
-                                                {!! Form::text('seksi_laboratorium', null, ['class'=>'form-control', 'placeholder'=>'Inputkan Seksi Laboratorium']) !!}
+                                                <input type="text" name="seksi_laboratorium" id="seksi_laboratorium" value="{{ old('seksi_laboratorium', $listSeksiLaboratorium->seksi_laboratorium ?? '') }}" class="form-control" placeholder="Inputkan Seksi Laboratorium" />
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            {!! Form::label('lab', 'Laboratorium', ['class' => 'col-sm-2 col-form-label']) !!}
+                                            <label for="lab" class="col-sm-2 col-form-label">Laboratorium</label>
                                             <div class="col-sm-10">
                                                 {!! viewSelectLaboratorium('lab',@$listSeksiLaboratorium->lab) !!}
                                             </div>
@@ -59,17 +62,17 @@
                                         <div class="form-group">
                                             <div class="col-lg-4 ml-auto">
                                                 @if($var['method']=='edit')
-                                                    {!! Form::submit('Update', ['class'=>'btn btn-primary']) !!}
-                                                    {!! Form::reset('Reset', ['class'=>'btn btn-danger']) !!}
+                                                    <button type="submit" class="btn btn-primary">Update</button>
+                                                    <button type="reset" class="btn btn-danger">Reset</button>
                                                 @elseif($var['method']=='create')
-                                                    {!! Form::submit('Simpan', ['class'=>'btn btn-primary']) !!}
-                                                    {!! Form::reset('Reset', ['class'=>'btn btn-danger']) !!}
+                                                    <button type="submit" class="btn btn-primary">Simpan</button>
+                                                    <button type="reset" class="btn btn-danger">Reset</button>
                                                 @else
                                                     <a href="{{ url()->previous() }}" class="btn btn-primary">Kembali</a>
                                                 @endif
                                             </div>
                                         </div>
-                                    {!! Form::close() !!}
+                                    </form>
                                 </div>
                             </div>
                         </div>

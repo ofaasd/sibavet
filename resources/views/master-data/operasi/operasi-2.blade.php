@@ -32,38 +32,41 @@
                             <div class="tab-pane active">
                                 <div class="pad">
                                     @if($var['method']=='edit')
-                                        {!! Form::model($listOperasi, ['method'=>'PATCH', 'url'=> '/master-data/operasi/'.$listOperasi->id.$var['url']['all'], 'id'=>'form-operasi']) !!}
+                                        <form id="form-operasi" method="POST" action="{{ url('/master-data/operasi/'.$listOperasi->id.$var['url']['all']) }}">
+                                            @csrf
+                                            @method('PATCH')
                                     @elseif($var['method']=='create')
-                                        {!! Form::open(['id'=>'form-operasi', 'method'=>'POST', 'url'=>'/master-data/operasi']) !!}
+                                        <form id="form-operasi" method="POST" action="{{ url('/master-data/operasi') }}">
+                                            @csrf
                                     @else
-                                        {!! Form::model($listOperasi, ['class'=>'form-operasi']) !!}
+                                        <form class="form-operasi">
                                     @endif
                                         <div class="form-group row">
-                                            {!! Form::label('kode', 'Kode', ['class' => 'col-sm-2 col-form-label']) !!}
+                                            <label for="kode" class="col-sm-2 col-form-label">Kode</label>
                                             <div class="col-sm-10">
-                                                {!! Form::text('kode', null, ['class'=>'form-control', 'placeholder'=>'Inputkan Kode']) !!}
+                                                <input type="text" name="kode" id="kode" value="{{ old('kode', $listOperasi->kode ?? '') }}" class="form-control" placeholder="Inputkan Kode" />
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            {!! Form::label('tindakan', 'Tindakan', ['class' => 'col-sm-2 col-form-label']) !!}
+                                            <label for="tindakan" class="col-sm-2 col-form-label">Tindakan</label>
                                             <div class="col-sm-10">
-                                                {!! Form::text('tindakan', null, ['class'=>'form-control', 'placeholder'=>'Inputkan Tindakan']) !!}
+                                                <input type="text" name="tindakan" id="tindakan" value="{{ old('tindakan', $listOperasi->tindakan ?? '') }}" class="form-control" placeholder="Inputkan Tindakan" />
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <div class="col-lg-4 ml-auto">
                                                 @if($var['method']=='edit')
-                                                    {!! Form::submit('Update', ['class'=>'btn btn-primary']) !!}
-                                                    {!! Form::reset('Reset', ['class'=>'btn btn-danger']) !!}
+                                                    <button type="submit" class="btn btn-primary">Update</button>
+                                                    <button type="reset" class="btn btn-danger">Reset</button>
                                                 @elseif($var['method']=='create')
-                                                    {!! Form::submit('Simpan', ['class'=>'btn btn-primary']) !!}
-                                                    {!! Form::reset('Reset', ['class'=>'btn btn-danger']) !!}
+                                                    <button type="submit" class="btn btn-primary">Simpan</button>
+                                                    <button type="reset" class="btn btn-danger">Reset</button>
                                                 @else
                                                     <a href="{{ url()->previous() }}" class="btn btn-primary">Kembali</a>
                                                 @endif
                                             </div>
                                         </div>
-                                    {!! Form::close() !!}
+                                    </form>
                                 </div>
                             </div>
                         </div>

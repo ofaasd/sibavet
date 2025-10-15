@@ -32,82 +32,107 @@
                             <div class="tab-pane active">
                                 <div class="pad">
                                     @if($var['method']=='edit')
-                                        {!! Form::model($listUser, ['method'=>'PATCH', 'url'=> '/pengaturan/pengguna/'.$listUser->id.$var['url']['all'], 'id'=>'form-pengguna']) !!}
+                                        <form method="POST" action="/pengaturan/pengguna/{{ $listUser->id }}{{ $var['url']['all'] }}" id="form-pengguna">
+                                            @csrf
+                                            @method('PATCH')
                                     @elseif($var['method']=='create')
-                                        {!! Form::open(['id'=>'form-pengguna', 'method'=>'POST', 'url'=>'/pengaturan/pengguna']) !!}
+                                        <form method="POST" action="/pengaturan/pengguna" id="form-pengguna">
+                                            @csrf
                                     @else
-                                        {!! Form::model($listUser, ['class'=>'form-horizontal']) !!}
+                                        <form class="form-horizontal">
                                     @endif
                                         <div class="form-group row">
-                                            {!! Form::label('nip', 'Nomor Induk Pegawai', ['class' => 'col-sm-2 col-form-label']) !!}
+                                            <label for="nip" class="col-sm-2 col-form-label">Nomor Induk Pegawai</label>
                                             <div class="col-sm-10">
-                                                {!! Form::text('nip', null, ['class'=>'form-control', 'placeholder'=>'Inputkan Nomor Induk Pegawai']) !!}
+                                                <input type="text" name="nip" id="nip" class="form-control" placeholder="Inputkan Nomor Induk Pegawai" 
+                                                    value="{{ old('nip', isset($listUser) ? $listUser->nip : '') }}">
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            {!! Form::label('name', 'Nama Pegawai', ['class' => 'col-sm-2 col-form-label']) !!}
+                                            <label for="name" class="col-sm-2 col-form-label">Nama Pegawai</label>
                                             <div class="col-sm-10">
-                                                {!! Form::text('name', null, ['class'=>'form-control', 'placeholder'=>'Inputkan Nama Pegawai']) !!}
+                                                <input type="text" name="name" id="name" class="form-control" placeholder="Inputkan Nama Pegawai" 
+                                                    value="{{ old('name', isset($listUser) ? $listUser->name : '') }}">
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            {!! Form::label('no_handphone', 'Nomor Handphone', ['class' => 'col-sm-2 col-form-label']) !!}
+                                            <label for="no_handphone" class="col-sm-2 col-form-label">Nomor Handphone</label>
                                             <div class="col-sm-10">
-                                                {!! Form::text('no_handphone', null, ['class'=>'form-control', 'placeholder'=>'Inputkan Nomor Handphone']) !!}
+                                                <input type="text" name="no_handphone" id="no_handphone" class="form-control" placeholder="Inputkan Nomor Handphone" 
+                                                    value="{{ old('no_handphone', isset($listUser) ? $listUser->no_handphone : '') }}">
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            {!! Form::label('email', 'Email', ['class' => 'col-sm-2 col-form-label']) !!}
+                                            <label for="email" class="col-sm-2 col-form-label">Email</label>
                                             <div class="col-sm-10">
-                                                {!! Form::text('email', null, ['class'=>'form-control', 'placeholder'=>'Inputkan Email']) !!}
+                                                <input type="email" name="email" id="email" class="form-control" placeholder="Inputkan Email" 
+                                                    value="{{ old('email', isset($listUser) ? $listUser->email : '') }}">
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            {!! Form::label('satuan_kerja_id', 'Satuan Kerja', ['class' => 'col-sm-2 col-form-label']) !!}
+                                            <label for="satuan_kerja_id" class="col-sm-2 col-form-label">Satuan Kerja</label>
                                             <div class="col-sm-10">
-                                                {!! Form::select('satuan_kerja_id', $var['satuanKerja'], null, ['class'=>'form-control', 'placeholder'=>'Pilih Satuan Kerja', 'onchange'=>'satuanKerja()']) !!}
+                                                <select name="satuan_kerja_id" id="satuan_kerja_id" class="form-control" onchange="satuanKerja()">
+                                                    <option value="">Pilih Satuan Kerja</option>
+                                                    @foreach($var['satuanKerja'] as $key => $value)
+                                                        <option value="{{ $key }}" {{ old('satuan_kerja_id', isset($listUser) ? $listUser->satuan_kerja_id : '') == $key ? 'selected' : '' }}>{{ $value }}</option>
+                                                    @endforeach
+                                                </select>
                                             </div>
                                         </div>
                                         <div id="areaSubSatuanKerja">
                                             <div class="form-group row">
-                                                {!! Form::label('sub_satuan_kerja_id', 'Sub Satuan Kerja', ['class' => 'col-sm-2 col-form-label']) !!}
+                                                <label for="sub_satuan_kerja_id" class="col-sm-2 col-form-label">Sub Satuan Kerja</label>
                                                 <div class="col-sm-10">
-                                                    {!! Form::select('sub_satuan_kerja_id', [], null, ['class'=>'form-control', 'placeholder'=>'Pilih Sub Satuan Kerja']) !!}
+                                                    <select name="sub_satuan_kerja_id" id="sub_satuan_kerja_id" class="form-control">
+                                                        <option value="">Pilih Sub Satuan Kerja</option>
+                                                    </select>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            {!! Form::label('view_data', 'View Data', ['class' => 'col-sm-2 col-form-label']) !!}
+                                            <label for="view_data" class="col-sm-2 col-form-label">View Data</label>
                                             <div class="col-sm-10">
-                                                {!! Form::select('view_data', $var['viewData'], null, ['class'=>'form-control', 'placeholder'=>'Pilih View Data']) !!}
+                                                <select name="view_data" id="view_data" class="form-control">
+                                                    <option value="">Pilih View Data</option>
+                                                    @foreach($var['viewData'] as $key => $value)
+                                                        <option value="{{ $key }}" {{ old('view_data', isset($listUser) ? $listUser->view_data : '') == $key ? 'selected' : '' }}>{{ $value }}</option>
+                                                    @endforeach
+                                                </select>
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            {!! Form::label('role', 'Role', ['class' => 'col-sm-2 col-form-label']) !!}
+                                            <label for="role" class="col-sm-2 col-form-label">Role</label>
                                             <div class="col-sm-10">
-                                                {!! Form::select('role', $var['role'], null, ['class'=>'form-control', 'placeholder'=>'Pilih Role']) !!}
+                                                <select name="role" id="role" class="form-control">
+                                                    <option value="">Pilih Role</option>
+                                                    @foreach($var['role'] as $key => $value)
+                                                        <option value="{{ $key }}" {{ old('role', isset($listUser) ? $listUser->role : '') == $key ? 'selected' : '' }}>{{ $value }}</option>
+                                                    @endforeach
+                                                </select>
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            {!! Form::label('username', 'Username', ['class' => 'col-sm-2 col-form-label']) !!}
+                                            <label for="username" class="col-sm-2 col-form-label">Username</label>
                                             <div class="col-sm-10">
-                                                {!! Form::text('username', null, ['class'=>'form-control', 'placeholder'=>'Inputkan Username']) !!}
+                                                <input type="text" name="username" id="username" class="form-control" placeholder="Inputkan Username" 
+                                                    value="{{ old('username', isset($listUser) ? $listUser->username : '') }}">
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <div class="col-lg-4 ml-auto">
                                                 @if($var['method']=='edit')
-                                                    {!! Form::submit('Update', ['class'=>'btn btn-primary']) !!}
-                                                    {!! Form::reset('Reset', ['class'=>'btn btn-danger']) !!}
+                                                    <button type="submit" class="btn btn-primary">Update</button>
+                                                    <button type="reset" class="btn btn-danger">Reset</button>
                                                 @elseif($var['method']=='create')
-                                                    {!! Form::submit('Simpan', ['class'=>'btn btn-primary']) !!}
-                                                    {!! Form::reset('Reset', ['class'=>'btn btn-danger']) !!}
+                                                    <button type="submit" class="btn btn-primary">Simpan</button>
+                                                    <button type="reset" class="btn btn-danger">Reset</button>
                                                 @else
                                                     <a href="{{ url()->previous() }}" class="btn btn-primary">Kembali</a>
                                                 @endif
                                             </div>
                                         </div>
-                                    {!! Form::close() !!}
+                                    </form>
                                 </div>
                             </div>
                         </div>

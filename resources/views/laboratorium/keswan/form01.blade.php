@@ -8,7 +8,8 @@
         <li class="breadcrumb-item active">FORM 01</li>
     </ol>
 </section>
-{!! Form::model($keswan, ['id'=>'form-keswan', 'method'=>'POST', 'url'=>'/lab/keswan/create', 'class'=>'validation-wizard wizard-circle', 'files'=>true]) !!}
+<form id="form-keswan" method="POST" action="/lab/keswan/create" class="validation-wizard wizard-circle" enctype="multipart/form-data">
+
 @csrf
 <input type="hidden" id="id" name="id" value="{!! @$id?$keswan->id:0 !!}">
 <section class="content">
@@ -25,46 +26,49 @@
                 <div class="box-body wizard-content">
                     <section>
                         <div class="form-group row">
-                            {!! Form::label('no_epid', 'No. EPID :', ['class' => 'col-sm-2 col-form-label', 'style' => 'font-weight:bold;text-align:right;']) !!}
-                            @if($id==0)
+                            <label for="no_epid" class="col-sm-2 col-form-label" style="font-weight:bold;text-align:right;">No. EPID :</label>
                                 <div class="col-sm-2">
-                                    {!! Form::select('status_epid', ['ES'=>'ES (Pasif)', 'ED'=>'ED (Aktif)'], null, ['class'=>'form-control', 'id'=>'status_epid', 'placeholder'=>'- Status EPID -']) !!}
+                                    <select name="status_epid" id="status_epid" class="form-control" placeholder="- Status EPID -">
+                                        <option value="">- Status EPID -</option>
+                                        <option value="ES" {{ (isset($keswan) && $keswan->status_epid == 'ES') ? 'selected' : '' }}>ES (Pasif)</option>
+                                        <option value="ED" {{ (isset($keswan) && $keswan->status_epid == 'ED') ? 'selected' : '' }}>ED (Aktif)</option>
+                                    </select>
+                                    
                                 </div>
-                            @endif
                             <div class="col-sm-5">
-                                {!! Form::text('no_epid', null, ['class'=>'form-control', 'readonly'=> $id, 'style'=> 'font-weight:bold;']) !!}
+                                <input type="text" name="no_epid" id="no_epid" class="form-control" placeholder="Inputkan Nomor EPID" style="font-weight:bold;" value="{{ old('no_epid', $keswan->no_epid ?? '') }}" {{ $id ? 'readonly' : '' }}>
                             </div>
                         </div>
                         @if(Auth::user()->view_data > 2)
                             <input type="hidden" name="sub_satuan_kerja_id" value="{!! Auth::user()->sub_satuan_kerja_id !!}">
                         @else
                         <div class="form-group row">
-                            {!! Form::label('sub_satuan_kerja_id', 'Nama Laboratorium :', ['class' => 'col-sm-2 col-form-label']) !!}
-                            <div class="col-sm-10">
-                                {!! viewSelectLab(1,'sub_satuan_kerja_id',@$keswan->sub_satuan_kerja_id,'col-sm-5') !!}
+                            <label for="sub_satuan_kerja_id" class="col-sm-2 col-form-label">Nama Laboratorium :</label>
+                            <div class="col-sm-10">                                
+                                {!! viewSelectLab(1, 'sub_satuan_kerja_id', isset($keswan) ? $keswan->sub_satuan_kerja_id : '', 'col-sm-5') !!}
                             </div>
                         </div>
                         @endif
                         <div class="form-group row">
-                            {!! Form::label('nama_pengirim_id', 'Nama Pengirim :', ['class' => 'col-sm-2 col-form-label']) !!}
+                            <label for="nama_pengirim_id" class="col-sm-2 col-form-label">Nama Pengirim :</label>
                             <div class="col-sm-10">
-                                {!! viewSelectCustomer('nama_pengirim_id',@$keswan->nama_pengirim_id,'col-sm-5') !!}
+                                {!! viewSelectCustomer('nama_pengirim_id', isset($keswan) ? $keswan->nama_pengirim_id : '', 'col-sm-5') !!}
                             </div>
                         </div>
                         <div class="form-group row">
-                            {!! Form::label('alamat_pengirim', 'Alamat Pengirim :', ['class' => 'col-sm-2 col-form-label']) !!}
+                            <label for="alamat_pengirim" class="col-sm-2 col-form-label">Alamat Pengirim :</label>
                             <div class="col-sm-10">
-                                {!! Form::text('alamat_pengirim',@$keswan->customer->alamat, ['class'=>'form-control', 'placeholder'=>'Alamat Pengirim', 'readonly']) !!}
+                                <input type="text" name="alamat_pengirim" id="alamat_pengirim" class="form-control" placeholder="Alamat Pengirim" readonly value="{{ !empty($var) && ($var['method']=='edit' || $var['method']=='show') ? (@$keswan->customer->alamat) : '' }}">
                             </div>
                         </div>
                         <div class="form-group row">
-                            {!! Form::label('jenis_hewan_id', 'Jenis Hewan :', ['class' => 'col-sm-2 col-form-label']) !!}
+                            <label for="jenis_hewan_id" class="col-sm-2 col-form-label">Jenis Hewan :</label>
                             <div class="col-sm-10">
-                                {!! viewSelectSpesies(1,'jenis_hewan_id',@$keswan->jenis_hewan_id,'col-sm-4') !!}
+                                {!! viewSelectSpesies(1, 'jenis_hewan_id', isset($keswan) ? $keswan->jenis_hewan_id : '', 'col-sm-4') !!}
                             </div>
                         </div>
                         <div class="form-group row">
-                            {!! Form::label('', 'Contoh :', ['class' => 'col-sm-2 col-form-label']) !!}
+                            <label for="" class="col-sm-2 col-form-label">Contoh :</label>
                             <div class="col-sm-10">
                                 <table class="table table-bordered mb-0" id='tabel_contoh'>
                                     <tr>
@@ -73,10 +77,12 @@
                                         <th style="width: 20pt;">#</th>
                                     </tr>
                                     @if($id)
-                                        @foreach($keswan->labContoh as $key=>$lc)
+                                        @foreach($keswan->labContoh as $contoh)
                                             <tr>
-                                                <td class="center"><input class="form-control" value="{!! $id?@$lc->pcontoh->jumlah:1 !!}" name="jumlah_contoh[]" type="number" style="text-align: center;"/></td>
-                                                <td>{!! viewSelectJenisContoh("1","jenis_contoh[]", @$lc->id) !!}</td>
+                                                <td class="center"><input class="form-control" value="{{ $contoh->pcontoh->jumlah }}" name="jumlah_contoh[]" type="number" style="text-align: center;"/></td>
+                                                <td>
+                                                    {!! viewSelectJenisContoh(1, 'jenis_contoh[]', $contoh->jenis_contoh_id, 'select2') !!}
+                                                </td>
                                                 <td class="center delete_contoh"><a class="text-danger" style="cursor:pointer"><i class="fa fa-times-circle"></i></a></td>
                                             </tr>
                                         @endforeach
@@ -88,70 +94,70 @@
                         </div>
                         <div id="areaJenisPengujian">
                             <div class="form-group row">
-                                {!! Form::label('permintaan_uji[]', 'Permintaan Uji :', ['class' => 'col-sm-2 col-form-label']) !!}
-                                <div class="col-sm-10">
-                                    {!! viewSelectPermintaanUji('1','permintaan_uji[]',$id?@$keswan->labPengujian->pluck('id'):"") !!}
+                                <label for="permintaan_uji[]" class="col-sm-2 col-form-label">Permintaan Uji :</label>
+                                <div class="col-sm-10">                                    
+                                    {!! viewSelectPermintaanUji(1, 'permintaan_uji[]', $id ? $keswan->labPengujian->pluck('permintaan_uji_id')->toArray() : [], 'select2') !!}
                                 </div>
                             </div>
                         </div>
                         <div class="form-group row">
-                            {!! Form::label('kriteria_contoh', 'Kriteria Contoh :', ['class' => 'col-sm-2 col-form-label']) !!}
-                            <div class="col-sm-10"
->                               <input name="kriteria_contoh" class="with-gap radio-col-blue form-control" type="radio" id="memenuhi" value="MS" {!! $id?$keswan->kriteria_contoh=="MS"?"checked":"":"checked" !!}>
+                            <label for="kriteria_contoh" class="col-sm-2 col-form-label">Kriteria Contoh :</label>
+                            <div class="col-sm-10">
+                                <input name="kriteria_contoh" class="with-gap radio-col-blue form-control" type="radio" id="memenuhi" value="MS" {{ (isset($keswan) && $keswan->kriteria_contoh == 'MS') ? 'checked' : '' }}>
                                 <label for="memenuhi">Memenuhi Syarat</label>&nbsp;&nbsp;&nbsp;
-                                <input name="kriteria_contoh" class="with-gap radio-col-red form-control" type="radio" id="tidak_memenuhi" value="TMS" {!! $id?$keswan->kriteria_contoh=="TMS"?"checked":"":"" !!}>
+                                <input name="kriteria_contoh" class="with-gap radio-col-red form-control" type="radio" id="tidak_memenuhi" value="TMS" {{ (isset($keswan) && $keswan->kriteria_contoh == 'TMS') ? 'checked' : '' }}>
                                 <label for="tidak_memenuhi">Tidak Memenuhi Syarat</label>
                             </div>
                         </div>
                         <div class="form-group row">
-                            {!! Form::label('peralatan', 'Peralatan :', ['class' => 'col-sm-2 col-form-label']) !!}
-                            <div class="col-sm-10"
->                               <input name="peralatan" class="with-gap radio-col-blue form-control" type="radio" id="peralatan_mampu" value="Mampu" {!! $id?$keswan->peralatan=="Mampu"?"checked":"":"checked" !!}>
+                            <label for="peralatan" class="col-sm-2 col-form-label">Peralatan :</label>
+                            <div class="col-sm-10">
+                                <input name="peralatan" class="with-gap radio-col-blue form-control" type="radio" id="peralatan_mampu" value="Mampu" {{ (isset($keswan) && $keswan->peralatan == 'Mampu') ? 'checked' : '' }}>
                                 <label for="peralatan_mampu">Mampu</label>&nbsp;&nbsp;&nbsp;
-                                <input name="peralatan" class="with-gap radio-col-red form-control" type="radio" id="peralatan_tidak_mampu" value="Tidak Mampu" {!! $id?$keswan->peralatan=="Tidak Mampu"?"checked":"":"" !!}>
+                                <input name="peralatan" class="with-gap radio-col-red form-control" type="radio" id="peralatan_tidak_mampu" value="Tidak Mampu" {{ (isset($keswan) && $keswan->peralatan == 'Tidak Mampu') ? 'checked' : '' }}>
                                 <label for="peralatan_tidak_mampu">Tidak Mampu</label>
                             </div>
                         </div>
                         <div class="form-group row">
-                            {!! Form::label('bahan', 'Bahan :', ['class' => 'col-sm-2 col-form-label']) !!}
-                            <div class="col-sm-10"
->                               <input name="bahan" class="with-gap radio-col-blue form-control" type="radio" id="bahan_mampu" value="Mampu" {!! $id?$keswan->bahan=="Mampu"?"checked":"":"checked" !!}>
+                            <label for="bahan" class="col-sm-2 col-form-label">Bahan :</label>
+                            <div class="col-sm-10">
+                                <input name="bahan" class="with-gap radio-col-blue form-control" type="radio" id="bahan_mampu" value="Mampu" {{ (isset($keswan) && $keswan->bahan == 'Mampu') ? 'checked' : '' }}>
                                 <label for="bahan_mampu">Mampu</label>&nbsp;&nbsp;&nbsp;
-                                <input name="bahan" class="with-gap radio-col-red form-control" type="radio" id="bahan_tidak_mampu" value="Tidak Mampu" {!! $id?$keswan->bahan=="Tidak Mampu"?"checked":"":"" !!}>
+                                <input name="bahan" class="with-gap radio-col-red form-control" type="radio" id="bahan_tidak_mampu" value="Tidak Mampu" {{ (isset($keswan) && $keswan->bahan == 'Tidak Mampu') ? 'checked' : '' }}>
                                 <label for="bahan_tidak_mampu">Tidak Mampu</label>
                             </div>
                         </div>
                         <div class="form-group row">
-                            {!! Form::label('personil', 'Personil :', ['class' => 'col-sm-2 col-form-label']) !!}
-                            <div class="col-sm-10"
->                               <input name="personil" class="with-gap radio-col-blue form-control" type="radio" id="personil_mampu" value="Mampu" {!! $id?$keswan->personil=="Mampu"?"checked":"":"checked" !!}>
+                            <label for="personil" class="col-sm-2 col-form-label">Personil :</label>
+                            <div class="col-sm-10">
+                                <input name="personil" class="with-gap radio-col-blue form-control" type="radio" id="personil_mampu" value="Mampu" {{ (isset($keswan) && $keswan->personil == 'Mampu') ? 'checked' : '' }}>
                                 <label for="personil_mampu">Mampu</label>&nbsp;&nbsp;&nbsp;
-                                <input name="personil" class="with-gap radio-col-red form-control" type="radio" id="personil_tidak_mampu" value="Tidak Mampu" {!! $id?$keswan->personil=="Tidak Mampu"?"checked":"":"" !!}>
+                                <input name="personil" class="with-gap radio-col-red form-control" type="radio" id="personil_tidak_mampu" value="Tidak Mampu" {{ (isset($keswan) && $keswan->personil == 'Tidak Mampu') ? 'checked' : '' }}>
                                 <label for="personil_tidak_mampu">Tidak Mampu</label>
                             </div>
                         </div>
                         <div class="form-group row">
-                            {!! Form::label('catatan', 'Catatan/Saran :', ['class' => 'col-sm-2 col-form-label']) !!}
+                            <label for="catatan" class="col-sm-2 col-form-label">Catatan/Saran :</label>
                             <div class="col-sm-10">
-                                {!! Form::textarea('catatan', null, array('class'=> 'form-control', 'rows' => '2','placeholder'=>'Catatan/Saran')) !!}
+                                <textarea name="catatan" id="catatan" class="form-control" rows="2" placeholder="Catatan/Saran">{{ old('catatan', $keswan->catatan ?? '') }}</textarea>
                             </div>
                         </div>
                         <div class="form-group row">
-                            {!! Form::label('tanggal_penerimaan', 'Tanggal Diterima Contoh :', ['class' => 'col-sm-2 col-form-label']) !!}
+                            <label for="tanggal_penerimaan" class="col-sm-2 col-form-label">Tanggal Diterima Contoh :</label>
                             <div class="col-sm-4">
-                                {!! viewSelectTanggal('tanggal_penerimaan', @$keswan->tanggal_penerimaan==""?date('d-m-Y'):@$keswan->tanggal_penerimaan)  !!}
+                                <input type="text" name="tanggal_penerimaan" id="tanggal_penerimaan" class="form-control" placeholder="Tanggal Diterima Contoh" value="{{ old('tanggal_penerimaan', @$keswan->tanggal_penerimaan==""?date('d-m-Y'):@$keswan->tanggal_penerimaan) }}">
                             </div>
                         </div>
                         <div class="form-group row">
-                            {!! Form::label('pengirim', 'Pengirim :', ['class' => 'col-sm-2 col-form-label']) !!}
+                            <label for="pengirim" class="col-sm-2 col-form-label">Pengirim :</label>
                             <div class="col-sm-10">
-                                {!! Form::text('pengirim', null, ['class'=>'form-control col-sm-4', 'placeholder'=>'Nama Pengirim']) !!}
+                                <input type="text" name="pengirim" id="pengirim" class="form-control col-sm-4" placeholder="Nama Pengirim" value="{{ old('pengirim', $keswan->pengirim ?? '') }}">
                             </div>
                         </div>
                         <div class="form-group row">
-                            {!! Form::label('penerima', 'Penerima :', ['class' => 'col-sm-2 col-form-label']) !!}
+                            <label for="penerima" class="col-sm-2 col-form-label">Penerima :</label>
                             <div class="col-sm-10">
-                                {!! Form::text('penerima', null, ['class'=>'form-control col-sm-4', 'placeholder'=>'Nama Penerima']) !!}
+                                <input type="text" name="penerima" id="penerima" class="form-control col-sm-4" placeholder="Nama Penerima" value="{{ old('penerima', $keswan->penerima ?? '') }}">
                             </div>
                         </div>
                     </section>
@@ -168,7 +174,7 @@
         </div>
     </div>
 </section>
-{!! Form::close() !!}
+</form>
 <script>
     $jid = {!! $id?$keswan->id:0 !!};
     $(document).ready(function() {
@@ -249,7 +255,13 @@
         $('#tabel_contoh tbody').append(
             '<tr>'
                 +'<td class="center"><input class="form-control" value="1" name="jumlah_contoh[]" type="number" style="text-align: center;"/></td>'
-                +'<td>{!! viewSelectJenisContoh("1","jenis_contoh[]") !!}</td>'
+                +'<td>'
+                    +'<select name="jenis_contoh[]" class="form-control select2">'
+                        +'@foreach($jenisContoh as $id => $name)'
+                            +'<option value="{{ $id }}">{{ $name }}</option>'
+                        +'@endforeach'
+                    +'</select>'
+                +'</td>'
                 +'<td class="center delete_contoh"><a class="text-danger" style="cursor:pointer"><i class="fa fa-times-circle"></i></a></td>'
             +'</tr>'
         );

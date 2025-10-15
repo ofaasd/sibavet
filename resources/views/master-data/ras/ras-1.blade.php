@@ -72,18 +72,20 @@
                                                 <tr>
                                                     <td style="text-align:center">
                                                         <div class="btn-group">
-                                                            {!! Form::open(['method'=>'delete', 'url'=>'/master-data/ras/'.$item->id.$var['url']['all'], 'class'=> 'delete_form']) !!}
-                                                            {!! Form::hidden('nomor', $no, ['class'=>'form-control']) !!}
-                                                            <div class="btn-group btn-group-xs" role="group" aria-label="Basic example">
-                                                                @can('Delete Ras')
-                                                                    <button type="submit" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></button>
-                                                                @endcan
-                                                                @can('Update Ras')
-                                                                    <a href="{{ url('/master-data/ras/'.$item->id.'/edit'.$var['url']['all'])}}" class="btn btn-primary btn-xs"><i class="fa fa-edit"></i></a>
-                                                                @endcan
-                                                                <a href="{{ url('/master-data/ras/'.$item->id.$var['url']['all'])}}" class="btn btn-info btn-xs"><i class="fa fa-search"></i></a>
-                                                            </div>
-                                                            {!! Form::close() !!}
+                                                            <form method="POST" action="{{ url('/master-data/ras/'.$item->id.$var['url']['all']) }}" style="display:inline;">
+                                                                @csrf
+                                                                @method('DELETE')
+                                                                <input type="hidden" name="nomor" value="{{ $no }}" class="form-control" />
+                                                                <div class="btn-group btn-group-xs" role="group" aria-label="Basic example">
+                                                                    @can('Delete Ras')
+                                                                        <button type="submit" class="btn btn-danger btn-xs" onclick="return confirm('Are you sure you want to delete this item?');"><i class="fa fa-trash"></i></button>
+                                                                    @endcan
+                                                                    @can('Update Ras')
+                                                                        <a href="{{ url('/master-data/ras/'.$item->id.'/edit'.$var['url']['all'])}}" class="btn btn-primary btn-xs"><i class="fa fa-edit"></i></a>
+                                                                    @endcan
+                                                                    <a href="{{ url('/master-data/ras/'.$item->id.$var['url']['all'])}}" class="btn btn-info btn-xs"><i class="fa fa-search"></i></a>
+                                                                </div>
+                                                            </form>
                                                         </div>
                                                     </td>
                                                     <td>{{ $item->kode }}</td>

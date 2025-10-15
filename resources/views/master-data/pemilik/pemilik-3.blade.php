@@ -32,60 +32,66 @@
                             <div class="tab-pane active">
                                 <div class="pad">
                                     @if($var['method']=='edit')
-                                        {!! Form::model($listPemilik, ['method'=>'PATCH', 'url'=> '/master-data/pemilik/'.$listPemilik->id.$var['url']['all'], 'id'=>'form-pemilik']) !!}
+                                        <form id="form-pemilik" method="POST" action="{{ url('/master-data/pemilik/'.$listPemilik->id.$var['url']['all']) }}">
+                                            @csrf
+                                            @method('PATCH')
                                     @elseif($var['method']=='create')
-                                        {!! Form::open(['id'=>'form-pemilik', 'method'=>'POST', 'url'=>'/master-data/pemilik']) !!}
+                                        <form id="form-pemilik" method="POST" action="{{ url('/master-data/pemilik') }}">
+                                            @csrf
                                     @else
-                                        {!! Form::model($listPemilik, ['class'=>'form-pemilik']) !!}
+                                        <form class="form-pemilik">
                                     @endif
+
                                         <div class="form-group row">
-                                            {!! Form::label('kode', 'Kode', ['class' => 'col-sm-2 col-form-label']) !!}
+                                            <label for="kode" class="col-sm-2 col-form-label">Kode</label>
                                             <div class="col-sm-10">
                                             @if($var['method']=='edit')
-                                                {!! Form::text('kode', null, ['class'=>'form-control', 'placeholder'=>'Inputkan Kode']) !!}
-											@else
-                                                {!! Form::text('kode', null, ['class'=>'form-control', 'placeholder'=>'Inputkan Kode']) !!}                           
+                                                <input type="text" name="kode" id="kode" value="{{ old('kode', $listPemilik->kode ?? '') }}" class="form-control" placeholder="Inputkan Kode" />
+                                            @elseif($var['method']=='create')
+                                                <input type="text" name="kode" id="kode" value="{{ old('kode', $var['kode'] ?? '') }}" class="form-control" placeholder="Inputkan Kode" />
+                                            @else
+                                                <input type="text" name="kode" id="kode" value="{{ old('kode', $listPemilik->kode ?? '') }}" class="form-control" placeholder="Inputkan Kode" />
                                             @endif    
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            {!! Form::label('nama', 'Nama', ['class' => 'col-sm-2 col-form-label']) !!}
+                                            <label for="nama" class="col-sm-2 col-form-label required">Nama</label>
                                             <div class="col-sm-10">
-                                                {!! Form::text('nama', null, ['class'=>'form-control', 'placeholder'=>'Inputkan Nama']) !!}
+                                                <input type="text" name="nama" id="nama" value="{{ old('nama', $listPemilik->nama ?? '') }}" class="form-control" placeholder="Inputkan Nama" required />
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            {!! Form::label('alamat', 'Alamat', ['class' => 'col-sm-2 col-form-label']) !!}
+                                            <label for="alamat" class="col-sm-2 col-form-label">Alamat</label>
                                             <div class="col-sm-10">
-                                                {!! Form::text('alamat', null, ['class'=>'form-control', 'placeholder'=>'Inputkan Alamat']) !!}
+                                                <input type="text" name="alamat" id="alamat" value="{{ old('alamat', $listPemilik->alamat ?? '') }}" class="form-control" placeholder="Inputkan Alamat" />
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            {!! Form::label('telepon', 'Telepon', ['class' => 'col-sm-2 col-form-label']) !!}
+                                            <label for="telepon" class="col-sm-2 col-form-label">Telepon</label>
                                             <div class="col-sm-10">
-                                                {!! Form::text('telepon', null, ['class'=>'form-control', 'placeholder'=>'Inputkan Telepon']) !!}
+                                                <input type="text" name="telepon" id="telepon" value="{{ old('telepon', $listPemilik->telepon ?? '') }}" class="form-control" placeholder="Inputkan Telepon" />
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            {!! Form::label('ktp', 'Nomor KTP', ['class' => 'col-sm-2 col-form-label']) !!}
+                                            <label for="ktp" class="col-sm-2 col-form-label required">Nomor KTP</label> 
                                             <div class="col-sm-10">
-                                                {!! Form::text('ktp', null, ['class'=>'form-control', 'placeholder'=>'Inputkan Nomor KTP']) !!}
+                                                <input type="text" name="ktp" id="ktp" value="{{ old('ktp', $listPemilik->ktp ?? '') }}" class="form-control" placeholder="Inputkan Nomor KTP" required />
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <div class="col-lg-4 ml-auto">
                                                 @if($var['method']=='edit')
-                                                    {!! Form::submit('Update', ['class'=>'btn btn-primary']) !!}
-                                                    {!! Form::reset('Reset', ['class'=>'btn btn-danger']) !!}
+                                                    <button type="submit" class="btn btn-primary">Update</button>
+                                                    <button type="reset" class="btn btn-danger">Reset</button>
                                                 @elseif($var['method']=='create')
-                                                    {!! Form::submit('Simpan', ['class'=>'btn btn-primary']) !!}
-                                                    {!! Form::reset('Reset', ['class'=>'btn btn-danger']) !!}
+                                                    <button type="submit" class="btn btn-primary">Simpan</button>
+                                                    <button type="reset" class="btn btn-danger">Reset</button>
                                                 @else
                                                     <a href="{{ url()->previous() }}" class="btn btn-primary">Kembali</a>
                                                 @endif
                                             </div>
                                         </div>
-                                    {!! Form::close() !!}
+                                    </form>
 									<h3>Data Pasien</h3>
 									<a href="#" class="btn btn-primary" data-toggle="modal" data-target="#tambah">Tambah Pasien</a>
 									<table class="table table-stripped">
@@ -127,24 +133,33 @@
 														<form method="post" action="{{ url('/master-data/pemilik/update_pasien') }}">
 														@csrf
 															<input type="hidden" name="id" value="{{$row->id}}">
-															<input type="hidden" name="id_pemilik" value="{{$listPemilik->id}}">
+															<input type="hidden" name="id_pemilik" value="{{ $listPemilik->id }}">
 															<div class="form-group row">
-																{!! Form::label('nama_hewan', 'Nama Hewan', ['class' => 'col-sm-2 col-form-label']) !!}
-																<div class="col-sm-10">
-																	{!! Form::text('nama_hewan', $row->nama_hewan, ['class'=>'form-control', 'placeholder'=>'Nama Hewan']) !!}
-																</div>
-															</div>
-															<div class="form-group row">
-																{!! Form::label('spesies_id', 'Jenis Hewan', ['class' => 'col-sm-2 col-form-label']) !!}
-																<div class="col-sm-10">
-																	{!! Form::select('spesies_id', $var['spesies'], $row->spesies_id, ['class'=>'form-control', 'placeholder'=>'Pilih Jenis Hewan', 'style'=>'width: 100%;', 'onchange'=>'ras()']) !!}
-																</div>
-															</div>
-															<div class="form-group row">
-																{!! Form::label('jenis_kelamin', 'Jenis Kelamin', ['class' => 'col-sm-2 col-form-label']) !!}
-																<div class="col-sm-10">
-																	{!! Form::select('jenis_kelamin', ['Jantan'=>'Jantan', 'Betina'=>'Betina'], $row->jenis_kelamin, ['class'=>'form-control', 'placeholder'=>'Pilih Jenis Kelamin']) !!}
-																</div>
+                                                                <label for="nama_hewan" class="col-sm-2 col-form-label">Nama Hewan</label>
+                                                                <div class="col-sm-10">
+                                                                    <input type="text" name="nama_hewan" id="nama_hewan" value="{{ old('nama_hewan', $row->nama_hewan ?? '') }}" class="form-control" placeholder="Nama Hewan" />
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group row">
+                                                                <label for="spesies_id" class="col-sm-2 col-form-label">Jenis Hewan</label>
+                                                                <div class="col-sm-10">
+                                                                    <select name="spesies_id" id="spesies_id" class="form-control" style="width: 100%;">
+                                                                        <option value="">Pilih Jenis Hewan</option>
+                                                                        @foreach($var['spesies'] as $key => $value)
+                                                                            <option value="{{ $key }}" {{ old('spesies_id', $row->spesies_id ?? '') == $key ? 'selected' : '' }}>{{ $value }}</option>
+                                                                        @endforeach
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group row">
+                                                                <label for="jenis_kelamin" class="col-sm-2 col-form-label">Jenis Kelamin</label>
+                                                                <div class="col-sm-10">
+                                                                    <select name="jenis_kelamin" id="jenis_kelamin" class="form-control">
+                                                                        <option value="">Pilih Jenis Kelamin</option>
+                                                                        <option value="Jantan" {{ old('jenis_kelamin', $row->jenis_kelamin ?? '') == 'Jantan' ? 'selected' : '' }}>Jantan</option>
+                                                                        <option value="Betina" {{ old('jenis_kelamin', $row->jenis_kelamin ?? '') == 'Betina' ? 'selected' : '' }}>Betina</option>
+                                                                    </select>
+                                                                </div>
 															</div>
 														<br>
 													  </div>
@@ -188,24 +203,33 @@
         <form method="post" action="{{ url('master-data/pemilik/store_pasien') }}">
         @csrf
 			<input type="hidden" name="kode_pemilik" value="{{$listPemilik->kode}}">
-			<input type="hidden" name="id_pemilik" value="{{$listPemilik->id}}">
+			<input type="hidden" name="id_pemilik" value="{{ $listPemilik->id }}">
             <div class="form-group row">
-				{!! Form::label('nama_hewan', 'Nama Hewan', ['class' => 'col-sm-2 col-form-label']) !!}
-				<div class="col-sm-10">
-					{!! Form::text('nama_hewan', null, ['class'=>'form-control', 'placeholder'=>'Nama Hewan']) !!}
-				</div>
-			</div>
-			<div class="form-group row">
-				{!! Form::label('spesies_id', 'Jenis Hewan', ['class' => 'col-sm-2 col-form-label']) !!}
-				<div class="col-sm-10">
-					{!! Form::select('spesies_id', $var['spesies'], null, ['class'=>'form-control', 'placeholder'=>'Pilih Jenis Hewan', 'style'=>'width: 100%;', 'onchange'=>'ras()']) !!}
-				</div>
-			</div>
-			<div class="form-group row">
-				{!! Form::label('jenis_kelamin', 'Jenis Kelamin', ['class' => 'col-sm-2 col-form-label']) !!}
-				<div class="col-sm-10">
-					{!! Form::select('jenis_kelamin', ['Jantan'=>'Jantan', 'Betina'=>'Betina'], null, ['class'=>'form-control', 'placeholder'=>'Pilih Jenis Kelamin']) !!}
-				</div>
+                <label for="nama_hewan" class="col-sm-2 col-form-label">Nama Hewan</label>
+                <div class="col-sm-10">
+                    <input type="text" name="nama_hewan" id="nama_hewan" value="{{ old('nama_hewan', $listPemilik->nama_hewan ?? '') }}" class="form-control" placeholder="Nama Hewan" />
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="spesies_id" class="col-sm-2 col-form-label">Jenis Hewan</label>
+                <div class="col-sm-10">
+                    <select name="spesies_id" id="spesies_id" class="form-control" style="width: 100%;">
+                        <option value="">Pilih Jenis Hewan</option>
+                        @foreach($var['spesies'] as $key => $value)
+                            <option value="{{ $key }}" {{ old('spesies_id', $listPemilik->spesies_id ?? '') == $key ? 'selected' : '' }}>{{ $value }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="jenis_kelamin" class="col-sm-2 col-form-label">Jenis Kelamin</label>
+                <div class="col-sm-10">
+                    <select name="jenis_kelamin" id="jenis_kelamin" class="form-control">
+                        <option value="">Pilih Jenis Kelamin</option>
+                        <option value="Jantan" {{ old('jenis_kelamin', $listPemilik->jenis_kelamin ?? '') == 'Jantan' ? 'selected' : '' }}>Jantan</option>
+                        <option value="Betina" {{ old('jenis_kelamin', $listPemilik->jenis_kelamin ?? '') == 'Betina' ? 'selected' : '' }}>Betina</option>
+                    </select>
+                </div>
 			</div>
         <br>
       </div>

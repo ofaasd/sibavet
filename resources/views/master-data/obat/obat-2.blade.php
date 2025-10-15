@@ -30,46 +30,52 @@
                         <!-- Tab panes -->
                         <div class="tab-content tabcontent-border">
                             <div class="tab-pane active">
-                                <div class="pad">
-                                    @if($var['method']=='edit')
-                                        {!! Form::model($listObat, ['method'=>'PATCH', 'url'=> '/master-data/obat/'.$listObat->id.$var['url']['all'], 'id'=>'form-obat']) !!}
-                                    @elseif($var['method']=='create')
-                                        {!! Form::open(['id'=>'form-obat', 'method'=>'POST', 'url'=>'/master-data/obat']) !!}
-                                    @else
-                                        {!! Form::model($listObat, ['class'=>'form-obat']) !!}
-                                    @endif
-                                        <div class="form-group row">
-                                            {!! Form::label('kode', 'Kode', ['class' => 'col-sm-2 col-form-label']) !!}
-                                            <div class="col-sm-10">
-                                                {!! Form::text('kode', null, ['class'=>'form-control', 'placeholder'=>'Inputkan Kode']) !!}
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            {!! Form::label('obat', 'Obat', ['class' => 'col-sm-2 col-form-label']) !!}
-                                            <div class="col-sm-10">
-                                                {!! Form::text('obat', null, ['class'=>'form-control', 'placeholder'=>'Inputkan Obat']) !!}
-                                            </div>
-                                        </div>
-										<div class="form-group row">
-                                            {!! Form::label('Status', 'Status', ['class' => 'col-sm-2 col-form-label']) !!}
-                                            <div class="col-sm-10">
-                                                {!! Form::select('klinik', [0=>'Tidak Aktif',1=>'Aktif'], null, ['class'=>'form-control select2', 'placeholder'=>'Pilih Jenis Obat', 'style'=>'width: 100%;']) !!}
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="col-lg-4 ml-auto">
-                                                @if($var['method']=='edit')
-                                                    {!! Form::submit('Update', ['class'=>'btn btn-primary']) !!}
-                                                    {!! Form::reset('Reset', ['class'=>'btn btn-danger']) !!}
-                                                @elseif($var['method']=='create')
-                                                    {!! Form::submit('Simpan', ['class'=>'btn btn-primary']) !!}
-                                                    {!! Form::reset('Reset', ['class'=>'btn btn-danger']) !!}
-                                                @else
-                                                    <a href="{{ url()->previous() }}" class="btn btn-primary">Kembali</a>
-                                                @endif
-                                            </div>
-                                        </div>
-                                    {!! Form::close() !!}
+                                <div class="pad"> 
+ @if($var['method']=='edit')
+ <form id="form-obat" method="POST" action="{{ url('/master-data/obat/'.$listObat->id.$var['url']['all']) }}">
+ @csrf
+ @method('PATCH')
+ @elseif($var['method']=='create')
+ <form id="form-obat" method="POST" action="{{ url('/master-data/obat') }}">
+ @csrf
+ @else
+ <form class="form-obat">
+ @endif
+ <div class="form-group row">
+ <label for="kode" class="col-sm-2 col-form-label">Kode</label>
+ <div class="col-sm-10">
+ <input type="text" name="kode" id="kode" value="{{ old('kode', $listObat->kode ?? '') }}" class="form-control" placeholder="Inputkan Kode" />
+ </div>
+ </div>
+ <div class="form-group row">
+ <label for="obat" class="col-sm-2 col-form-label">Obat</label>
+ <div class="col-sm-10">
+ <input type="text" name="obat" id="obat" value="{{ old('obat', $listObat->obat ?? '') }}" class="form-control" placeholder="Inputkan Obat" />
+ </div>
+ </div>
+ <div class="form-group row">
+ <label for="klinik" class="col-sm-2 col-form-label">Status</label>
+ <div class="col-sm-10">
+ <select name="klinik" id="klinik" class="form-control select2" style="width: 100%;">
+ <option value="0" {{ old('klinik', $listObat->klinik ?? '') == '0' ? 'selected' : '' }}>Tidak Aktif</option>
+ <option value="1" {{ old('klinik', $listObat->klinik ?? '') == '1' ? 'selected' : '' }}>Aktif</option>
+ </select>
+ </div>
+ </div>
+ <div class="form-group">
+ <div class="col-lg-4 ml-auto">
+ @if($var['method']=='edit')
+ <button type="submit" class="btn btn-primary">Update</button>
+ <button type="reset" class="btn btn-danger">Reset</button>
+ @elseif($var['method']=='create')
+ <button type="submit" class="btn btn-primary">Simpan</button>
+ <button type="reset" class="btn btn-danger">Reset</button>
+ @else
+ <a href="{{ url()->previous() }}" class="btn btn-primary">Kembali</a>
+ @endif
+ </div>
+ </div>
+ </form>
                                 </div>
                             </div>
                         </div>

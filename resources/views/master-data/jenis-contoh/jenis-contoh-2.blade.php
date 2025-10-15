@@ -32,32 +32,40 @@
                             <div class="tab-pane active">
                                 <div class="pad">
                                     @if($var['method']=='edit')
-                                        {!! Form::model($listJenisContoh, ['method'=>'PATCH', 'url'=> '/master-data/jenis-contoh/'.$listJenisContoh->id.$var['url']['all'], 'id'=>'form-jenis-contoh']) !!}
+                                        <form id="form-jenis-contoh" method="POST" action="{{ url('/master-data/jenis-contoh/'.$listJenisContoh->id.$var['url']['all']) }}">
+                                            @csrf
+                                            @method('PATCH')
                                     @elseif($var['method']=='create')
-                                        {!! Form::open(['id'=>'form-jenis-contoh', 'method'=>'POST', 'url'=>'/master-data/jenis-contoh']) !!}
+                                        <form id="form-jenis-contoh" method="POST" action="{{ url('/master-data/jenis-contoh') }}">
+                                            @csrf
                                     @else
-                                        {!! Form::model($listJenisContoh, ['class'=>'form-jenis-contoh']) !!}
+                                        <form class="form-jenis-contoh">
                                     @endif
                                         <div class="form-group row">
-                                            {!! Form::label('kode', 'Kode', ['class' => 'col-sm-2 col-form-label']) !!}
+                                            <label for="kode" class="col-sm-2 col-form-label">Kode</label>
                                             <div class="col-sm-10">
-                                                {!! Form::text('kode', null, ['class'=>'form-control', 'placeholder'=>'Inputkan Kode']) !!}
+                                                <input type="text" name="kode" id="kode" value="{{ old('kode', $listJenisContoh->kode ?? '') }}" class="form-control" placeholder="Inputkan Kode" />
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            {!! Form::label('sub_satuan_kerja_id', 'Laboratorium', ['class' => 'col-sm-2 col-form-label']) !!}
+                                            <label for="sub_satuan_kerja_id" class="col-sm-2 col-form-label">Laboratorium</label>
                                             <div class="col-sm-10">
-                                                {!! Form::select('sub_satuan_kerja_id', $var['subSatuanKerja'], null, ['class'=>'form-control', 'placeholder'=>'Pilih Laboratorium']) !!}
+                                                <select name="sub_satuan_kerja_id" id="sub_satuan_kerja_id" class="form-control">
+                                                    <option value="">Pilih Laboratorium</option>
+                                                    @foreach($var['subSatuanKerja'] as $key => $value)
+                                                        <option value="{{ $key }}" {{ old('sub_satuan_kerja_id', $listJenisContoh->sub_satuan_kerja_id ?? '') == $key ? 'selected' : '' }}>{{ $value }}</option>
+                                                    @endforeach
+                                                </select>
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            {!! Form::label('nama_sampel', 'Nama Sampel', ['class' => 'col-sm-2 col-form-label']) !!}
+                                            <label for="nama_sampel" class="col-sm-2 col-form-label">Nama Sampel</label>
                                             <div class="col-sm-10">
-                                                {!! Form::text('nama_sampel', null, ['class'=>'form-control', 'placeholder'=>'Inputkan Nama Sampel']) !!}
+                                                <input type="text" name="nama_sampel" id="nama_sampel" value="{{ old('nama_sampel', $listJenisContoh->nama_sampel ?? '') }}" class="form-control" placeholder="Inputkan Nama Sampel" />
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            {!! Form::label('lab', 'Laboratorium', ['class' => 'col-sm-2 col-form-label']) !!}
+                                            <label for="lab" class="col-sm-2 col-form-label">Laboratorium</label>
                                             <div class="col-sm-10">
                                                 {!! viewSelectLaboratorium('lab',@$listJenisContoh->lab) !!}
                                             </div>
@@ -65,17 +73,17 @@
                                         <div class="form-group">
                                             <div class="col-lg-4 ml-auto">
                                                 @if($var['method']=='edit')
-                                                    {!! Form::submit('Update', ['class'=>'btn btn-primary']) !!}
-                                                    {!! Form::reset('Reset', ['class'=>'btn btn-danger']) !!}
+                                                    <button type="submit" class="btn btn-primary">Update</button>
+                                                    <button type="reset" class="btn btn-danger">Reset</button>
                                                 @elseif($var['method']=='create')
-                                                    {!! Form::submit('Simpan', ['class'=>'btn btn-primary']) !!}
-                                                    {!! Form::reset('Reset', ['class'=>'btn btn-danger']) !!}
+                                                    <button type="submit" class="btn btn-primary">Simpan</button>
+                                                    <button type="reset" class="btn btn-danger">Reset</button>
                                                 @else
                                                     <a href="{{ url()->previous() }}" class="btn btn-primary">Kembali</a>
                                                 @endif
                                             </div>
                                         </div>
-                                    {!! Form::close() !!}
+                                    </form>
                                 </div>
                             </div>
                         </div>

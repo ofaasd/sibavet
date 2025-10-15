@@ -75,18 +75,20 @@
                                                 <tr>
                                                     <td style="text-align:center">
                                                         <div class="btn-group">
-                                                            {!! Form::open(['method'=>'delete', 'url'=>'/pllt/'.$item->id.$var['url']['all'], 'class'=> 'delete_form']) !!}
-                                                            {!! Form::hidden('nomor', $no, ['class'=>'form-control']) !!}
-                                                            <div class="btn-group btn-group-xs" role="group" aria-label="Basic example">
-                                                                @can('Delete PLLT')
-                                                                    <button type="submit" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></button>
-                                                                @endcan
-                                                                @can('Update PLLT')
-                                                                    <a href="{{ url('/pllt/'.$item->id.'/edit'.$var['url']['all'])}}" class="btn btn-primary btn-xs"><i class="fa fa-edit"></i></a>
-                                                                @endcan
-                                                                <a href="{{ url('/pllt/'.$item->id.$var['url']['all'])}}" class="btn btn-info btn-xs"><i class="fa fa-search"></i></a>
-                                                            </div>
-                                                            {!! Form::close() !!}
+                                                            <form method="POST" action="/pllt/{{ $item->id }}{{ $var['url']['all'] }}" class="delete_form">
+                                                                @csrf
+                                                                @method('DELETE')
+                                                                <input type="hidden" name="nomor" value="{{ $no }}" class="form-control">
+                                                                <div class="btn-group btn-group-xs" role="group" aria-label="Basic example">
+                                                                    @can('Delete PLLT')
+                                                                        <button type="submit" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></button>
+                                                                    @endcan
+                                                                    @can('Update PLLT')
+                                                                        <a href="{{ url('/pllt/'.$item->id.'/edit'.$var['url']['all'])}}" class="btn btn-primary btn-xs"><i class="fa fa-edit"></i></a>
+                                                                    @endcan
+                                                                    <a href="{{ url('/pllt/'.$item->id.$var['url']['all'])}}" class="btn btn-info btn-xs"><i class="fa fa-search"></i></a>
+                                                                </div>
+                                                            </form>
                                                         </div>
                                                     </td>
                                                     <td>{{ @$item->subSatuanKerja->sub_satuan_kerja }}</td>

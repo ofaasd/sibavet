@@ -39,8 +39,8 @@ class KlinikController extends Controller
 	function __construct(Request $request)
 	{
 		$this->middleware('auth');
-		$this->cari = $request->query('cari', '');
-		$this->url = makeUrl($request->query());
+        $this->cari = $request->query('cari', '');
+        $this->url = makeUrl($request->query());
 	}
 
     /**
@@ -156,6 +156,7 @@ class KlinikController extends Controller
 		$var['helper'] = new KlinikHelper();
 		//sementara di filter per tahun sekarang supaya hasil data yang di tampilkan lebih cepat
 		$year = date('Y');
+		$bulan = date('m');
 		$kode = Auth::user()->subSatuanKerja->kode_klinik;
 		$status = array("Pendaftaran","Pemeriksaan","Belum Bayar","Sudah Bayar");
 		$queryKlinik = KlinikTerapi::select("klinik_terapi.*","klinik.sub_satuan_kerja_id","klinik.pemilik_id","klinik.spesies_id","klinik.nama_hewan")->join('klinik','klinik_terapi.klinik_id','=','klinik.id')->join('pemilik','klinik.pemilik_id','=','pemilik.id')->where("klinik_terapi.no_pasien","like","%" . $kode ."%")->whereYear('klinik_terapi.tanggal_periksa',$year)->whereIn("klinik_terapi.status",[2,3]);

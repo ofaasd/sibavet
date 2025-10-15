@@ -135,46 +135,55 @@
         </button>
       </div>
       <div class="modal-body">             
-        {!! Form::open(['id'=>'form-klinik', 'method'=>'POST', 'url'=>'/klinik/updateObat/'.$var['url']['all']]) !!}
+        <form id="form-klinik" method="POST" action="/klinik/updateObat/{{$var['url']['all']}}">
+        @csrf
 
         <input type="hidden" name="created" id="created">
         <input type="hidden" name="klinik_id2" id="klinik_id2">
 
         <div class="form-group row">
-                                {!! Form::label('tindakan', 'Jenis Penanganan', ['class' => 'col-sm-2 col-form-label']) !!}
+                                <label for="tindakan" class="col-sm-2 col-form-label">Jenis Penanganan</label>
                                             <div class="col-sm-10">
-                                            {!! Form::select('tindakan', $var['penanganan'], null, ['class'=>'form-control select2', 'placeholder'=>'Pilih Jenis Penanganan', 'style'=>'width: 100%;', 'onchange'=>'penangananAksi()']) !!}
+                                            <select name="tindakan" id="tindakan" class="form-control select2" placeholder="Pilih Jenis Penanganan" style="width: 100%;" onchange="penangananAksi()">
+                                                @foreach($var['penanganan'] as $key => $value)
+                                                    <option value="{{ $key }}">{{ $value }}</option>
+                                                @endforeach
+                                            </select>
                                             </div>
                                         </div>
                                     <div id="areaTindakan">    
                                         <div class="form-group row">
-                                            {!! Form::label('terapi_id', 'Terapi / Tindakan', ['class' => 'col-sm-2 col-form-label']) !!}
+                                            <label for="terapi_id" class="col-sm-2 col-form-label">Terapi / Tindakan</label>
                                             <div class="col-sm-10">
-                                                {!! Form::select('terapi_id', $var['obat'], null, ['class'=>'form-control  select2', 'placeholder'=>'Pilih Terapi / Tindakan', 'style'=>'width: 100%;']) !!}
+                                                <select name="terapi_id" id="terapi_id" class="form-control select2" placeholder="Pilih Terapi / Tindakan" style="width: 100%;">
+                                                    @foreach($var['obat'] as $key => $value)
+                                                        <option value="{{ $key }}">{{ $value }}</option>
+                                                    @endforeach
+                                                </select>
                                             </div>
                                         </div>
                                     </div>    
                                         <div class="form-group row">
-                                            {!! Form::label('dosis', 'Dosis / Ket Penaganan', ['class' => 'col-sm-2 col-form-label']) !!}
+                                            <label for="dosis" class="col-sm-2 col-form-label">Dosis / Ket Penaganan</label>
                                             <div class="col-sm-10">
-                                                {!! Form::text('dosis', null, ['class'=>'form-control', 'placeholder'=>'Inputkan Dosis atau Keterangan Penanganan']) !!}
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="col-lg-4 ml-auto">
-                                                {!! Form::submit('Tambah', ['class'=>'btn btn-primary', 'id'=>'buttonTambahTerapiDosis']) !!}
-                                                {!! Form::reset('Reset', ['class'=>'btn btn-danger', 'id'=>'buttonResetTerapiDosis']) !!}
+                                                <input type="text" name="dosis" id="dosis" class="form-control" placeholder="Inputkan Dosis atau Keterangan Penanganan" value="{{ old('dosis') }}">
                                             </div>
                                         </div>
             <div id="areaDataTerapiDosis"></div>
+            <div class="form-group">
+                <div class="col-lg-4 ml-auto">
+                    <button type="button" class="btn btn-primary" id="buttonTambahTerapiDosis">Tambah</button>
+                    <button type="reset" class="btn btn-danger" id="buttonResetTerapiDosis">Reset</button>
+                </div>
+            </div>
             
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <input type="submit" class="btn btn-primary" value="Update">
-        {!! Form::close() !!}
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+    <input type="submit" class="btn btn-primary" value="Update">
+    </form>
       </div>
-    </div>
+    </form>
   </div>
 </div>
 

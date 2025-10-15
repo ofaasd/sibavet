@@ -7,7 +7,7 @@
         <li class="breadcrumb-item active">FORM 02</li>
     </ol>
 </section>
-{!! Form::model($keswan,['id'=>'form-keswan', 'method'=>'POST', 'url'=>'/lab/keswan/create', 'class'=>'validation-wizard wizard-circle', 'files'=>true]) !!}
+<form id="form-keswan" method="POST" action="/lab/keswan/create" class="validation-wizard wizard-circle" enctype="multipart/form-data">
 @csrf
 <input type="hidden" id="id" name="id" value="{!! $keswan->id !!}">
 <section class="content">
@@ -24,31 +24,31 @@
                 <div class="box-body wizard-content">
                     <section>
                         <div class="form-group row">
-                            {!! Form::label('no_epid', 'No. EPID :', ['class' => 'col-sm-2 col-form-label', 'style' => 'font-weight:bold;']) !!}
-                            <div class="col-sm-2">
-                                {!! Form::text('no_epid', null, ['class'=>'form-control', 'style'=> 'font-weight:bold;','readonly']) !!}
+                            <label for="no_epid" class="col-sm-2 col-form-label" style="font-weight:bold;">No. EPID :</label>
+                            <div class="col-sm-2">                                
+                                <input type="text" name="no_epid" id="no_epid" class="form-control" style="font-weight:bold;" value="{{ $keswan->no_epid ?? '' }}" readonly>
                             </div>
                         </div>
                         <div class="form-group row">
-                            {!! Form::label('sub_satuan_kerja_id', 'Nama Laboratorium :', ['class' => 'col-sm-2 col-form-label']) !!}
+                            <label for="sub_satuan_kerja_id" class="col-sm-2 col-form-label">Nama Laboratorium :</label>
                             <div class="col-sm-7">
-                                <input class="form-control" readonly="" type="text" value="{!! $keswan->subSatuankerja->sub_satuan_kerja !!}">
+                                <input class="form-control" readonly type="text" value="{{ $keswan->subSatuankerja->sub_satuan_kerja }}">
                             </div>
                         </div>
                         <div class="form-group row">
-                            {!! Form::label('permintaan_uji', 'Permintaan Uji :', ['class' => 'col-sm-2 col-form-label', 'style' => 'font-weight:bold;']) !!}
+                            <label for="permintaan_uji" class="col-sm-2 col-form-label" style="font-weight:bold;">Permintaan Uji :</label>
                             <div class="col-sm-10">
                                 @php
                                 $pengujian = "";
                                 foreach($keswan->labPengujian as $key=>$uji){
                                         $pengujian .= ($key==0?'':', ').$uji->jenis_pengujian;
                                 }
-                                @endphp
-                                {!! Form::textarea('', $pengujian, array('class'=> 'form-control', 'rows' => '2','readonly')) !!}
+                                @endphp                                
+                                <textarea class="form-control" rows="2" readonly>{{ $pengujian }}</textarea>
                             </div>
                         </div>
                         <div class="form-group row">
-                            {!! Form::label('', 'Contoh :', ['class' => 'col-sm-2 col-form-label']) !!}
+                            <label class="col-sm-2 col-form-label">Contoh :</label>
                             <div class="col-sm-10">
                                 <table class="table table-bordered mb-0" id='tabel_contoh'>
                                     <tr>
@@ -63,11 +63,11 @@
                                         <td class="center">{!! $key+1 !!}</td>
                                         <td class="">{!! $contoh->nama_sampel !!}</td>
                                         <td class="center">{!! $contoh->pcontoh->jumlah !!}</td>
-                                        <td class="center">
-                                            <input class="penomoran form-control" value="{!! @$contoh->pcontoh->nomor_asal !!}" name="nomor_asal[{!! $contoh->id !!}]" type="text" style="text-align: center;"/>
+                                        <td class="center">                                            
+                                            <input class="penomoran form-control" value="{!! @$contoh->pcontoh->nomor_asal !!}" name="nomor_asal[{{ $contoh->id }}]" type="text" style="text-align: center;"/>
                                         </td>
-                                        <td class="center">
-                                            <input class="penomoran form-control" value="{!! @$contoh->pcontoh->nomor_baru !!}" name="nomor_baru[{!! $contoh->id !!}]" type="text" style="text-align: center;"/>
+                                        <td class="center">                                            
+                                            <input class="penomoran form-control" value="{!! @$contoh->pcontoh->nomor_baru !!}" name="nomor_baru[{{ $contoh->id }}]" type="text" style="text-align: center;"/>
                                         </td>
                                     </tr>
                                     @endforeach
@@ -75,21 +75,21 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            {!! Form::label('asal_contoh_id', 'Asal Contoh', ['class' => 'col-sm-2 col-form-label']) !!}
+                            <label for="asal_contoh_id" class="col-sm-2 col-form-label">Asal Contoh</label>
                             <div class="col-sm-10">
-                                {!! viewSelectKota('asal_contoh_id', $keswan->asal_contoh_id) !!}
+                                {!! viewSelectKota('asal_contoh_id', isset($keswan) ? $keswan->asal_contoh_id : '', 'col-sm-5') !!}
                             </div>
                         </div>
                         <div class="form-group row">
-                            {!! Form::label('penerima_02', 'Petugas penerima contoh :', ['class' => 'col-sm-2 col-form-label']) !!}
+                            <label for="penerima_02" class="col-sm-2 col-form-label">Petugas penerima contoh :</label>
                             <div class="col-sm-10">
-                                {!! Form::text('penerima_02', $keswan->penerima_02, array('class'=> 'form-control')) !!}
+                                <input type="text" name="penerima_02" id="penerima_02" class="form-control" value="{{ $keswan->penerima_02 ?? '' }}">
                             </div>
                         </div>
                         <div class="form-group row">
-                            {!! Form::label('catatan_02', 'Catatan/Saran :', ['class' => 'col-sm-2 col-form-label']) !!}
+                            <label for="catatan_02" class="col-sm-2 col-form-label">Catatan/Saran :</label>
                             <div class="col-sm-10">
-                                {!! Form::textarea('catatan_02', $keswan->catatan_02, array('class'=> 'form-control', 'rows' => '2','placeholder'=>'Catatan/Saran')) !!}
+                                <textarea name="catatan_02" id="catatan_02" class="form-control" rows="2" placeholder="Catatan/Saran">{{ $keswan->catatan_02 ?? '' }}</textarea>
                             </div>
                         </div>
                     </section>
@@ -105,8 +105,8 @@
             </div>
         </div>
     </div>
-</section>
-{!! Form::close() !!}
+</section> 
+</form>
 <script>
     $(document).ready(function() {
         $('#form-keswan').validate({

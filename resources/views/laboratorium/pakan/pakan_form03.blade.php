@@ -7,7 +7,7 @@
         <li class="breadcrumb-item active">FORM 03</li>
     </ol>
 </section>
-{!! Form::model($pakan,['id'=>'form-pakan', 'method'=>'POST', 'url'=>'/lab/pakan/create', 'class'=>'validation-wizard wizard-circle', 'files'=>true]) !!}
+<form id="form-pakan" method="POST" action="/lab/pakan/create" class="validation-wizard wizard-circle" enctype="multipart/form-data">
 @csrf
 <input type="hidden" id="id" name="id" value="{!! $pakan->id !!}">
 <section class="content">
@@ -24,25 +24,26 @@
                 <div class="box-body wizard-content">
                     <section>
                         <div class="form-group row">
-                            {!! Form::label('no_epid', 'No. EPID :', ['class' => 'col-sm-2 col-form-label', 'style' => 'font-weight:bold;']) !!}
+                            <label for="no_epid" class="col-sm-2 col-form-label" style="font-weight:bold;">No. EPID :</label>
                             <div class="col-sm-2">
-                                {!! Form::text('no_epid', null, ['class'=>'form-control', 'style'=> 'font-weight:bold;','readonly']) !!}
+                                <input type="text" name="no_epid" id="no_epid" class="form-control" style="font-weight:bold;" value="{{ $pakan->no_epid ?? '' }}" readonly>
                             </div>
                         </div>
                         <div class="form-group row">
-                            {!! Form::label('sub_satuan_kerja_id', 'Nama Laboratorium :', ['class' => 'col-sm-2 col-form-label']) !!}
+                            <label for="sub_satuan_kerja_id" class="col-sm-2 col-form-label">Nama Laboratorium :</label>
                             <div class="col-sm-7">
                                 <input class="form-control" readonly="" type="text" value="{!! $pakan->subSatuankerja->sub_satuan_kerja !!}">
                             </div>
                         </div>
                         <div class="form-group row">
-                            {!! Form::label('tanggal_penerimaan', 'Tanggal Diterima Contoh :', ['class' => 'col-sm-2 col-form-label']) !!}
+                            <label for="tanggal_penerimaan" class="col-sm-2 col-form-label">Tanggal Diterima Contoh :</label>
                             <div class="col-sm-4">
+                                {{-- {!! viewSelectTanggal('tanggal_penerimaan', @$pakan->tanggal_penerimaan==""?date('d-m-Y'):@$pakan->tanggal_penerimaan) !!} --}}
                                 <input class="form-control" readonly="" type="text" value="{!! $pakan->tanggal_penerimaan !!}">
                             </div>
                         </div>
                         <div class="form-group row">
-                            {!! Form::label('', 'Contoh :', ['class' => 'col-sm-2 col-form-label']) !!}
+                            <label class="col-sm-2 col-form-label">Contoh :</label>
                             <div class="col-sm-8">
                                 <table class="table table-bordered mb-0" id='tabel_contoh'>
                                     <tr>
@@ -67,21 +68,29 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            {!! Form::label('seksi_laboratorium_id', 'Seksi Laboratorium', ['class' => 'col-sm-2 col-form-label']) !!}
+                            <label for="seksi_laboratorium_id" class="col-sm-2 col-form-label">Seksi Laboratorium</label>
                             <div class="col-sm-10">
-                                {!! viewSelectSeksiLab(2,'seksi_laboratorium_id',$pakan->seksi_laboratorium_id) !!}
+                                <select name="seksi_laboratorium_id" id="seksi_laboratorium_id" class="form-control col-sm-5">
+                                    @foreach($seksiLaboratorium as $id => $name)
+                                        <option value="{{ $id }}" {{ ($pakan->seksi_laboratorium_id == $id) ? 'selected' : '' }}>{{ $name }}</option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
                         <div class="form-group row">
-                            {!! Form::label('manajer_teknis', 'Manajer Teknis :', ['class' => 'col-sm-2 col-form-label']) !!}
+                            <label for="manajer_teknis" class="col-sm-2 col-form-label">Manajer Teknis :</label>
                             <div class="col-sm-10">
-                                {!! viewSelectPegawai(2,'manajer_teknis',$pakan->manajer_teknis) !!}
+                                <select name="manajer_teknis" id="manajer_teknis" class="form-control col-sm-5">
+                                    @foreach($pegawai as $id => $name)
+                                        <option value="{{ $id }}" {{ ($pakan->manajer_teknis == $id) ? 'selected' : '' }}>{{ $name }}</option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
                         <div class="form-group row">
-                            {!! Form::label('catatan_03', 'Catatan/Saran :', ['class' => 'col-sm-2 col-form-label']) !!}
+                            <label for="catatan_03" class="col-sm-2 col-form-label">Catatan/Saran :</label>
                             <div class="col-sm-10">
-                                {!! Form::textarea('catatan_03', $pakan->catatan_03, array('class'=> 'form-control', 'rows' => '2','placeholder'=>'Catatan/Saran')) !!}
+                                <textarea name="catatan_03" id="catatan_03" class="form-control" rows="2" placeholder="Catatan/Saran">{{ $pakan->catatan_03 ?? '' }}</textarea>
                             </div>
                         </div>
                     </section>
@@ -97,8 +106,8 @@
             </div>
         </div>
     </div>
-</section>
-{!! Form::close() !!}
+</section> 
+</form>
 <script>
     $(document).ready(function(){
         $('#form-pakan').validate({

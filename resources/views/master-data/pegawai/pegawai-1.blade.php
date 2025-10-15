@@ -71,8 +71,10 @@
                                                 <tr>
                                                     <td style="text-align:center">
                                                         <div class="btn-group">
-                                                            {!! Form::open(['method'=>'delete', 'url'=>'/master-data/pegawai/'.$item->id.$var['url']['all'], 'class'=> 'delete_form']) !!}
-                                                            {!! Form::hidden('nomor', $no, ['class'=>'form-control']) !!}
+                                                            <form method="POST" action="{{ url('/master-data/pegawai/'.$item->id.$var['url']['all']) }}" class="delete_form" style="display:inline;">
+                                                                @csrf
+                                                                @method('DELETE')
+                                                                <input type="hidden" name="nomor" value="{{ $no }}" class="form-control" />
                                                             <div class="btn-group btn-group-xs" role="group" aria-label="Basic example">
                                                                 @can('Delete Operasi')
                                                                     <button type="submit" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></button>
@@ -82,7 +84,6 @@
                                                                 @endcan
                                                                 <a href="{{ url('/master-data/pegawai/'.$item->id.$var['url']['all'])}}" class="btn btn-info btn-xs"><i class="fa fa-search"></i></a>
                                                             </div>
-                                                            {!! Form::close() !!}
                                                         </div>
                                                     </td>
                                                     <td>{{ $item->nipname }}</td>

@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers\Laboratorium;
 
-use PDF, Session, Request, Auth, DB;
+use Session;
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Input;
 
@@ -10,6 +11,8 @@ use App\Http\Controllers\Helpers\UserHelper;
 
 use App\Models\Modul\LaboratoriumKesmavet;
 use App\Models\MasterData\Customer;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 // use App\Models\Modul\LaboratoriumFile;
 // use App\Models\Pengaturan\User;
 // use App\Models\MasterData\SubSatuanKerja;
@@ -31,8 +34,8 @@ class KesmavetController extends Controller
     function __construct(Request $request)
     {
         $this->middleware('auth');
-        $this->cari = Input::get('cari', '');
-        $this->url = makeUrl($request::query());
+        $this->cari = $request->query('cari', '');
+        $this->url = makeUrl($request->query());
     }
 
     public function index()

@@ -1,0 +1,39 @@
+th{
+	font-weight: bold;
+	text-align: center;
+}
+
+.center{
+	text-align: center;
+}
+
+.col-form-label{
+	text-align: left;
+}
+
+@media (min-width : 768px) {
+	.col-form-label{
+		text-align: right;
+	}
+}
+
+.field-salah{
+	background-color: #ffd0d9;
+}
+
+
+th.rotate {
+  height:80px !important;
+  white-space: nowrap !important;
+  position:relative !important;
+}
+
+th.rotate > div {
+  transform: rotate(90deg) !important;
+  position:absolute !important;
+  left:0 !important;
+  right:0 !important;
+  top: 10px !important;
+  margin:auto !important;
+  
+}

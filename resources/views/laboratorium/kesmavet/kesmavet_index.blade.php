@@ -53,22 +53,22 @@
                                             @endphp
                                             <tr recid="{!! $kesmavet->id !!}">
                                                 <!-- <td style="text-align:center">
-                                                    <div class="btn-group">
-                                                        {!! Form::open(['method'=>'delete', 'url'=>'/laboratorium/'.$kesmavet->id.$var['url']['all'], 'class'=> 'delete_form']) !!}
-                                                        {!! Form::hidden('nomor', $no, ['class'=>'form-control']) !!}
+                                                    <div class="btn-group"> -->
+                                                        <!-- <form method="post" action="/laboratorium/{{ $kesmavet->id }}{{ $var['url']['all'] }}" class="delete_form">
+                                                            @csrf
+                                                            @method('delete')
+                                                            <input type="hidden" name="nomor" value="{{ $no }}" class="form-control"> -->
                                                         <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
                                                             @can('Delete Laboratorium')
                                                                 <button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
-                                                            @endcan -->
-                                                            <!-- @can('Update Laboratorium')
-                                                                <a href="{{ url('/laboratorium/'.$kesmavet->id.'/edit'.$var['url']['all'])}}" class="btn btn-primary btn-sm"><i class="fa fa-edit"></i></a>
-                                                            @endcan -->
-                                                            <!-- <a href="{{ url('/laboratorium/'.$kesmavet->id.$var['url']['all'])}}" class="btn btn-info btn-sm"><i class="fa fa-search"></i></a>
+                                                            @endcan
+                                                            <a href="{{ url('/laboratorium/'.$kesmavet->id.'/edit'.$var['url']['all'])}}" class="btn btn-primary btn-sm"><i class="fa fa-edit"></i></a>
+                                                            <a href="{{ url('/laboratorium/'.$kesmavet->id.$var['url']['all'])}}" class="btn btn-info btn-sm"><i class="fa fa-search"></i></a>
                                                             <a href="{{ url('/laboratorium/cetak/'.$kesmavet->id)}}" class="btn btn-success btn-sm" target="_blank"><i class="fa fa-print"></i></a>
                                                         </div>
-                                                        {!! Form::close() !!}
-                                                    </div>
-                                                </td> -->
+                                                        <!-- </form>
+                                                    </div> -->
+                                                <!-- </td> -->
                                                 <td>{{ $kesmavet->no_epid }}</td>
                                                 <td>{{ @$kesmavet->subSatuanKerja->sub_satuan_kerja }}</td>
                                                 <td>{{ @$kesmavet->customer->nama_pelanggan }}</td>

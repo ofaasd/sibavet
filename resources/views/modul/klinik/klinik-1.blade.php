@@ -78,18 +78,21 @@
                                                 <tr>
                                                     <td style="text-align:center">
                                                         <div class="btn-group">
-                                                            {!! Form::open(['method'=>'delete', 'url'=>'/klinik/'.$item->id.$var['url']['all'], 'class'=> 'delete_form']) !!}
-                                                            {!! Form::hidden('nomor', $no, ['class'=>'form-control']) !!}
+                                                            <form method="post" action="/klinik/{{ $item->id }}{{ $var['url']['all'] }}" class="delete_form">
+                                                                @csrf
+                                                                @method('delete')
+                                                                <input type="hidden" name="nomor" value="{{ $no }}" class="form-control">
                                                             <div class="btn-group btn-group-xs" role="group" aria-label="Basic example">
                                                                 @can('Delete Klinik')
                                                                     <button type="submit" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></button>
                                                                 @endcan
                                                                 @can('Update Klinik')
                                                                     <a href="{{ url('/klinik/editRM/'.$item->id.'/'.$var['url']['all'])}}" class="btn btn-primary btn-xs"><i class="fa fa-edit"></i></a>
-                                                                @endcan                                                   <a href="{{ url('/klinik/detailPeriksa/'.$item->id.$var['url']['all'])}}" class="btn btn-info btn-xs"><i class="fa fa-search"></i></a>
+                                                                @endcan
+                                                                <a href="{{ url('/klinik/detailPeriksa/'.$item->id.$var['url']['all'])}}" class="btn btn-info btn-xs"><i class="fa fa-search"></i></a>
                                                                 <a href="{{ url('/klinik/cetakRM/'.$item->id)}}" class="btn btn-success btn-xs"><i class="fa fa-print"></i></a>
                                                             </div>
-                                                            {!! Form::close() !!}
+                                                            </form>
                                                         </div>
                                                     </td>
                                                     <td>{{ $item->no_pasien }}</td>

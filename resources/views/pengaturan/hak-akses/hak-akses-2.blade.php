@@ -42,15 +42,15 @@
                                         <form class="form-hak-akses">
                                     @endif
                                         <div class="form-group row">
-                                            {!! \Html::label('name', 'Nama Hak Akses', ['class' => 'col-sm-2 col-form-label']) !!}
+                                            <label for="name" class="col-sm-2 col-form-label">Nama Hak Akses</label>
                                             <div class="col-sm-10">
-                                                {!! \Html::text('name', old('name', $listHakAkses->name ?? null), ['class'=>'form-control', 'placeholder'=>'Inputkan Nama Hak Akses']) !!}
+                                                <input type="text" name="name" id="name" value="{{ old('name', $listHakAkses->name ?? null) }}" class="form-control" placeholder="Inputkan Nama Hak Akses">
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            {!! \Html::label('keterangan', 'Keterangan', ['class' => 'col-sm-2 col-form-label']) !!}
+                                            <label for="keterangan" class="col-sm-2 col-form-label">Keterangan</label>
                                             <div class="col-sm-10">
-                                                {!! \Html::textarea('keterangan', old('keterangan', $listHakAkses->keterangan ?? null), ['class'=>'form-control', 'placeholder'=>'Inputkan Keterangan', 'rows'=>4]) !!}
+                                                <textarea name="keterangan" id="keterangan" class="form-control" placeholder="Inputkan Keterangan" rows="4">{{ old('keterangan', $listHakAkses->keterangan ?? null) }}</textarea>
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -84,32 +84,32 @@
                                                                 <td style="text-align:center;">
                                                                     @if(!empty($read))
                                                                         <div style="margin:-15px;">
-                                                                            {!! \Html::checkbox('permission[]', $read->name, in_array($read->name, $var['permission']), ['id'=>$read->id]) !!}
-                                                                            <label for="{!! $read->id !!}"></label>
+                                                                            <input type="checkbox" name="permission[]" value="{{ $read->name }}" id="{{ $read->id }}" {{ in_array($read->name, $var['permission']) ? 'checked' : '' }}>
+                                                                            <label for="{{ $read->id }}"></label>
                                                                         </div>
                                                                     @endif
                                                                 </td>
                                                                 <td style="text-align:center;">
                                                                     @if(!empty($create))
                                                                         <div style="margin:-15px;">
-                                                                            {!! \Html::checkbox('permission[]', $create->name, in_array($create->name, $var['permission']), ['id'=>$create->id]) !!}
-                                                                            <label for="{!! $create->id !!}"></label>
+                                                                            <input type="checkbox" name="permission[]" value="{{ $create->name }}" id="{{ $create->id }}" {{ in_array($create->name, $var['permission']) ? 'checked' : '' }}>
+                                                                            <label for="{{ $create->id }}"></label>
                                                                         </div>
                                                                     @endif
                                                                 </td>
                                                                 <td style="text-align:center;">
                                                                     @if(!empty($update))
                                                                         <div style="margin:-15px;">
-                                                                            {!! \Html::checkbox('permission[]', $update->name, in_array($update->name, $var['permission']), ['id'=>$update->id]) !!}
-                                                                            <label for="{!! $update->id !!}"></label>
+                                                                            <input type="checkbox" name="permission[]" value="{{ $update->name }}" id="{{ $update->id }}" {{ in_array($update->name, $var['permission']) ? 'checked' : '' }}>
+                                                                            <label for="{{ $update->id }}"></label>
                                                                         </div>
                                                                     @endif
                                                                 </td>
                                                                 <td style="text-align:center;">
                                                                     @if(!empty($delete))
                                                                         <div style="margin:-15px;">
-                                                                            {!! \Html::checkbox('permission[]', $delete->name, in_array($delete->name, $var['permission']), ['id'=>$delete->id]) !!}
-                                                                            <label for="{!! $delete->id !!}"></label>
+                                                                            <input type="checkbox" name="permission[]" value="{{ $delete->name }}" id="{{ $delete->id }}" {{ in_array($delete->name, $var['permission']) ? 'checked' : '' }}>
+                                                                            <label for="{{ $delete->id }}"></label>
                                                                         </div>
                                                                     @endif
                                                                 </td>

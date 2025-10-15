@@ -32,44 +32,52 @@
                             <div class="tab-pane active">
                                 <div class="pad">
                                     @if($var['method']=='edit')
-                                        {!! Form::model($listBentukContoh, ['method'=>'PATCH', 'url'=> '/master-data/bentuk-contoh/'.$listBentukContoh->id.$var['url']['all'], 'id'=>'form-bentuk-contoh']) !!}
+                                        <form id="form-bentuk-contoh" method="POST" action="{{ url('/master-data/bentuk-contoh/'.$listBentukContoh->id.$var['url']['all']) }}">
+                                            @csrf
+                                            @method('PATCH')
                                     @elseif($var['method']=='create')
-                                        {!! Form::open(['id'=>'form-bentuk-contoh', 'method'=>'POST', 'url'=>'/master-data/bentuk-contoh']) !!}
+                                        <form id="form-bentuk-contoh" method="POST" action="{{ url('/master-data/bentuk-contoh') }}">
+                                            @csrf
                                     @else
-                                        {!! Form::model($listBentukContoh, ['class'=>'form-bentuk-contoh']) !!}
+                                        <form class="form-bentuk-contoh">
                                     @endif
                                         <div class="form-group row">
-                                            {!! Form::label('kode', 'Kode', ['class' => 'col-sm-2 col-form-label']) !!}
+                                            <label for="kode" class="col-sm-2 col-form-label">Kode</label>
                                             <div class="col-sm-10">
-                                                {!! Form::text('kode', null, ['class'=>'form-control', 'placeholder'=>'Inputkan Kode']) !!}
+                                                <input type="text" name="kode" id="kode" value="{{ old('kode', $listBentukContoh->kode ?? '') }}" class="form-control" placeholder="Inputkan Kode" />
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            {!! Form::label('jenis_contoh_id', 'Jenis Contoh', ['class' => 'col-sm-2 col-form-label']) !!}
+                                            <label for="jenis_contoh_id" class="col-sm-2 col-form-label">Jenis Contoh</label>
                                             <div class="col-sm-10">
-                                                {!! Form::select('jenis_contoh_id', $var['jenisContoh'], null, ['class'=>'form-control', 'placeholder'=>'Pilih Jenis Contoh']) !!}
+                                                <select name="jenis_contoh_id" id="jenis_contoh_id" class="form-control">
+                                                    <option value="">Pilih Jenis Contoh</option>
+                                                    @foreach($var['jenisContoh'] as $key => $value)
+                                                        <option value="{{ $key }}" {{ old('jenis_contoh_id', $listBentukContoh->jenis_contoh_id ?? '') == $key ? 'selected' : '' }}>{{ $value }}</option>
+                                                    @endforeach
+                                                </select>
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            {!! Form::label('bentuk_sampel', 'Bentuk Sampel', ['class' => 'col-sm-2 col-form-label']) !!}
+                                            <label for="bentuk_sampel" class="col-sm-2 col-form-label">Bentuk Sampel</label>
                                             <div class="col-sm-10">
-                                                {!! Form::text('bentuk_sampel', null, ['class'=>'form-control', 'placeholder'=>'Inputkan Bentuk Sampel']) !!}
+                                                <input type="text" name="bentuk_sampel" id="bentuk_sampel" value="{{ old('bentuk_sampel', $listBentukContoh->bentuk_sampel ?? '') }}" class="form-control" placeholder="Inputkan Bentuk Sampel" />
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <div class="col-lg-4 ml-auto">
                                                 @if($var['method']=='edit')
-                                                    {!! Form::submit('Update', ['class'=>'btn btn-primary']) !!}
-                                                    {!! Form::reset('Reset', ['class'=>'btn btn-danger']) !!}
+                                                    <button type="submit" class="btn btn-primary">Update</button>
+                                                    <button type="reset" class="btn btn-danger">Reset</button>
                                                 @elseif($var['method']=='create')
-                                                    {!! Form::submit('Simpan', ['class'=>'btn btn-primary']) !!}
-                                                    {!! Form::reset('Reset', ['class'=>'btn btn-danger']) !!}
+                                                    <button type="submit" class="btn btn-primary">Simpan</button>
+                                                    <button type="reset" class="btn btn-danger">Reset</button>
                                                 @else
                                                     <a href="{{ url()->previous() }}" class="btn btn-primary">Kembali</a>
                                                 @endif
                                             </div>
                                         </div>
-                                    {!! Form::close() !!}
+                                    </form>
                                 </div>
                             </div>
                         </div>

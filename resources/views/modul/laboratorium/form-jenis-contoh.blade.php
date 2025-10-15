@@ -1,7 +1,11 @@
 <div class="form-group row">
-    {!! Form::label('jenis_contoh_id', 'Jenis Contoh', ['class' => 'col-sm-2 col-form-label']) !!}
+ <label for="jenis_contoh_id" class="col-sm-2 col-form-label">Jenis Contoh</label>
     <div class="col-sm-10">
-        {!! Form::select('jenis_contoh_id', $listJenisContoh, $var['jenisContohId'], ['class'=>'form-control select2', 'placeholder'=>'Pilih Jenis Contoh', 'style'=>'width: 100%;', 'onchange'=>'bentukContoh()']) !!}
+ <select name="jenis_contoh_id" id="jenis_contoh_id" class="form-control select2" placeholder="Pilih Jenis Contoh" style="width: 100%;" onchange="bentukContoh()">
+ @foreach($listJenisContoh as $id => $name)
+ <option value="{{ $id }}" {{ ($var['jenisContohId'] == $id) ? 'selected' : '' }}>{{ $name }}</option>
+ @endforeach
+ </select>
     </div>
 </div>
 
