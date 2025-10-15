@@ -89,13 +89,13 @@
 													<div class="form-group row">
 														<label for="alamat_pemilik" class="col-sm-2 col-form-label">Alamat Pemilik</label>
 														<div class="col-sm-10">
-															<input type="text" name="alamat_pemilik" value="{{ (!empty($var['curr_klinik'])?$var['curr_klinik']->alamat_pemilik:"") }}" class="form-control" placeholder="Inputkan Alamat Pemilik" readonly>
+															<input type="text" id="alamat_pemilik" name="alamat_pemilik" value="{{ (!empty($var['curr_klinik'])?$var['curr_klinik']->alamat_pemilik:"") }}" class="form-control" placeholder="Inputkan Alamat Pemilik" readonly>
 														</div>
 													</div>
 													<div class="form-group row">
 														<label for="telepon_pemilik" class="col-sm-2 col-form-label">Telepon Pemilik</label>
 														<div class="col-sm-10">
-															<input type="text" name="telepon_pemilik" value="{{ (!empty($var['curr_klinik'])?$var['curr_klinik']->telepon_pemilik:"") }}" class="form-control" placeholder="Inputkan Telepon Pemilik" readonly>
+															<input type="text" id="telepon_pemilik" name="telepon_pemilik" value="{{ (!empty($var['curr_klinik'])?$var['curr_klinik']->telepon_pemilik:"") }}" class="form-control" placeholder="Inputkan Telepon Pemilik" readonly>
 														</div>
 													</div>
 													
@@ -168,7 +168,7 @@
 													<div class="form-group row">
 														<label for="no_pasien" class="col-sm-2 col-form-label">No. RM</label>
 														<div class="col-sm-10">
-															<input type="text" name="no_pasien" value="{{ (!empty($var['curr_klinik'])?$var['curr_klinik']->no_pasien:"") }}" class="form-control" placeholder="Inputkan No. RM" readonly required>
+															<input type="text" name="no_pasien" id="no_pasien" value="{{ (!empty($var['curr_klinik'])?$var['curr_klinik']->no_pasien:"") }}" class="form-control" placeholder="Inputkan No. RM" readonly required>
 														</div>
 														<input type="hidden" id="new_no_pasien">
 													</div>
@@ -265,6 +265,7 @@
                 url : '{{ url('/klinik/pemilik') }}',
                 data : 'pemilikId='+pemilikId,
             }).done(function (data) {
+				// alert(data[1].alamat)
                 $("#alamat_pemilik").val(data[1].alamat);
                 $("#telepon_pemilik").val(data[1].telepon);
                 $("#new_no_pasien").val(data[1].kode+'/'+data[0]);
@@ -321,7 +322,14 @@
 		function ambilDataHewan(pemilikId){
             if(pemilikId == '') pemilikId = $("#pemilik_id").val();
             //alert($("#pemilik_id").val());
-			$("#hewan").load("{{ url('klinik/hewan') }}"+"?pemilikId="+pemilikId);
+			//$("#hewan").load("{{ url('klinik/hewan') }}"+"?pemilikId="+pemilikId);
+			$.ajax({
+				url : "{{ url('klinik/hewan') }}"+"?pemilikId="+pemilikId,
+				method : "GET",
+				success : function(data){
+					$("#list_hewan").html(data);
+				}
+			});
 			//$("#hewan").append("<option value='999999999'>Lainnya</option>");
         }
 		

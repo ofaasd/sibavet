@@ -122,6 +122,7 @@ class KlinikController extends Controller
 	public function pendaftaran(Request $request){
 		$url = $request->route()->getActionMethod();
 		$var['helper'] = new KlinikHelper();
+		
 		//print_r($url);
 		//echo $url;
 		//exit;
@@ -134,7 +135,8 @@ class KlinikController extends Controller
 		//$listKlinik = $queryKlinik->paginate($this->jumPerPage);
 		$listKlinik = $queryKlinik->get();
 		$var['view_data'] = Auth::user()->view_data;
-		return view('modul.klinik.klinik-all2', compact('listKlinik','status','url','var'));
+		
+		return view('modul.klinik.klinik-all3', compact('listKlinik','status','url','var'));
 	}
 	public function pemeriksaan(Request $request){
 		$url = $request->route()->getActionMethod();
@@ -149,25 +151,38 @@ class KlinikController extends Controller
 		$listKlinik = $queryKlinik->get();
 		$var['view_data'] = Auth::user()->view_data;
 		
-		return view('modul.klinik.klinik-all2', compact('listKlinik','status','url','var'));
+		return view('modul.klinik.klinik-all3', compact('listKlinik','status','url','var'));
 	}
 	public function pembayaran(Request $request){
 		$url = $request->route()->getActionMethod();
 		$var['helper'] = new KlinikHelper();
-		//sementara di filter per tahun sekarang supaya hasil data yang di tampilkan lebih cepat
-		$year = date('Y');
-		$bulan = date('m');
+		//sementara di filter per tahun sekarang supaya hasil data yang di tampilkan lebih cepat	
+		if($request->bulan && $request->tahun){
+			$bulan = $request->bulan;
+			$year = $request->tahun;
+			$_SESSION['bulan'] = $request->bulan;
+			$_SESSION['tahun'] = $request->tahun;
+		}elseif(!empty($_SESSION['bulan'])){
+			$bulan = $_SESSION['bulan'];
+			$year = $_SESSION['tahun'];
+		}else{
+			$year = date('Y');
+			$bulan = date('m');
+			$_SESSION['bulan'] = $bulan;
+			$_SESSION['tahun'] = $year;	
+		}
 		$kode = Auth::user()->subSatuanKerja->kode_klinik;
 		$status = array("Pendaftaran","Pemeriksaan","Belum Bayar","Sudah Bayar");
-		$queryKlinik = KlinikTerapi::select("klinik_terapi.*","klinik.sub_satuan_kerja_id","klinik.pemilik_id","klinik.spesies_id","klinik.nama_hewan")->join('klinik','klinik_terapi.klinik_id','=','klinik.id')->join('pemilik','klinik.pemilik_id','=','pemilik.id')->where("klinik_terapi.no_pasien","like","%" . $kode ."%")->whereYear('klinik_terapi.tanggal_periksa',$year)->whereIn("klinik_terapi.status",[2,3]);
+		$queryKlinik = KlinikTerapi::select("klinik_terapi.*","klinik.sub_satuan_kerja_id","klinik.pemilik_id","klinik.spesies_id","klinik.nama_hewan")->join('klinik','klinik_terapi.klinik_id','=','klinik.id')->join('pemilik','klinik.pemilik_id','=','pemilik.id')->where("klinik_terapi.no_pasien","like","%" . $kode ."%")->whereYear('klinik_terapi.tanggal_periksa',$_SESSION['tahun'])->whereMonth('klinik_terapi.tanggal_periksa',$_SESSION['bulan'])->whereIn("klinik_terapi.status",[2,3]);
 		//print_r( $queryKlinik->toSql());
 		//print_r( $queryKlinik->getBindings());
 		//exit;
 		//$listKlinik = $queryKlinik->paginate($this->jumPerPage);
 		$listKlinik = $queryKlinik->get();
 		$var['view_data'] = Auth::user()->view_data;
-		
-		return view('modul.klinik.klinik-all2', compact('listKlinik','status','url','var'));
+		$l_bulan = array(1=>"Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember");
+		$tahun = $year;
+		return view('modul.klinik.klinik-all2', compact('listKlinik','status','url','var','l_bulan','bulan','tahun'));
 	}
 	public function rekap_buku(Request $request,$id){
 		$url = $request->route()->getActionMethod();
@@ -942,8 +957,7 @@ class KlinikController extends Controller
 			$klinikTerapi->diagnosa = $diagnosa;
 			$klinikTerapi->jam_pemeriksaan = date("H:i:s");
 			$from_url = $request->from_url;
-			if($from_url == "awal")
-				$klinikTerapi->status = 2;
+			$klinikTerapi->status = 2;
 			$klinikTerapi->save();
 			$berhasil = 0;
 			$klinikDosis = KlinikDosis::where('klinik_id', $klinik_terapi_id)->delete();
@@ -957,10 +971,7 @@ class KlinikController extends Controller
 				$berhasil = $klinikDosis->save();
 			}
 			if($berhasil){
-				if($from_url == "awal")
-					return redirect('klinik/pemeriksaan');
-				else
-					return redirect('klinik/detailPeriksa/' . $request->hewan);
+				return redirect('klinik/pemeriksaan');	
 			}else{
 				return redirect('klinik/add_pemeriksaan/'. $klinik_terapi_id);
 			}
@@ -1228,7 +1239,7 @@ class KlinikController extends Controller
 
         $arr = array();
         //$arr[0] = $det->nama_ras;
-        $arr[1] = $det->nama_spesies;
+        $arr[1] = $det->nama_spesies ?? "";
         $arr[2] = $det->spesies_id;
         $arr[3] = $det->jenis_kelamin;
         $arr[4] = $det->umur;

@@ -26,32 +26,13 @@
                         <div class="tab-content tabcontent-border">
                             <div class="tab-pane active">
                                 <div class="pad">
-                                    <div class="col-md-12" style="text-alignL:right">
-                                    
-                                        <form method="GET" action="{{url('klinik/pembayaran')}}">
-                                            @csrf
-                                            <div class="row">
-                                                <div class="col-md-4">
-                                                    <select name="bulan" class="form-control" style="float:right">
-                                                        @foreach($l_bulan as $key=>$value)
-                                                            <option value='{{$key}}'  {{($key==$bulan)?'selected':''}}>{{$value}}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <select name="tahun" class="form-control">
-                                                        @for($i=date('Y');$i>((int)date('Y')-5);$i--)
-                                                            <option value='{{$i}}' {{($i==$tahun)?'selected':''}}>{{$i}}</option>
-                                                        @endfor
-                                                    </select>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <input type="submit" class="btn btn-primary" value="Lihat Data">
-                                                </div>	
-                                            <div>
-                                        </form>
-                                        
-                                    </div>
+                                    <!--<button class="btn btn-primary" data-toggle="modal" data-target="#modalsort">Sortir</button> -->
+									
+										@if($url == "pendaftaran")
+											<a href="{{url('klinik/add_pendaftaran') }}" class="btn btn-primary">Tambah Pendaftaran</a>
+										@endif
+                                    <br> 
+                                    <br />
                                     <div class="table-responsive">
                                         <table class="table table-hover" id="myTable">
                                             <thead>
