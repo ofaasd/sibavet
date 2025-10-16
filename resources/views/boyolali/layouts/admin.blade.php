@@ -90,7 +90,7 @@
             <!-- sidebar menu-->
             <ul class="sidebar-menu" data-widget="tree">
                 <li class="user-profile treeview">
-                <a href="index.html">
+                <a href="#">
                     <img src="{{ asset('fabadmin/images/avatarku.png') }}" alt="user">
                     <span>{{ Auth::user()->name }}</span>
                 </a>

@@ -9,7 +9,6 @@
         </h1>
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="#"><i class="fa fa-dashboard"></i> Beranda</a></li>
-            <li class="breadcrumb-item active">Beranda</li>
         </ol>
     </section>
 

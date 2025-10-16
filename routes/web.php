@@ -49,15 +49,19 @@ use App\Http\Controllers\Boyolali\MasterData\SampelController;
 use App\Http\Controllers\Boyolali\LabBoyolaliController;
 use App\Http\Controllers\Boyolali\LaporanLabBoyolaliController;
 use App\Http\Controllers\Boyolali\BoyolaliController;
-
-
-
+use App\Http\Controllers\LandingPageController;
 
 // Route::get('/dashboard', function () {
 //     return view('dashboard');
 // })->middleware(['auth', 'verified'])->name('dashboard');
 Route::get('dashboard', [HomeController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 Route::get('/', [HomeController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::get('/landing-page', [LandingPageController::class, 'index'])->name('landing-page');
+Route::get('/landing-page-login', [LandingPageController::class, 'login'])->name('login');
+Route::get('/landing-page-register', [LandingPageController::class, 'register'])->name('register');
+Route::get('/form-pendaftaran-periksa', [LandingPageController::class, 'formPendaftaran'])->name('form-pendaftaran-periksa');
+Route::get('/tiket-antrian', [LandingPageController::class, 'tiketAntrian'])->name('tiket-antrian');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -76,7 +80,6 @@ Route::get('/clear-config', function () {
 });
 
 Route::get('statistik', [StatistikController::class, 'index']);
-
 
 
 Route::post('beranda/get_jumlah_jenis_pasien', [HomeController::class, 'get_jumlah_jenis_pasien']);
