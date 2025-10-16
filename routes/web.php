@@ -112,6 +112,7 @@ Route::prefix('master-data')->group(function () {
     Route::post('pemilik/store_pasien', [PemilikController::class, 'store_pasien']);
     Route::post('pemilik/update_pasien', [PemilikController::class, 'update_pasien']);
     Route::post('pemilik/delete_pasien', [PemilikController::class, 'delete_pasien']);
+    Route::post('pemilik/get_wilayah', [PemilikController::class, 'get_wilayah']);
     Route::resource('pemilik', PemilikController::class);
     Route::post('penyakit/cek-validasi', [PenyakitController::class, 'cekValidasi']);
     Route::resource('penyakit', PenyakitController::class);

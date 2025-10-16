@@ -8,7 +8,7 @@ class Pemilik extends Model
 {
     protected $table = 'pemilik';
     protected $fillable = [
-        'kode', 'nama', 'alamat', 'telepon','ktp'
+        'kode', 'nama', 'alamat', 'telepon','ktp','province_id','city_id','region_id'
     ];
 
     public function scopeCari($query, $cari) {

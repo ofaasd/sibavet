@@ -10,6 +10,7 @@ use App\Models\MasterData\Pemilik;
 use App\Models\MasterData\Spesies;
 use App\Models\Modul\Klinik;
 use App\Models\Modul\KlinikTerapi;
+use App\Models\Wilayah;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
@@ -82,11 +83,23 @@ class PemilikController extends Controller
         }else{
             $var['kode'] = '';
         }
+        
+        $var['pronvice'] = Wilayah::where('id_induk_wilayah','000000')->get();
+        $var['curr_province'] = '030000';
+        $var['curr_city'] = '036300';
+        $var['curr_region'] = '036305';
+        $var['city'] = Wilayah::where('id_induk_wilayah',$var['curr_province'])->get();
+        $var['region'] = Wilayah::where('id_induk_wilayah',$var['curr_city'])->get();
 		$var['spesies'] = Spesies::where("klinik",1)->pluck('nama_spesies','id')->all();
 		
         return view('master-data.pemilik.pemilik-2', compact('var'));
     }
 
+    public function get_wilayah(Request $request){
+        $id_provinsi = $request->input('id');
+        $wilayah = Wilayah::where('id_induk_wilayah',$id_provinsi)->get();
+        echo json_encode($wilayah);
+    }
     /**
      * Store a newly created resource in storage.
      *
@@ -210,6 +223,13 @@ class PemilikController extends Controller
 		//echo $var['klinik']->count();
 		$var['spesies'] = Spesies::pluck('nama_spesies','id')->all();
 		
+        $var['pronvice'] = Wilayah::where('id_induk_wilayah','000000')->get();
+        $var['curr_province'] = $listPemilik->province_id ?? '030000';
+        $var['curr_city'] = $listPemilik->city_id ?? '036300';
+        $var['curr_region'] = $listPemilik->region_id ?? '036305';
+        $var['city'] = Wilayah::where('id_induk_wilayah',$var['curr_province'])->get();
+        $var['region'] = Wilayah::where('id_induk_wilayah',$var['curr_city'])->get();
+
 		//exit;
         return view('master-data.pemilik.pemilik-3', compact('listPemilik', 'var'));
     }
