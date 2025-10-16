@@ -13,7 +13,7 @@
 
         <header class="main-header">
             <!-- Logo -->
-            <a href="{{ url('beranda') }}" class="logo">
+            <a href="{{ url('dashboard') }}" class="logo">
             <!-- mini logo -->
             {{-- <b class="logo-mini">
                 <span class="light-logo"><img src="{{ asset('fabadmin/images/logo-light.png') }}" alt="logo"></span>
@@ -95,7 +95,7 @@
                 </a>
                 </li>
                 <li class="header nav-small-cap">Navigasi</li>
-                <li class="@if(isset($varGlobal['beranda'])) {{ $varGlobal['beranda'] }} @endif"><a href="{{ url('beranda') }}"><i class="fa fa-dashboard"></i> <span>Beranda</span></a></li>
+                <li class="@if(isset($varGlobal['dashboard'])) {{ $varGlobal['dashboard'] }} @endif"><a href="{{ url('dashboard') }}"><i class="fa fa-dashboard"></i> <span>Beranda</span></a></li>
 				@can('Read Master Data')
                 <li class="treeview @if(isset($varGlobal['master-data'])) {{ $varGlobal['master-data'] }} @endif">
                     <a href="#">

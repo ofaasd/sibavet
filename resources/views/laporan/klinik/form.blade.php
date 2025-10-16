@@ -28,53 +28,71 @@
                         <!-- Tab panes -->
                         <div class="tab-content tabcontent-border">
                             <div class="tab-pane active">
-                                <div class="pad">
-                                    {!! Form::open(['id'=>'form-cetak-klinik', 'method'=>'POST', 'url'=>'/laporan/lap-klinik']) !!}
+                                <div class="pad"> 
+                                    <form id="form-cetak-klinik" method="POST" action="/laporan/lap-klinik">
+                                        @csrf
                                         <div class="form-group row">
-                                            {!! Form::label('dari_tanggal', 'Dari Tanggal', ['class' => 'col-sm-2 col-form-label']) !!}
+                                            <label for="dari_tanggal" class="col-sm-2 col-form-label">Dari Tanggal</label>
                                             <div class="col-sm-4">
-                                            {!! Form::text('dari_tanggal', null, ['class'=>'form-control tanggalku', 'placeholder'=>'Inputkan Dari Tanggal', 'autocomplete'=>'off']) !!}
+                                                <input type="text" name="dari_tanggal" id="dari_tanggal" class="form-control tanggalku" placeholder="Inputkan Dari Tanggal" autocomplete="off">
                                             </div>
-                                            {!! Form::label('sampai_tanggal', 'Sampai Tanggal', ['class' => 'col-sm-2 col-form-label']) !!}
+                                            <label for="sampai_tanggal" class="col-sm-2 col-form-label">Sampai Tanggal</label>
                                             <div class="col-sm-4">
-                                            {!! Form::text('sampai_tanggal', null, ['class'=>'form-control tanggalku', 'placeholder'=>'Inputkan Sampai Tanggal', 'autocomplete'=>'off']) !!}
+                                                <input type="text" name="sampai_tanggal" id="sampai_tanggal" class="form-control tanggalku" placeholder="Inputkan Sampai Tanggal" autocomplete="off">
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            {!! Form::label('jenis', 'Jenis Pelaporan', ['class' => 'col-sm-2 col-form-label']) !!}
+                                            <label for="jenis" class="col-sm-2 col-form-label">Jenis Pelaporan</label>
                                             <div class="col-sm-10">
-                                                {!! Form::select('jenis', ['Penyakit' => 'Penyakit','Vaksinasi'=>'Vaksinasi', 'Operasi'=>'Operasi','Harian'=>'Harian'], null, ['class'=>'form-control']) !!}
+                                                <select name="jenis" id="jenis" class="form-control">
+                                                    <option value="Penyakit">Penyakit</option>
+                                                    <option value="Vaksinasi">Vaksinasi</option>
+                                                    <option value="Operasi">Operasi</option>
+                                                    <option value="Harian">Harian</option>
+                                                </select>
                                             </div>
                                         </div>
                                         @if(Auth::user()->view_data==3 || Auth::user()->view_data==4)
                                             <div class="form-group row">
-                                                {!! Form::label('sub_satuan_kerja_id', 'Klinik', ['class' => 'col-sm-2 col-form-label']) !!}
+                                                <label for="sub_satuan_kerja_id" class="col-sm-2 col-form-label">Klinik</label>
                                                 <div class="col-sm-10">
-                                                    {!! Form::select('sub_satuan_kerja_id', $var['listKlinik'], null, ['class'=>'form-control']) !!}
+                                                    <select name="sub_satuan_kerja_id" id="sub_satuan_kerja_id" class="form-control">
+                                                        @foreach($var['listKlinik'] as $id => $name)
+                                                            <option value="{{ $id }}">{{ $name }}</option>
+                                                        @endforeach
+                                                    </select>
                                                 </div>
                                             </div>
                                         @elseif(Auth::user()->view_data==1 || Auth::user()->view_data==2)
                                             <div class="form-group row">
-                                                {!! Form::label('sub_satuan_kerja_id', 'Klinik', ['class' => 'col-sm-2 col-form-label']) !!}
+                                                <label for="sub_satuan_kerja_id" class="col-sm-2 col-form-label">Klinik</label>
                                                 <div class="col-sm-10">
-                                                    {!! Form::select('sub_satuan_kerja_id', $var['listKlinik'], null, ['class'=>'form-control', 'placeholder'=>'Pilih Klinik']) !!}
+                                                    <select name="sub_satuan_kerja_id" id="sub_satuan_kerja_id" class="form-control">
+                                                        <option value="">Pilih Klinik</option>
+                                                        @foreach($var['listKlinik'] as $id => $name)
+                                                            <option value="{{ $id }}">{{ $name }}</option>
+                                                        @endforeach
+                                                    </select>
                                                 </div>
                                             </div>
                                         @endif
                                         <div class="form-group row">
-                                            {!! Form::label('format', 'Format Laporan', ['class' => 'col-sm-2 col-form-label']) !!}
+                                            <label for="format" class="col-sm-2 col-form-label">Format Laporan</label>
                                             <div class="col-sm-10">
-                                                {!! Form::select('format', ['PDF'=>'PDF', 'Excel'=>'Excel'], null, ['class'=>'form-control']) !!}
+                                                <select name="format" id="format" class="form-control">
+                                                    <option value="PDF">PDF</option>
+                                                    <option value="Excel">Excel</option>
+                                                </select>
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <div class="col-lg-4 ml-auto">
-                                            {!! Form::submit('Cetak', ['class'=>'btn btn-success']) !!}
-                                            {!! Form::submit('Preview', ['class'=>'btn btn-primary', 'id'=>'btnPrev']) !!}
-                                                {!! Form::reset('Reset', ['class'=>'btn btn-danger']) !!}
+                                                <button type="submit" class="btn btn-success">Cetak</button>
+                                                <button type="button" class="btn btn-primary" id="btnPrev">Preview</button>
+                                                <button type="reset" class="btn btn-danger">Reset</button>
                                             </div>
                                         </div>
-                                    {!! Form::close() !!}
+                                    </form>
                                 </div>
                             </div>
                         </div>
