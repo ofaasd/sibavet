@@ -70,7 +70,7 @@ class HomeController extends Controller
 											->whereMonth("klinik_terapi.tanggal_periksa", $curr_bulan)
 											->whereYear("klinik_terapi.tanggal_periksa", $curr_tahun)
 											->where("klinik_terapi.no_pasien", "like", "%" . $kode . "%")
-											->groupBy('spesies.id', 'spesies.nama', 'spesies.created_at', 'spesies.updated_at')
+											->groupBy('spesies.id', 'spesies.nama_spesies','spesies.kode','spesies.lab', 'spesies.klinik', 'spesies.created_at', 'spesies.updated_at')
 											->get();
 		$var['jumlah_jenis_pasien'] = array();
 		$var['list_spesies'] = array();
