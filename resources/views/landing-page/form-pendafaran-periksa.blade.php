@@ -64,7 +64,7 @@
                             @csrf
 
                             <!-- Header: User & Klinik -->
-                            <div class="row mb-3">
+                            {{-- <div class="row mb-3">
                                 <div class="col-md-6">
                                     <label for="user_id" class="form-label">User</label>
                                     <select id="user_id" name="user_id" class="form-select" required>
@@ -78,7 +78,7 @@
                                     <label for="nama_klinik" class="form-label">Nama Klinik</label>
                                     <input type="text" id="nama_klinik" name="nama_klinik" class="form-control" placeholder="Nama klinik" required>
                                 </div>
-                            </div>
+                            </div> --}}
 
                             <!-- Data Pemilik -->
                             <h5 class="mb-3">Data Pemilik</h5>
@@ -176,7 +176,7 @@
                                     <div class="error-message"></div>
                                     <div class="sent-message d-none">Pendaftaran periksa berhasil. Terima kasih!</div>
 
-                                    <button type="submit" class="btn btn-primary me-2">Simpan</button>
+                                    <button type="submit" class="btn btn-primary me-2">Daftar</button>
                                     <button type="reset" class="btn btn-secondary">Reset</button>
                                 </div>
                             </div>

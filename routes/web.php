@@ -58,7 +58,7 @@ Route::get('dashboard', [HomeController::class, 'index'])->middleware(['auth', '
 Route::get('/', [HomeController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::get('/landing-page', [LandingPageController::class, 'index'])->name('landing-page');
-Route::get('/landing-page-login', [LandingPageController::class, 'login'])->name('login');
+Route::get('/landing-page-login', [LandingPageController::class, 'login'])->name('login_page');
 Route::get('/landing-page-register', [LandingPageController::class, 'register'])->name('register');
 Route::get('/form-pendaftaran-periksa', [LandingPageController::class, 'formPendaftaran'])->name('form-pendaftaran-periksa');
 Route::get('/tiket-antrian', [LandingPageController::class, 'tiketAntrian'])->name('tiket-antrian');

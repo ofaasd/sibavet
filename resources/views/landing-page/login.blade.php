@@ -68,13 +68,14 @@
         <div class="container" data-aos="fade-up" data-aos-delay="100">
             <div class="row gy-4 justify-content-center">
                 <div class="col-lg-6">
-                    <form action="{{ route('login') }}" method="POST" class="php-email-form" data-aos="fade-up" data-aos-delay="200">
+                    {{-- <form action="{{ route('login') }}" method="POST" class="php-email-form" data-aos="fade-up" data-aos-delay="200"> --}}
+                    <form action="{{ route('login') }}" method="POST" data-aos="fade-up" data-aos-delay="200">
                         @csrf
 
                         <div class="row gy-4">
                             <div class="col-md-12">
-                                <label for="username" class="form-label">Username</label>
-                                <input type="text" id="username" name="username" class="form-control" placeholder="Username" required autofocus>
+                                <label for="username" class="form-label">Email</label>
+                                <input type="text" id="email" name="email" class="form-control" placeholder="Username" required autofocus>
                             </div>
 
                             <div class="col-md-12">
