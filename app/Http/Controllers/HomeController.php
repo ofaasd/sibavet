@@ -63,7 +63,15 @@ class HomeController extends Controller
 		    $nama = Auth::user()->nama;
 		}
 		$var['nama'] = $nama;
-		$var['spesies'] = DB::table('klinik_terapi')->select("spesies.*")->join("klinik","klinik_terapi.klinik_id","klinik.id")->join("spesies","spesies.id","klinik.spesies_id")->whereMonth("klinik_terapi.tanggal_periksa",$curr_bulan)->whereYear("klinik_terapi.tanggal_periksa",$curr_tahun)->where("klinik_terapi.no_pasien","like","%" . $kode . "%")->groupBy("spesies_id")->get();
+		$var['spesies'] = 	$results = DB::table('klinik_terapi')
+											->select("spesies.*")
+											->join("klinik", "klinik_terapi.klinik_id", "klinik.id")
+											->join("spesies", "spesies.id", "klinik.spesies_id")
+											->whereMonth("klinik_terapi.tanggal_periksa", $curr_bulan)
+											->whereYear("klinik_terapi.tanggal_periksa", $curr_tahun)
+											->where("klinik_terapi.no_pasien", "like", "%" . $kode . "%")
+											->groupBy('spesies.id', 'spesies.nama', 'spesies.created_at', 'spesies.updated_at')
+											->get();
 		$var['jumlah_jenis_pasien'] = array();
 		$var['list_spesies'] = array();
 		foreach($var['spesies'] as $spesies){
