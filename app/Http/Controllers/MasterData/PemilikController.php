@@ -118,7 +118,12 @@ class PemilikController extends Controller
 			$kode = substr($request->kode,0,3);
 			echo $nama;
 			echo "<br />" . $kode . "<br />" . $telepon;
-			$query = DB::table('pemilik')->selectRaw('count(*) as jumlah')->whereRaw('nama = "?" and telepon = "?" and kode like "%?%"',array($nama,$telepon,$kode))->first();
+			$kode_like = "%" . $kode . "%"; // Gabungkan % di variabel PHP
+
+            $query = DB::table('pemilik')
+                ->selectRaw('count(*) as jumlah')
+                ->whereRaw('nama = ? and telepon = ? and kode like ?', [$nama, $telepon, $kode_like])
+                ->first();
 			//echo "asdasdasd";
 			if($query->jumlah > 0){
 				Session::flash('pesanError', 'Data Pemilik Sudah Ada');
