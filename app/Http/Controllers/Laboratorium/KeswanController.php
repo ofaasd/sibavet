@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Laboratorium;
 use PDF, Session, Auth, DB;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Input;
+// use Illuminate\Support\Facades\Input; // Dihapus
 
 use App\Http\Controllers\Helpers\UserHelper;
 
@@ -53,7 +53,25 @@ class KeswanController extends Controller
 
         return view('laboratorium.keswan.index', compact('var', 'listLaboratorium'));
     }
-
+//get input
+    public function input($id = false)
+    {
+        if(!Auth::user()->hasPermissionTo('Create Lab Keswan')) return view('errors.403');
+        $keswan = null;
+        if($id != false){
+            if(Auth::user()->view_data > 2){
+                $keswan = LaboratoriumKeswan::where('sub_satuan_kerja_id', Auth::user()->sub_satuan_kerja_id)->where('lab_id',1)->with(['labContoh','subSatuanKerja:sub_satuan_kerja','labPengujian','customer'])->find($id);
+            }else{
+                $keswan = LaboratoriumKeswan::where('lab_id',1)->with(['labContoh','subSatuanKerja:sub_satuan_kerja','labPengujian','customer'])->find($id);
+            }
+            $id = true;
+            if(empty($keswan)){
+                return view('errors.403');
+            }
+        }
+        $jenisContoh = JenisContoh::get();
+        return view("laboratorium.keswan.input", compact('id','keswan','jenisContoh'));
+    }
 // get1
     public function getForm01(Request $request,$id = false)
     {
@@ -174,16 +192,16 @@ class KeswanController extends Controller
         try {
             DB::beginTransaction();
 
-            if(Input::has('id')){
-                if(Input::get('id')== '0'){
+            if($request->id){
+                if($request->input('id') == '0'){
                     $lab = new LaboratoriumKeswan();
-                    $lab->status_epid = Input::get('status_epid');
-                    $lab->no_epid = Input::get('no_epid');    
+                    $lab->status_epid = $request->input('status_epid');
+                    $lab->no_epid = $request->input('no_epid');
                 }else{
                     if(Auth::user()->view_data > 2){
-                        $lab = LaboratoriumKeswan::where('sub_satuan_kerja_id', Auth::user()->sub_satuan_kerja_id)->where('lab_id',1)->find(Input::get('id'));
+                        $lab = LaboratoriumKeswan::where('sub_satuan_kerja_id', Auth::user()->sub_satuan_kerja_id)->where('lab_id',1)->find($request->input('id'));
                     }else{
-                        $lab = LaboratoriumKeswan::where('lab_id',1)->find(Input::get('id'));
+                        $lab = LaboratoriumKeswan::where('lab_id',1)->find($request->input('id'));
                     }
                     if(empty($lab)){
                         return view('errors.403');
@@ -191,31 +209,31 @@ class KeswanController extends Controller
                 }
             }else{
                 $lab = new LaboratoriumKeswan();
-                $lab->status_epid = Input::get('status_epid');
-                $lab->no_epid = Input::get('no_epid');
+                $lab->status_epid = $request->input('status_epid');
+                $lab->no_epid = $request->input('no_epid');
             }
 
             $lab->lab_id = 1;
-            $lab->sub_satuan_kerja_id = Input::get('sub_satuan_kerja_id');
-            $lab->nama_pengirim_id = Input::get('nama_pengirim_id');
-            $lab->jenis_hewan_id = Input::get('jenis_hewan_id');
-            $lab->kriteria_contoh = Input::get('kriteria_contoh');
-            $lab->catatan = Input::get('catatan');
-            $lab->peralatan = Input::get('peralatan');
-            $lab->bahan = Input::get('bahan');
-            $lab->personil = Input::get('personil');
-            $lab->tanggal_penerimaan = Input::get('tanggal_penerimaan');
-            $lab->pengirim = Input::get('pengirim');
-            $lab->penerima = Input::get('penerima');
+            $lab->sub_satuan_kerja_id = $request->input('sub_satuan_kerja_id');
+            $lab->nama_pengirim_id = $request->input('nama_pengirim_id');
+            $lab->jenis_hewan_id = $request->input('jenis_hewan_id');
+            $lab->kriteria_contoh = $request->input('kriteria_contoh');
+            $lab->catatan = $request->input('catatan');
+            $lab->peralatan = $request->input('peralatan');
+            $lab->bahan = $request->input('bahan');
+            $lab->personil = $request->input('personil');
+            $lab->tanggal_penerimaan = $request->input('tanggal_penerimaan');
+            $lab->pengirim = $request->input('pengirim');
+            $lab->penerima = $request->input('penerima');
             $lab->input_by = Auth::user()->id;
 
-            foreach (Input::get('jenis_contoh') as $key => $value) {
-                $jenis_contoh[$value] = array('jumlah' => Input::get('jumlah_contoh')[$key]);
+            foreach ($request->input('jenis_contoh') as $key => $value) {
+                $jenis_contoh[$value] = array('jumlah' => $request->input('jumlah_contoh')[$key]);
             }
 
             $lab->save();
             $lab->labContoh()->sync($jenis_contoh);
-            $lab->labPengujian()->sync(Input::get('permintaan_uji'));
+            $lab->labPengujian()->sync($request->input('permintaan_uji'));
 
             DB::commit();
 
@@ -235,24 +253,24 @@ class KeswanController extends Controller
             DB::beginTransaction();
 
             if(Auth::user()->view_data > 2){
-                $lab = LaboratoriumKeswan::where('sub_satuan_kerja_id', Auth::user()->sub_satuan_kerja_id)->where('lab_id',1)->find(Input::get('id'));
+                $lab = LaboratoriumKeswan::where('sub_satuan_kerja_id', Auth::user()->sub_satuan_kerja_id)->where('lab_id',1)->find($request->input('id'));
             }else{
-                $lab = LaboratoriumKeswan::where('lab_id',1)->find(Input::get('id'));
+                $lab = LaboratoriumKeswan::where('lab_id',1)->find($request->input('id'));
             }
             if(empty($lab)){
                 return view('errors.403');
             }
 
-            $lab->asal_contoh_id = Input::get('asal_contoh_id');
-            $lab->penerima_02 = Input::get('penerima_02');
-            $lab->catatan_02 = Input::get('catatan_02');
-            $nomor_baru = Input::get('nomor_baru');
+            $lab->asal_contoh_id = $request->input('asal_contoh_id');
+            $lab->penerima_02 = $request->input('penerima_02');
+            $lab->catatan_02 = $request->input('catatan_02');
+            $nomor_baru = $request->input('nomor_baru');
 
             if(empty($lab->time_02)){
                 $lab->time_02 = date('Y-m-d H:i:s');
             }
 
-            foreach (Input::get('nomor_asal') as $key => $value) {
+            foreach ($request->input('nomor_asal') as $key => $value) {
                 $lab->labContoh()->updateExistingPivot($key, ['nomor_asal'=>$value,'nomor_baru'=>$nomor_baru[$key]]);
             }
 
@@ -277,17 +295,17 @@ class KeswanController extends Controller
             DB::beginTransaction();
 
             if(Auth::user()->view_data > 2){
-                $lab = LaboratoriumKeswan::where('sub_satuan_kerja_id', Auth::user()->sub_satuan_kerja_id)->where('lab_id',1)->find(Input::get('id'));
+                $lab = LaboratoriumKeswan::where('sub_satuan_kerja_id', Auth::user()->sub_satuan_kerja_id)->where('lab_id',1)->find($request->input('id'));
             }else{
-                $lab = LaboratoriumKeswan::where('lab_id',1)->find(Input::get('id'));
+                $lab = LaboratoriumKeswan::where('lab_id',1)->find($request->input('id'));
             }
             if(empty($lab)){
                 return view('errors.403');
             }
 
-            $lab->seksi_laboratorium_id = Input::get('seksi_laboratorium_id');
-            $lab->manajer_teknis = Input::get('manajer_teknis');
-            $lab->catatan_03 = Input::get('catatan_03');
+            $lab->seksi_laboratorium_id = $request->input('seksi_laboratorium_id');
+            $lab->manajer_teknis = $request->input('manajer_teknis');
+            $lab->catatan_03 = $request->input('catatan_03');
             
             if(empty($lab->time_03)){
                 $lab->time_03 = date('Y-m-d H:i:s');
@@ -314,16 +332,16 @@ class KeswanController extends Controller
             DB::beginTransaction();
 
             if(Auth::user()->view_data > 2){
-                $lab = LaboratoriumKeswan::where('sub_satuan_kerja_id', Auth::user()->sub_satuan_kerja_id)->where('lab_id',1)->find(Input::get('id'));
+                $lab = LaboratoriumKeswan::where('sub_satuan_kerja_id', Auth::user()->sub_satuan_kerja_id)->where('lab_id',1)->find($request->input('id'));
             }else{
-                $lab = LaboratoriumKeswan::where('lab_id',1)->find(Input::get('id'));
+                $lab = LaboratoriumKeswan::where('lab_id',1)->find($request->input('id'));
             }
             if(empty($lab)){
                 return view('errors.403');
             }
 
-            $lab->penguji_ditunjuk = Input::get('penguji_ditunjuk');
-            $lab->catatan_04 = Input::get('catatan_04');
+            $lab->penguji_ditunjuk = $request->input('penguji_ditunjuk');
+            $lab->catatan_04 = $request->input('catatan_04');
             
             if(empty($lab->time_04)){
                 $lab->time_04 = date('Y-m-d H:i:s');
@@ -350,16 +368,16 @@ class KeswanController extends Controller
             DB::beginTransaction();
 
             if(Auth::user()->view_data > 2){
-                $lab = LaboratoriumKeswan::where('sub_satuan_kerja_id', Auth::user()->sub_satuan_kerja_id)->where('lab_id',1)->find(Input::get('id'));
+                $lab = LaboratoriumKeswan::where('sub_satuan_kerja_id', Auth::user()->sub_satuan_kerja_id)->where('lab_id',1)->find($request->input('id'));
             }else{
-                $lab = LaboratoriumKeswan::where('lab_id',1)->find(Input::get('id'));
+                $lab = LaboratoriumKeswan::where('lab_id',1)->find($request->input('id'));
             }
             if(empty($lab)){
                 return view('errors.403');
             }
 
-            $lab->catatan_hasil = Input::get('catatan_04');
-            $hasil = Input::get('hasil');
+            $lab->catatan_hasil = $request->input('catatan_04');
+            $hasil = $request->input('hasil');
             
             if(empty($lab->time_hasil)){
                 $lab->time_hasil = date('Y-m-d H:i:s');
@@ -392,7 +410,7 @@ class KeswanController extends Controller
     {
         if(!Auth::user()->hasPermissionTo('Create Lab Keswan')) return view('errors.403');
 
-        $customer = Customer::find(Input::get('customerId'));
+        $customer = Customer::find($request->input('customerId'));
         return response()->json($customer);
     }
 
@@ -400,13 +418,13 @@ class KeswanController extends Controller
     {
         if(!Auth::user()->hasPermissionTo('Create Lab Keswan')) return view('errors.403');
 
-        if (Input::get('id') !=0) {
+        if ($request->id !=0) {
             return true;
         }else{
             if(Auth::user()->view_data > 2){
-                $jumlah = LaboratoriumKeswan::where('sub_satuan_kerja_id', Auth::user()->sub_satuan_kerja_id)->where('lab_id',1)->where('no_epid', Input::get('no_epid'))->count();
+                $jumlah = LaboratoriumKeswan::where('sub_satuan_kerja_id', Auth::user()->sub_satuan_kerja_id)->where('lab_id',1)->where('no_epid', $request->no_epid)->count();
             }else{
-                $jumlah = LaboratoriumKeswan::where('lab_id',1)->where('no_epid', Input::get('no_epid'))->count();
+                $jumlah = LaboratoriumKeswan::where('lab_id',1)->where('no_epid', $request->no_epid)->count();
             }
             return response()->json($jumlah>0?false:true);
         }
@@ -466,7 +484,7 @@ class KeswanController extends Controller
             $keswan = LaboratoriumKeswan::where('lab_id',1)->with(['labContoh','subSatuanKerja','labPengujian','customer'])->find($id);
         }
         if (empty($keswan)) {
-            return view('errors.403');
+            return view('errors.4Gagal Disimpan03');
         }
 
         return view('laboratorium.keswan.cetak04',compact('keswan'));

@@ -7,5 +7,13 @@
 			@endforeach
 			<option value="999999999999">Lainnya</option>
 		</select>
+		<div id="new_hewan">
+															
+		</div>	
     </div>
 </div>
+<script>
+	$(document).ready(function(){
+		$('.select2').select2();
+	});
+</script>

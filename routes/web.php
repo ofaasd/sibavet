@@ -156,6 +156,7 @@ Route::prefix('lab')->group(function () {
     Route::group(['middleware' => ['ajax']], function () {
         Route::get('keswan', [KeswanController::class, 'index']);
         Route::get('keswan/form01', [KeswanController::class, 'getForm01']);
+        Route::get('keswan/input', [KeswanController::class, 'input']);
         Route::get('keswan/{id}/form01', [KeswanController::class, 'getForm01']);
         Route::get('keswan/{id}/form02', [KeswanController::class, 'getForm02']);
         Route::get('keswan/{id}/form03', [KeswanController::class, 'getForm03']);
